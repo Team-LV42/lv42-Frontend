@@ -7,36 +7,38 @@ import {
   useRecoilValue,
   useRecoilRefresher_UNSTABLE,
 } from 'recoil';
-import { Router, Routes, Route } from './hooks/Route.jsx';
+import { Route, Routes } from 'react-router-dom'
+// import { Router, Routes, Route } from './hooks/Route.jsx';
 import Login from './pages/Login.jsx';
+import Auth from './hooks/Auth.jsx'
 import User from './pages/User.jsx'
 import { ConnectionStatus } from './components/Test.jsx'
 import React, { Suspense } from 'react';
 
-// function App() {
-//   return (
-//     <RecoilRoot>
-//       <Router>
-//         <Routes>
-//           <Route path="/user" element={<User />} />
-//           <Route path="/" element={<Login />} />
-//         </Routes>
-//       </Router>
-//     </RecoilRoot>
-//   );
-// }
-
-
-
 function App() {
   return (
     <RecoilRoot>
-      <Suspense fallback={<div><p>Loading...</p></div>}>
-        {/* <ConnectionStatus /> */}
-        <Login />
+      <Suspense fallback={<div><p>Loading...</p></div>} >
+        <Routes>
+          <Route path="/callback" element={<Auth />} />
+          <Route index element={<Login />} />
+        </Routes>
       </Suspense>
     </RecoilRoot>
-  )
+  );
 }
+
+
+
+// function App() {
+//   return (
+//     <RecoilRoot>
+//       <Suspense fallback={<div><p>Loading...</p></div>}>
+//         {/* <ConnectionStatus /> */}
+//         <Login />
+//       </Suspense>
+//     </RecoilRoot>
+//   )
+// }
 
 export default App;
