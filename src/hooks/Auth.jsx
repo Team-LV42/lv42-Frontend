@@ -1,22 +1,28 @@
-import { atom, selector, useRecoilValue } from 'recoil';
-import { useSetRecoilState,} from 'recoil';
-import { UserLoginState } from '../pages/Login';
-import { Link, redirect, useSearchParams } from 'react-router-dom';
+import {
+	atom,
+	selector,
+	selectorFamily,
+	useRecoilValue, 
+	useSetRecoilState, 
+	useRecoilState,
+} from 'recoil';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const url = "http://54.180.96.16:3000/login?code=";
+const testUrl = "http://13.124.198.32:3000/login?code=";
 
 const codeState = atom({
 	key: 'codeState',
-	default: '',
+	default: '123',
 });
 
-const UserLoginQuery = selector({
+const UserLoginQuery = selectorFamily({
 	key: 'UserLoginQuery',
-	get: async ({ get }) => {
+	get: ( code ) => async () => {
 		try {
-			const code = get(codeState);
-			const response = await fetch(url + code, {
+			const response = await fetch(testUrl + code, {
 				method: "get",
+				// mode: "no-cors",
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -33,14 +39,12 @@ const UserLoginQuery = selector({
 
 const Auth = () => {
 	const [ params ] = useSearchParams();
-	const setCodeState = useSetRecoilState(codeState);
-	const setUserState = useSetRecoilState(UserLoginState);
-	const authRes = useRecoilValue(UserLoginQuery);
 	const code = params.get('code');
+	
+	// setCodeState(code);
 
-	setUserState(code);
-	setCodeState(code);
-
+	const authRes = useRecoilValue(UserLoginQuery(code));
+	console.log(authRes);
 	return (
 		<div>
 			{authRes.status === 200 ? "Success Login" : "Failed Login"}
