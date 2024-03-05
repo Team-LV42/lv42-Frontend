@@ -11,7 +11,7 @@ import { Route, Routes } from 'react-router-dom'
 // import { Router, Routes, Route } from './hooks/Route.jsx';
 import Login from './pages/Login.jsx';
 import Auth from './hooks/Auth.jsx'
-import User from './pages/User.jsx'
+import User from './pages/user.jsx'
 import { ConnectionStatus } from './components/Test.jsx'
 import React, { Suspense } from 'react';
 
