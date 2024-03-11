@@ -5,30 +5,14 @@ import {
 	useSetRecoilState,
 } from 'recoil';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { setCookie, getCookies } from './Cookie';
 
 const testUrl = "http://54.180.96.16:4242/auth/login?code=";
-
-export function setCookie(cname, cvalue, exdays) {
-	const expires = new Date();
-	expires.setDate(expires.getDate() + exdays);
-	document.cookie = cname + "=" + cvalue + "; expires=" + expires.toUTCString() + "; path=/";
-}
 
 export const accessTokenState = atom({
 	key: 'accessTokenState',
 	default: null,
 });
-
-function getCookies() {
-    const cookies = document.cookie.split(';').reduce((cookiesObj, cookie) => {
-        const [name, value] = cookie.split('=').map(item => item.trim());
-        cookiesObj[name] = value;
-        return cookiesObj;
-    }, {});
-
-    return cookies;
-}
 
 /*rt가 없으면 false, at만 없으면 at재발급*/
 export function CheckToken() {
