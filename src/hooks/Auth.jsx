@@ -5,56 +5,20 @@ import {
 	useSetRecoilState,
 } from 'recoil';
 import { Link, useSearchParams } from 'react-router-dom';
-import { setCookie, accessTokenState } from './Token';
-const testUrl = "http://54.180.96.16:4242/auth/login?code=";
-
-
-
-const UserLoginQuery = selectorFamily({
-	key: 'UserLoginQuery',
-	get: (code) => async () => {
-		try {
-			const response = await fetch(testUrl + code, {
-				method: "get",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			if (400 <= response.status && response.status <= 599)
-				throw new Error("response is failed");
-			
-			const responseData = await response.text();
-			const json = responseData ? JSON.parse(responseData) : {};
-			console.log(json);
-			return json;
-		} catch (err) {
-			throw err;
-		}
-	}
-});
+import { CheckToken, LoginTest } from './Token';
 
 const Auth = () => {
-	const setAccessToken = useSetRecoilState(accessTokenState);
-	const [params] = useSearchParams();
-	const code = params.get('code');
-	
-	const authRes = useRecoilValue(UserLoginQuery(code));
-
-	if (authRes.accessToken) {
-		setAccessToken(authRes.accessToken);
-	}
-	setCookie('refreshToken', authRes.refreshToken, 14); // set refresh token cookie
-	console.log("AT : " + authRes.accessToken);
-	console.log("AT : " + useRecoilValue(accessTokenState));
-
+	const loginState = CheckToken()
+	console.log(loginState);
+	if (loginState === false)		//rt가 없으면
+		LoginTest();				//로그인 쿼리 보내고 쿠키 저장, 함수 이름 바꿀 예정
 	return (
 		<div>
-			{authRes.status === 200 ? "Success Login" : "Failed Login"}
-			<button>
+			<button>	
 				<Link to='/'>Back to Home</Link>    
 			</button>
 		</div>
-	)
+	);
 };
 
 export default Auth;
