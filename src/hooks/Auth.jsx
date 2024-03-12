@@ -1,58 +1,24 @@
 import {
 	atom,
-	selector,
 	selectorFamily,
-	useRecoilValue, 
-	useSetRecoilState, 
-	useRecoilState,
+	useRecoilValue,
+	useSetRecoilState,
 } from 'recoil';
 import { Link, useSearchParams } from 'react-router-dom';
-
-const url = "http://54.180.96.16:3000/login?code=";
-const testUrl = "http://13.124.198.32:3000/login?code=";
-
-const codeState = atom({
-	key: 'codeState',
-	default: '123',
-});
-
-const UserLoginQuery = selectorFamily({
-	key: 'UserLoginQuery',
-	get: ( code ) => async () => {
-		try {
-			const response = await fetch(testUrl + code, {
-				method: "get",
-				// mode: "no-cors",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			if (400 <= response.status && response.status <= 599)
-				throw new Error("response is failed");
-			console.log(await response.json());
-			return response;
-		} catch (err) {
-			throw err;
-		}
-	}
-});
+import { CheckToken, LoginTest } from './Token';
 
 const Auth = () => {
-	const [ params ] = useSearchParams();
-	const code = params.get('code');
-	
-	// setCodeState(code);
-
-	const authRes = useRecoilValue(UserLoginQuery(code));
-	console.log(authRes);
+	const loginState = CheckToken()
+	console.log(loginState);
+	if (loginState === false)		//rt가 없으면
+		LoginTest();				//로그인 쿼리 보내고 쿠키 저장, 함수 이름 바꿀 예정
 	return (
 		<div>
-			{authRes.status === 200 ? "Success Login" : "Failed Login"}
-			<button>
-				<Link to='/'>Back to Home</Link>	
+			<button>	
+				<Link to='/'>Back to Home</Link>    
 			</button>
 		</div>
-	)
+	);
 };
 
 export default Auth;
