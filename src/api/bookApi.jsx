@@ -5,8 +5,7 @@ import {
 } from "recoil";
 
 
-import { consoleTypeState } from "../store/State.jsx";
-import { dateSelector } from "../containers/Book.jsx";
+import { consoleTypeState, dateSelector } from "../store/State.jsx";
 
 const url = "http://54.180.96.16:4242/books";
 
@@ -32,7 +31,6 @@ export const fetchBookRecordsListQuery = selector({
 			const consoleType = get(consoleTypeState);
 			const date = get(dateSelector);
 			//process.env.REACT_APP_URL
-			///books?type=" + consoleType
 			const response = await fetch(`${url}?date=${date}&type=${consoleType}`, {
 				method: "GET",
 				headers: {
@@ -41,8 +39,6 @@ export const fetchBookRecordsListQuery = selector({
 			});
 			if (response.status !== 200)
 				throw new Error("bookApi: failed to fetch booksRecord" + response.status);
-			// const data = await response.json();
-			// return data;
 			return await response.json();
 		} catch (err) {
 			throw err;
@@ -58,39 +54,31 @@ export const getRecordsListByUserID = selectorFamily({
 	}
 })
 
-export const getRecordByBookID = (bookID) => {
+// 선택된 타입의 레코드들을 불러오는데 조회를 할 수 있는 레코드들이 선택된 타입이기에 기존의
+// bookState에 존재하는 레코드들을 서치해서 리턴함.
+export const getRecordByBookID = selectorFamily({
+	key: 'gerRecordByBookID',
+	get: (bookID = null) => ({ get }) => {
+		if (bookID === null)
+			return null;
+		const list = get(booksState);
+		return list.filter((record) => record._id === bookID);
+	},
+});
 
-}
+export const fetchBookRecordDelete = async (bookid, userid) => {
+	const response = await fetch(`${url}?bookId=${bookid}&userId=${userid}`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
 
-export const booksRecordTestQuery = selector({
-	key: 'BooksRecordTestQuery',
-	get: () => {
-		const data = [
-			{
-				"_id": "65e597f76857bed8e99c75f8",
-				"user_id": "158085",
-				"start_time": 110,
-				"end_time": 111,
-				"date": "2023-03-04",
-				"type": 3,
-				"createdAt": "2024-03-04T09:44:23.702Z",
-				"updatedAt": "2024-03-04T09:44:23.702Z",
-				"__v": 0
-			},
-			{
-				"_id": "65e59838b8cf5b9111476fad",
-				"user_id": "158085",
-				"start_time": 111,
-				"end_time": 112,
-				"date": "2023-03-04",
-				"type": 3,
-				"createdAt": "2024-03-04T09:45:28.835Z",
-				"updatedAt": "2024-03-04T09:45:28.835Z",
-				"__v": 0
-			}
-		];
-		return data;
+	if (response.status === 404) {
+		console.error("failed to delete record!!!");
+		return false;
 	}
-})
+	return true;
+};	
 
 export default fetchBookRecordsListQuery;
