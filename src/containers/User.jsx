@@ -1,30 +1,30 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { UserStateQuery, UsersStateQuery } from "../api/userApi.js"
+import { UserStateQuery, userState } from "../api/userApi.js"
 import { useSearchParams } from "react-router-dom";
 import UserView from "../components/UserView.jsx"
 
 export function LoggedInUser() {
 	/* cookie.get(id) */
 	const logInUserId = '';
-	const [userInfo, setUserInfo] = useRecoilState(UserStateQuery(logInUserId));
+	// const [userInfo, setUserInfo] = useRecoilState(UserStateQuery(logInUserId));
+	const userInfo = useRecoilValue(userState(logInUserId));
 	const [params, setParams] = useSearchParams();
-	const userId = params.get('userId');
-
-	const [modalOpen, setModalOpen] = useRecoilState(userModalState);
+	const userID = params.get('userid');
 	let	specificUser;
 
+	const [modalOpen, setModalOpen] = useRecoilState(userModalState);
+
 	if (modalOpen)
-		specificUser = useRecoilValue(UserStateQuery(userId)); 
-	if (userId)
+		specificUser = useRecoilValue(UserStateQuery(userID)); 
+	if (userID)
 		setModalOpen(true)	;
 	if (userInfo === undefined)
 		return (<div>Failed</div>);
 	console.log(userInfo);
-	setUserInfo(userInfo);
 
 	const onModalClose = () => {
 		setModalOpen(false);
-		params.delete('userId');
+		params.delete('userid');
 		setParams(params);
 	}
 	

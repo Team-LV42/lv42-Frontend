@@ -1,4 +1,8 @@
-import { selector, selectorFamily } from 'recoil'
+import { 
+	atomFamily,
+	selector, 
+	selectorFamily 
+} from 'recoil'
 // import userState from '../store/userState.jsx'
 
 /*
@@ -9,17 +13,46 @@ import { selector, selectorFamily } from 'recoil'
 * }
 */
 
-
 /* Test Code */
 
 // const userId = cookie.get('userid');
 // const userId = '';
 
-const userState = atom({
+export const userState = atomFamily({
 	key: 'userState',
-	default: [], 
+	default: selectorFamily({
+		key: 'userState/Default',
+		get: userID => () => {
+			return fetchUserState(userID);
+		}
+	}),
 });
 
+export const userTestState = atomFamily({
+	key: 'userTestState',
+	default: userID => ({get}) => {
+		return get(UserStateQuery(userID));
+	},
+});
+
+const fetchUserState = async (userID) => {
+	try {
+		/* check id regex needed */
+		const response = await fetch(process.env.REACT_APP_URL + "/user?userid=" + userID, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (response.status != 200)
+			throw new Error("userApi: fetch user info failed");
+		if (response.json() === undefined)
+			throw new Error("userApi: fetched data is not json");
+		return response.json();
+	} catch (err) {
+		throw err;
+	};
+}
 /* Test Code End */
 
 // fetching User Info by Id
@@ -48,7 +81,6 @@ export const UserStateQuery = selectorFamily({
 	}
 });
 
-//fetching user list by Admin
 export const UsersStateQuery = selector({
 	key: 'UsersStateQuery',
 	get: async () => {

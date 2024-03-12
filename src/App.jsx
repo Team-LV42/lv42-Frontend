@@ -1,29 +1,26 @@
-import './App.css';
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-  useRecoilRefresher_UNSTABLE,
-} from 'recoil';
+import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom'
-// import { Router, Routes, Route } from './hooks/Route.jsx';
+import { RecoilRoot } from 'recoil';
+
 import Login from './pages/Login.jsx';
 import Auth from './hooks/Auth.jsx'
-import { ConnectionStatus } from './components/Test.jsx'
-import React, { Suspense } from 'react';
+import Book from './containers/Book';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
+import './App.css';
 
 function App() {
   return (
-    <RecoilRoot>
-      <Suspense fallback={<div><p>Loading...</p></div>} >
-        <Routes>
-          <Route path="/callback" element={<Auth />} />
-          <Route index element={<Login />} />
-        </Routes>
-      </Suspense>
-    </RecoilRoot>
+    <ErrorBoundary fallback={<p>Something went wrong</p>}>
+      <RecoilRoot>
+        <Suspense fallback={<div><p>Loading...</p></div>} >
+          <Routes>
+            <Route path="/test" element={<Book />} />
+            <Route path="/callback" element={<Auth />} />
+            <Route index element={<Login />} />
+          </Routes>
+        </Suspense>
+      </RecoilRoot>
+    </ErrorBoundary>
   );
 }
 
