@@ -11,22 +11,6 @@ import { Route, Routes } from 'react-router-dom'
 // import { Router, Routes, Route } from './hooks/Route.jsx';
 import Login from './pages/Login.jsx';
 import Auth from './hooks/Auth.jsx'
-<<<<<<< Updated upstream
-import User from './pages/user.jsx'
-import { ConnectionStatus } from './components/Test.jsx'
-import React, { Suspense } from 'react';
-
-function App() {
-  return (
-    <RecoilRoot>
-      <Suspense fallback={<div><p>Loading...</p></div>} >
-        <Routes>
-          <Route path="/callback" element={<Auth />} />
-          <Route index element={<Login />} />
-        </Routes>
-      </Suspense>
-    </RecoilRoot>
-=======
 import Book from './containers/Book';
 import Nav from './components/nav.jsx';
 import { UserModal } from './components/user/UserModal.jsx';
@@ -54,21 +38,7 @@ function App() {
         </Suspense>
       </RecoilRoot>
     </ErrorBoundary>
->>>>>>> Stashed changes
   );
 }
-
-
-
-// function App() {
-//   return (
-//     <RecoilRoot>
-//       <Suspense fallback={<div><p>Loading...</p></div>}>
-//         {/* <ConnectionStatus /> */}
-//         <Login />
-//       </Suspense>
-//     </RecoilRoot>
-//   )
-// }
 
 export default App;
