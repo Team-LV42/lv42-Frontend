@@ -1,14 +1,7 @@
-import './App.css';
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-  useRecoilRefresher_UNSTABLE,
-} from 'recoil';
+import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom'
-// import { Router, Routes, Route } from './hooks/Route.jsx';
+import { RecoilRoot } from 'recoil';
+
 import Login from './pages/Login.jsx';
 import Auth from './hooks/Auth.jsx'
 import Book from './containers/Book';

@@ -3,8 +3,7 @@ import {
 	selector, 
 	selectorFamily 
 } from 'recoil'
-import { dateState } from '../store/State.jsx';
-import { ConvertDateFormat } from '../hooks/useDate.jsx';
+// import userState from '../store/userState.jsx'
 
 /*
 * user : {
@@ -13,7 +12,6 @@ import { ConvertDateFormat } from '../hooks/useDate.jsx';
 *	profile-img: URL,
 * }
 */
-
 
 /* Test Code */
 
@@ -121,7 +119,6 @@ export const fetchUserStateQuery = selectorFamily({
 		set(userState, value)
 	}
 });
-
 
 export const UserlistStateQuery = selector({
 	key: 'UserlistStateQuery',
