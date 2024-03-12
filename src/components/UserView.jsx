@@ -1,12 +1,11 @@
 function UserView(props) {
-	let styleName = "user";
-	if (props.type === "modal")
-		styleName = "user modal";
+	if (!props.object)
+		console.error('UserView passed object is undefined');
 	return (
-		<div className={styleName}>
-			<h>{props.object.name}</h>
+		<div> 
+			<img src={props.object.profile_img} />
+			<h1>{props.object.name}</h1>
 			<p>{props.object.id}</p>
-			/* profile img*/
 		</div>
 	);
 }
