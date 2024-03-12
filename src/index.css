@@ -10,7 +10,7 @@ body {
 }
 
 #root {
-  height: 96vh;
+  height: 90vh;
   max-width: 540px; /* 모바일 화면과 같은 넓이로 설정, 원하는 값으로 변경 가능 */
   margin: 0 auto;
   background-color: white;
@@ -27,6 +27,12 @@ body {
       margin-right: 4vw;
       margin-top: 2vw;
   }
+  #root {
+    padding-bottom:5vh;
+  }
+  .time-picker {
+    max-height: 50vh;
+  }
 }
 
 @media (min-width: 768px) {
@@ -34,6 +40,9 @@ body {
   .adaptive-container {
       margin-left: 8vw;
       margin-right: 8vw;
+  }
+  .time-picker {
+    max-height: 60vh;
   }
 }
 
@@ -44,4 +53,171 @@ body {
       max-width: 800px;
       margin: 5% auto;
   }
+}
+
+@media (hover: hover) {
+  .time-button:hover {
+    background-color: #f5f5f5;
+  }
+
+  .date-button:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+
+
+/* ------------------ */
+button {
+  -webkit-tap-highlight-color: transparent !important;
+  background: transparent;
+  border: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.date-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+  min-height: 150px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+}
+
+.submit-container {
+  padding : 5px;
+  border-bottom: 2px black solid;
+  border-radius: 5px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px 0 10px 0;
+  float:bottom;
+  max-width: 98%;
+  max-height: 150px;
+  min-height:100px;
+  border-bottom: 2px black solid;
+}
+
+.date-button {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  max-height:70px;
+  max-width: 50px;
+  min-width : 30px;
+  border-radius: 15px;
+}
+.time-picker {
+  display: flex;
+  flex-direction: row;
+  width:100%;
+}
+
+.time-picker-left {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 60vh;
+  width: 50%;
+  float:left;
+}
+
+.time-picker-right {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 600px;
+  width: 50%;
+  float: center;
+  align-items: center;
+}
+
+.time-button {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  width: 90%;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.time-button-selected {
+  background-color: rgba(0, 255, 255, 0.3);
+}
+
+.date-button-selected {
+  background-color: rgba(255, 127, 80, 0.9);
+  color: white;
+}
+
+.date-button div{
+  display:flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+}
+
+.selected-time {
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px;
+  font-size: 1.2rem;
+}
+
+.selected-time span, p{
+  margin: 0 10px;
+  display:inline;
+}
+
+.selected-time p {
+  font-size:0.8rem;
+  float: bottom;
+  padding-top: 5px;
+}
+
+
+
+.time-picker-wheel {
+  overflow: hidden;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.time-picker-item {
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.time-picker-item.selected {
+  opacity: 1;
+}
+
+.record-list {
+  overflow-y: auto;
+  max-height: 70vh; /* Adjust the max-height value as needed */
 }

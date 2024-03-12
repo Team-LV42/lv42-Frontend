@@ -5,7 +5,14 @@ import { RecoilRoot } from 'recoil';
 import Login from './pages/Login.jsx';
 import Auth from './hooks/Auth.jsx'
 import Book from './containers/Book';
+import Nav from './components/nav.jsx';
+import { UserModal } from './components/user/UserModal.jsx';
+import BookModal from './components/BookModal.jsx';
+
+import Index from './pages/index.jsx';
+
 import ErrorBoundary from './components/ErrorBoundary.jsx';
+
 import './App.css';
 
 function App() {
@@ -13,28 +20,18 @@ function App() {
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
       <RecoilRoot>
         <Suspense fallback={<div><p>Loading...</p></div>} >
+          <Nav />
           <Routes>
             <Route path="/test" element={<Book />} />
             <Route path="/callback" element={<Auth />} />
-            <Route index element={<Login />} />
+            <Route index element={<Index />} />
+            <Route path="/user" element={<UserModal />} />
+            <Route path="/book" element={<BookModal />} />
           </Routes>
         </Suspense>
       </RecoilRoot>
     </ErrorBoundary>
   );
 }
-
-
-
-// function App() {
-//   return (
-//     <RecoilRoot>
-//       <Suspense fallback={<div><p>Loading...</p></div>}>
-//         {/* <ConnectionStatus /> */}
-//         <Login />
-//       </Suspense>
-//     </RecoilRoot>
-//   )
-// }
 
 export default App;
