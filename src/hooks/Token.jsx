@@ -4,8 +4,8 @@ import {
 	useRecoilValue,
 	useSetRecoilState,
 } from 'recoil';
-import { Link, useSearchParams } from 'react-router-dom';
-import { setCookie, getCookies } from './Cookie';
+import { useSearchParams } from 'react-router-dom';
+import { useCookie } from './Cookie';
 
 const testUrl = "http://54.180.96.16:4242/auth/login?code=";
 
@@ -16,6 +16,8 @@ export const accessTokenState = atom({
 
 /*rt가 없으면 false, at만 없으면 at재발급*/
 export function CheckToken() {
+	const {getCookies} = useCookie();
+
 	const cookies = getCookies();
 	const refreshToken = cookies.refreshToken;
 
@@ -30,6 +32,8 @@ export function CheckToken() {
 }
 
 function ReissueAccessToken() {
+	const {getCookies} = useCookie();
+
 	const setAccessToken = useSetRecoilState(accessTokenState);
 	const cookies = getCookies();
 	const refreshToken = cookies.refreshToken;
@@ -42,6 +46,8 @@ function ReissueAccessToken() {
 
 /*로그인 쿼리 보내고 쿠키 저장하기*/
 export function LoginTest() {
+	const {setCookie} = useCookie();
+
 	const [params] = useSearchParams();
 	const code = params.get('code');
 	const authRes = useRecoilValue(UserLoginQuery(code));

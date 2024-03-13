@@ -1,5 +1,6 @@
 import { atom, selector } from "recoil";
 import { ConvertDateFormat } from "../hooks/useDate";
+import { useCookie } from "../hooks/Cookie";
 
 /* TypeState<NUMBER> 1:xbox 2:switch 3:ps5 */
 /* default: ps5							   */
@@ -8,15 +9,18 @@ export const consoleTypeState = atom({
 	default: null,
 	effects: [
 		({ setSelf, trigger }) => {
-			if (trigger === 'get')
-				/* cookie.get('type') */
-				setSelf(parseInt('3', 10));
+			const {getCookies} = useCookie();
+			if (trigger === 'get') {
+				const Cookies = getCookies();
+				const type = Cookies.type; 
 
-			/* cookie. */
+				setSelf(parseInt(type, 10));
+			}
 		},
 		({ onSet }) => {
 			onSet(newType => {
-				/* cookie.set('type', newType) */
+				const {setCookie} = useCookie();
+				setCookie("type", newType, 14);
 			});
 		},
 	],
