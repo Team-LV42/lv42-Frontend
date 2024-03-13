@@ -37,6 +37,7 @@ export function Book() {
 			try {
 				if (books.length === 0)
 					setBooks(bookList);
+				console.log(moveDate);
 			} catch (error) {
 				console.error("Error fetching book list", error);
 			}
@@ -47,8 +48,8 @@ export function Book() {
 	}, [bookList, moveDate, setBooks]) //첫 마운트때만 실행하도록 빈 배열 전달?
 
 	useEffect(() => {
-		console.log(books);
-	}, [books]);
+		setBooks(bookList);
+	}, [setMovedDate]);
 	return (
 		<div>
 			<div>
@@ -64,7 +65,12 @@ export function Book() {
 			</div>
 			<ul className='record-list'>
 				{books.map((record) => (
-					consoleType === parseInt(record.type) && <Record record={record} key={record._id} />
+					consoleType === parseInt(record.type) && 
+					<Record
+						record={record}
+						key={record._id}
+						type='book'
+					/>
 				))}
 			</ul>
 		</div>

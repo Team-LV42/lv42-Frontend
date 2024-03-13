@@ -1,12 +1,10 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-
+import { useEffect } from 'react';
 import { 
 	dateState,
 	moveDateState,
 	dateSelector,
-
 	} from "../store/State.jsx";
-import { useCallback } from "react";
 
 export const ConvertDateFormat = (day) => {
 	const year = day.getFullYear();
@@ -28,7 +26,6 @@ export const useDate = () => {
 
 	//해당부분 수정하기 selector 사용??
 	const today = new Date();
-	setS_Date(ConvertDateFormat(today));
 
 	const setDate = (day) => {
 		setS_Date(ConvertDateFormat(day));
@@ -37,6 +34,11 @@ export const useDate = () => {
 	const setMovedDate = (dayCount) => {
 		setMoveDate(dayCount);
 	}
+
+	useEffect(() => {
+		setS_Date(ConvertDateFormat(today));
+	}, []);
+	
 	return { date, move, setDate, moveDate, setMovedDate };
 };
 

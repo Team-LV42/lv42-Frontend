@@ -1,11 +1,21 @@
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
-export default function Record({ record, action }) {
-	const convertTickToTime = (tick) => {
-		const hour = Math.floor(tick / 6);
-		const minute = Math.floor(tick % 6);
-		return (hour < 10 ? '0' + hour : hour) + ':' + ((minute * 10) < 10 ? '0' + (minute * 10) : minute * 10);
-	}
+import { useModal } from '../hooks/useModal.jsx';
+import { fetchBookRecordDelete } from '../api/bookApi.jsx';
+
+export default function Record({ record, type, time, callback, action = false }) {
+	const { openModal, closeModal } = useModal();
+
+	const deleteAction = () => {
+		fetchBookRecordDelete(record._id, record.user_id);
+		closeModal();
+	};
+	
+	const deleteModal = {
+		title: '예약 삭제',
+		content: '진짜 삭제하시겠습니까?',
+		callback: () => deleteAction(),
+	};
 
 	const typeToString = (type) => {
 		switch (type) {
@@ -18,22 +28,45 @@ export default function Record({ record, action }) {
 		}
 	};
 
+	console.log(record);
+
 	return (
 		<li>
-			<a className='record'>
-				<div>
-					<h1>{record.user[0].name}</h1>
-					<p>{typeToString(record.type)}</p>
-					<p>{convertTickToTime(record.start_time)} - {convertTickToTime(record.end_time)}</p>
-					<span>{record.date}</span>
-				</div>
-				{action && (
-				<div>
-					<button><Link to={`/book?type=modify&bookid=${record._id}`}>수정</Link></button>
-					<button><Link to={`/book?type=delete&bookid=${record._id}`}>삭제</Link></button>
-				</div>
+			{type === 'user' && (
+				<a className='record'>
+					<div>{time}</div>
+					<div>
+						<h1>{record.user[0].name}</h1>
+						<p>{typeToString(record.type)}</p>
+						<span>{record.date}</span>
+					</div>
+					{action && (
+						<div>
+							<button onClick={() => openModal(deleteModal)}>삭제</button>
+							{/* <button><Link to={`/book?type=modify&bookid=${record._id}`}>수정</Link></button> */}
+							{/* <button><Link to={`/book?type=delete&bookid=${record._id}`}>삭제</Link></button> */}
+						</div>
+					)}
+				</a>
+			)}
+			{type === 'book' && !record && (
+				<a className='record' value={time} onClick={(event) => callback(event)}>
+					<div>{time}</div>
+					<div>
+						대충  예약안됌
+					</div>
+				</a>
 				)}
-			</a>
+			{type === 'book' && record && (
+				<a className='record' value={time} onClick={(event) => callback(event)}>
+					<div>{time}</div>
+					<div>
+						<h1>{record.user[0].name}</h1>
+						<p>{typeToString(record.type)}</p>
+						<span>{record.date}</span>	
+					</div>
+				</a>
+			)}
 		</li>
 	);
 };

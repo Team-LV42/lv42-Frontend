@@ -1,14 +1,15 @@
 import { atom } from "recoil";
 
-export const userModalState = atom({
-	key: 'userModalState',
-	default: false,
-});
-
 export const modalState = atom({
 	key: 'modalState',
 	default: {
-		action: 'none',
+		title: '', //string
 		content: '', // string | JSX
+		callback: null, //callback => void,
 	},
-})
+});
+
+export const actionState = atom({
+	key: 'actionState',
+	default: false,
+});

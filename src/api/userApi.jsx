@@ -3,8 +3,9 @@ import {
 	selector, 
 	selectorFamily 
 } from 'recoil'
-// import userState from '../store/userState.jsx'
 
+import { dateState } from '../store/State.jsx';
+import { useDate } from '../hooks/useDate.jsx';
 /*
 * user : {
 *	id: STRING,
@@ -28,17 +29,10 @@ export const userState = atomFamily({
 	}),
 });
 
-export const userTestState = atomFamily({
-	key: 'userTestState',
-	default: userID => ({get}) => {
-		return get(UserStateQuery(userID));
-	},
-});
-
 const fetchUserState = async (userID) => {
 	try {
 		/* check id regex needed */
-		const response = await fetch(process.env.REACT_APP_URL + "/user?userid=" + userID, {
+		const response = await fetch(`http://54.180.96.16:4242/users/${userID}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -46,8 +40,6 @@ const fetchUserState = async (userID) => {
 		});
 		if (response.status != 200)
 			throw new Error("userApi: fetch user info failed");
-		if (response.json() === undefined)
-			throw new Error("userApi: fetched data is not json");
 		return response.json();
 	} catch (err) {
 		throw err;
@@ -57,9 +49,9 @@ const fetchUserState = async (userID) => {
 
 export const fetchUserCurrentBook = selectorFamily({
 	key: 'FetchUserCurrentBook',
-	get: (id) => async () => {
+	get: (id) => async ({ get }) => {
 		try {
-			const today = ConvertDateFormat(new Date());
+			const today = get(dateState);
 			const response = await fetch(`http://54.180.96.16:4242/books/${id}/list?date=${today}`, {
 				method: "GET",
 				headers: {
@@ -68,7 +60,7 @@ export const fetchUserCurrentBook = selectorFamily({
 			});
 			if (response.status != 200)
 				throw new Error('failed to fecth user current booking');
-			return response.json();
+			return await response.json();
 		} catch (error) {
 			console.error(error);
 		};
