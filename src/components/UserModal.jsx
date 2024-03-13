@@ -2,41 +2,38 @@ import { useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import UserView from "../UserView";
-import Record from "../Record.jsx";
-import { fetchUserCurrentBook, fetchUserHistory, userState, userTestState } from "../../api/userApi";
-import { booksState } from '../../api/bookApi.jsx';
+import { useDate } from '../hooks/useDate.jsx';
 
-const userModalState = atom({
-	key: 'UserModalState',
-	default: '',
-});
+import UserView from "./UserView";
+import Record from "./Record.jsx";
+import { fetchUserCurrentBook, fetchUserHistory, userState } from "../api/userApi";
+import { booksState } from '../api/bookApi.jsx';
 
-export function UserModal() {
+export default function UserModal() {
 	const [ params ] = useSearchParams();
-	const [uModalState, setUModalState] = useRecoilState(userModalState);
+	const date = useDate();
 	// const userID = params.get('userid'); 
 	// cookie로 대체해야함
 	const userID = 158010;
-	const setBooks = useSetRecoilState(booksState);
+	const [books, setBooks] = useRecoilState(booksState);
 	const searchParams = params.get('search');
+	const targetUser = useRecoilValue(userState(userID));
+	
 	const userHistory = useRecoilValue(fetchUserHistory(userID));
 	const userCurrentBook = useRecoilValue(fetchUserCurrentBook(userID));
-	const targetUser = useRecoilValue(userState(userID))
+
 	const renderActionButton = (params.get('search') === 'book' ? true : false);
 	
 	useEffect(() => {
 		switch (searchParams) {
 			case 'book':
-				setUModalState(userCurrentBook)
+				setBooks(userCurrentBook)
 				break;
 			case 'history':
-				setUModalState(userHistory)
+				setBooks(userHistory)
 				break;
 		}
-		if (uModalState)
-			setBooks(uModalState);
-	}, [searchParams, uModalState]);
+	}, [searchParams, books, setBooks]);
 
 	const passparams = (userID, param) => {
 		if (userID)
@@ -57,8 +54,8 @@ export function UserModal() {
 				<UserView object={targetUser}/>
 				<div className="user modal-content">
 					{/* <UserRecord records={} /> */}
-					{uModalState && uModalState.map((record) => (
-						<Record record={record} key={record._id} action={renderActionButton} />
+					{books && books.map((record) => (
+						<Record record={record} key={record._id} type={'user'} action={renderActionButton} />
 					))}
 				</div>
 			</div>

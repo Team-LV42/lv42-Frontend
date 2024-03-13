@@ -221,3 +221,43 @@ button {
   overflow-y: auto;
   max-height: 70vh; /* Adjust the max-height value as needed */
 }
+
+
+/* ===================================================================
+                                  modal                               
+====================================================================== */
+
+.modal-dimmer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  max-height: 600px;
+  min-width: 300px;
+  min-height: 100px;
+  background-color: #ffffff;
+  border: 1px solid #cbcbcb;
+  border-radius: 10px;
+}
+
+.modal-content {
+  padding: 1rem;
+  border-bottom: 1px solid #cbcbcb;
+}
+
+.modal-action-button {
+  border: 1px solid black;
+  box-shadow: 1px 1px 1px 1px #cbcbcb;
+  border-radius: 5px;
+}
