@@ -12,6 +12,8 @@ export const Index = () => {
 	const navigator = useNavigate();
 	const { isopen, modalDataState, closeModal, } = useModal();
 
+	//useEffect
+
 	// useEffect(() => {
 	// 	switch (params.pathname) {
 	// 		case '/user':
@@ -44,7 +46,7 @@ export const Index = () => {
 		closeModal();
 	};
 
-	console.log(modalDataState)
+	//	console.log(modalDataState)
 
 	return (
 		<>

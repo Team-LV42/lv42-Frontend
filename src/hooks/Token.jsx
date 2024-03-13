@@ -4,6 +4,8 @@ import {
 	useRecoilValue,
 	useSetRecoilState,
 } from 'recoil';
+
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useCookie } from './Cookie';
 
@@ -14,22 +16,55 @@ export const accessTokenState = atom({
 	default: null,
 });
 
-/*rt가 없으면 false, at만 없으면 at재발급*/
-export function CheckToken() {
+export function useToken(){
 	const {getCookies} = useCookie();
-
-	const cookies = getCookies();
-	const refreshToken = cookies.refreshToken;
-
-	console.log("CheckToken-RT = " + refreshToken);
 	const currentAccessToken = useRecoilValue(accessTokenState);
-	console.log("CheckToken-AT = " + currentAccessToken);
-	if (refreshToken === undefined)								//RT가 없으면
-		return false;
-	if (currentAccessToken === null || currentAccessToken === "")// AT가 없거나 null이면
-		ReissueAccessToken();
-	return true;
+	const setAccessToken = useSetRecoilState(accessTokenState);
+	const cookies = getCookies();
+
+	const checkToken = useCallback(() => {
+		const refreshToken = getRefreshToken();
+
+		console.log("CheckToken-RT = " + refreshToken);
+		console.log("CheckToken-AT = " + currentAccessToken);
+		if (refreshToken === undefined)								//RT가 없으면
+			return false;
+		if (currentAccessToken === null || currentAccessToken === "")// AT가 없거나 null이면
+			ReissueAccessToken();
+		return true;
+	}, []);
+
+	const getRefreshToken = useCallback(() => {
+		return cookies.refreshToken;
+	}, []);
+	// const ReissueAccesToken = useCallback(() => {
+	// 	const newAccessToken = useRecoilValue(getAccessTokenSelector);
+	// 	const refreshToken = cookies.refreshToken;
+	// 	const userId = cookies.userId;
+	// 	const getAccessTokenSelector = getAccessToken({userId, refreshToken});
+
+	// 	setAccessToken(newAccessToken.accessToken);	// 새로운 AT로 업데이트
+	// });
+	return {checkToken, getRefreshToken};
 }
+
+
+/*rt가 없으면 false, at만 없으면 at재발급*/
+// export function CheckToken() {
+// 	const {getCookies} = useCookie();
+
+// 	const cookies = getCookies();
+// 	const refreshToken = cookies.refreshToken;
+
+// 	console.log("CheckToken-RT = " + refreshToken);
+// 	const currentAccessToken = useRecoilValue(accessTokenState);
+// 	console.log("CheckToken-AT = " + currentAccessToken);
+// 	if (refreshToken === undefined)								//RT가 없으면
+// 		return false;
+// 	if (currentAccessToken === null || currentAccessToken === "")// AT가 없거나 null이면
+// 		ReissueAccessToken();
+// 	return true;
+// }
 
 function ReissueAccessToken() {
 	const {getCookies} = useCookie();
@@ -53,11 +88,11 @@ export function LoginTest() {
 	const authRes = useRecoilValue(UserLoginQuery(code));
 	const setAccessToken = useSetRecoilState(accessTokenState);
 	setCookie('refreshToken', authRes.refreshToken, 14); // set refresh token cookie
-	setCookie('userId', authRes.userId, 14);
-	console.log("LoginTest-parsedAT! : " + authRes.accessToken);
+	setCookie('userId', authRes.user_id, 14);
+	console.log("LoginTest-user_id! : " + authRes.user_id);
 	setAccessToken(authRes.accessToken);
 	console.log("LoginTest-recoilAT! : " + useRecoilValue(accessTokenState));
-}
+}	
 
 /*login 쿼리 */
 export const UserLoginQuery = selectorFamily({
