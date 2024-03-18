@@ -10,7 +10,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useCookie } from './Cookie';
 import { accessTokenState } from './useToken';
 
-const testUrl = "http://54.180.96.16:4242/auth/login?code=";
+const testUrl = "http://54.180.96.16:4242/auth";
 
 /*로그인 쿼리 보내고 쿠키 저장하기*/
 export function LoginTest() {
@@ -32,7 +32,7 @@ export const UserLoginQuery = selectorFamily({
 	key: 'UserLoginQuery',
 	get: (code) => async () => {
 		try {
-			const response = await fetch(testUrl + code, {
+			const response = await fetch(`/${testUrl}login?code=${code}`, {
 				method: "get",
 				headers: {
 					"Content-Type": "application/json",
@@ -56,11 +56,11 @@ export const getAccessToken = selectorFamily({
 	key: 'getAccessToken',
 	get: ({userId, refreshToken}) => async () => {
 		try {
-			const response = await fetch(testUrl + userId, {
+			const response = await fetch(`/${testUrl}refresh?userId=${userId}`, {
 				method: "get",
 				headers: {
 					"Content-Type": "application/json",
-					"Auth": refreshToken,
+					"authoriztion": refreshToken,
 				},
 			});
 			if (400 <= response.status && response.status <= 599)
