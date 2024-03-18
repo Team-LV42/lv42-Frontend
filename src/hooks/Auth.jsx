@@ -5,7 +5,9 @@ import {
 	useSetRecoilState,
 } from 'recoil';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useToken, LoginTest } from './Token';
+import {LoginTest } from './Logintest';
+import {ReissueAccessToken} from './tokenAction';
+import {useToken} from './useToken';
 
 const Auth = () => {
 	const {checkToken} = useToken();
