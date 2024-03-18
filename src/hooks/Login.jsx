@@ -13,26 +13,29 @@ import { accessTokenState } from './useToken';
 const testUrl = "http://54.180.96.16:4242/auth";
 
 /*로그인 쿼리 보내고 쿠키 저장하기*/
-export function LoginTest() {
-	const {setCookie} = useCookie();
-
+export function Login() {
 	const [params] = useSearchParams();
 	const code = params.get('code');
 	const authRes = useRecoilValue(UserLoginQuery(code));
+	SetTokens(authRes);
+}	
+
+/*반환된 값을 토큰으로 저장*/
+export function SetTokens(authRes){
+	const { setCookie } = useCookie();
+
 	const setAccessToken = useSetRecoilState(accessTokenState);
 	setCookie('refreshToken', authRes.refreshToken, 14); // set refresh token cookie
 	setCookie('userId', authRes.user_id, 14);
-	console.log("LoginTest-user_id! : " + authRes.user_id);
 	setAccessToken(authRes.accessToken);
-	console.log("LoginTest-recoilAT! : " + useRecoilValue(accessTokenState));
-}	
+}
 
 /*login 쿼리 */
 export const UserLoginQuery = selectorFamily({
 	key: 'UserLoginQuery',
 	get: (code) => async () => {
 		try {
-			const response = await fetch(`/${testUrl}login?code=${code}`, {
+			const response = await fetch(`${testUrl}/login?code=${code}`, {
 				method: "get",
 				headers: {
 					"Content-Type": "application/json",
@@ -43,7 +46,6 @@ export const UserLoginQuery = selectorFamily({
 			
 			const responseData = await response.text();
 			const json = responseData ? JSON.parse(responseData) : {};
-			console.log(json);
 			return json;
 		} catch (err) {
 			throw err;
@@ -56,7 +58,7 @@ export const getAccessToken = selectorFamily({
 	key: 'getAccessToken',
 	get: ({userId, refreshToken}) => async () => {
 		try {
-			const response = await fetch(`/${testUrl}refresh?userId=${userId}`, {
+			const response = await fetch(`${testUrl}/refresh?userId=${userId}`, {
 				method: "get",
 				headers: {
 					"Content-Type": "application/json",
@@ -68,7 +70,6 @@ export const getAccessToken = selectorFamily({
 			
 			const responseData = await response.text();
 			const json = responseData ? JSON.parse(responseData) : {};
-			console.log(json);
 			return json;
 		} catch (err) {
 			throw err;
