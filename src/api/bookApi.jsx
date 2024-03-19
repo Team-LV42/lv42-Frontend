@@ -10,19 +10,9 @@ import { consoleTypeState, dateSelector } from "../store/State.jsx";
 const url = "http://54.180.96.16:4242/books";
 
 export const booksState = atom({
-	key:'BooksState',
+	key: 'BooksState',
 	default: [],
 });
-
-// export const bookRecordsSelectorFamily = selectorFamily({
-// 	key: 'BookRecordsSelectorFamily',
-// 	get: (type) => ({get}) => {
-// 		return get(booksState(type));
-// 	},
-// 	set: (type) => ({set}, newRecords) => {
-// 		set((booksState(type)), newRecords);
-// 	}
-// });
 
 export const fetchBookRecordsListQuery = selector({
 	key: 'fetchBookRecordsListQuery',
@@ -66,19 +56,70 @@ export const getRecordByBookID = selectorFamily({
 	},
 });
 
-export const fetchBookRecordDelete = async (bookid, userid) => {
-	const response = await fetch(`${url}?bookId=${bookid}&userId=${userid}`, {
-		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	if (response.status === 404) {
-		console.error("failed to delete record!!!");
-		return false;
+export const deleteBookRecord = async (bookid, userid) => {
+	try {
+		const response = await fetch(`${url}?bookId=${bookid}&userId=${userid}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	
+		if (response.status === 404) {
+			console.error("failed to delete record!!!");
+			return false;
+		}
+		return true;
+	} catch (error) {
+		console.error("deleteBookRecord: Error", error);
 	}
-	return true;
-};	
+};
+
+export const postBookRecord = async (userid, data) => {
+	try {
+		const response = await fetch((`http://54.180.96.16:4242/books?userId=${userid}`), {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				// Token
+			},
+			body: JSON.stringify({
+				"start": data.start,
+				"end"  : data.end,
+				"date" : data.date,
+				"type" : data.consoleType,
+			}),
+		});
+	
+		if (response.status !== 200) {
+			console.error("failed to post record");
+			return ;
+		}
+		return response;
+	} catch (error) {
+		console.error('postBookRecord: Error',error);
+	}
+};
+
+export const patchBookRecord = async (userid, bookid, data) => {
+	try {
+		const response = await fetch(`http://54.180.96.16:4242/books?userId=${userid}&bookId=${bookid}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+				// Token
+			},
+			body: JSON.stringify({
+				"start": data.start,
+				"end"  : data.end,
+				"date" : data.date,
+				"type" : data.consoleType,
+			}),
+		});
+		return response;
+	} catch (error) {
+		console.error("patchBookRecord: Error", error);
+	}
+};
 
 export default fetchBookRecordsListQuery;

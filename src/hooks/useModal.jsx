@@ -18,8 +18,9 @@ export const useModal = () => {
 			callback: callback
 		});
 		setActionStatus(true);
-		console.log(content);
 	}, [setModalDataState, setActionStatus]);
   
 	return { isopen, modalDataState, closeModal, openModal };
 };
+
+export default useModal;

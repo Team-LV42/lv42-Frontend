@@ -3,8 +3,10 @@ import { Route, Routes } from 'react-router-dom'
 import { RecoilRoot } from 'recoil';
 
 import Login from './pages/Login.jsx';
-import Auth from './hooks/Auth.jsx'
+import Header from './components/Header.jsx';
+import Auth from './hooks/Auth.jsx';
 import Book from './containers/Book.jsx';
+import Search from './components/Search.jsx';
 import UserModal from './components/UserModal.jsx';
 import BookModal from './components/BookModal.jsx';
 
@@ -20,12 +22,16 @@ function App() {
       <RecoilRoot>
         <Suspense fallback={<div><p>Loading...</p></div>} >
           <Index />
-          <Routes>
-            <Route path="/test" element={<Book />} />
-            <Route path="/callback" element={<Auth />} />
-            <Route path="/user" element={<UserModal />} />
-            <Route path="/book" element={<BookModal />} />
-          </Routes>
+          <Header />
+          <div className='main'>
+             <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/test" element={<Search />} />
+              <Route path="/callback" element={<Auth />} />
+              <Route path="/user" element={<UserModal />} />
+              <Route path="/book" element={<BookModal />} />
+            </Routes>
+          </div>
         </Suspense>
       </RecoilRoot>
     </ErrorBoundary>

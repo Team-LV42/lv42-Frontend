@@ -6,24 +6,7 @@ import { useCookie } from "../hooks/Cookie";
 /* default: ps5							   */
 export const consoleTypeState = atom({
 	key: 'ConsoleTypeState',
-	default: null,
-	effects: [
-		({ setSelf, trigger }) => {
-			const {getCookies} = useCookie();
-			if (trigger === 'get') {
-				const Cookies = getCookies();
-				const type = Cookies.type; 
-
-				setSelf(parseInt(type, 10));
-			}
-		},
-		({ onSet }) => {
-			onSet(newType => {
-				const {setCookie} = useCookie();
-				setCookie("type", newType, 14);
-			});
-		},
-	],
+	default: 3,
 });
 
 export const dateState = atom({

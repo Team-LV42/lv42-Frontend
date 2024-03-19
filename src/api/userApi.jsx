@@ -5,7 +5,6 @@ import {
 } from 'recoil'
 
 import { dateState } from '../store/State.jsx';
-import { useDate } from '../hooks/useDate.jsx';
 /*
 * user : {
 *	id: STRING,
@@ -23,23 +22,45 @@ export const userState = atomFamily({
 	key: 'userState',
 	default: selectorFamily({
 		key: 'userState/Default',
-		get: userID => () => {
-			return fetchUserState(userID);
+		get: userID => async () => {
+			const response = await fetchUserStateQuery("id", userID);
+			return response;
 		}
 	}),
 });
 
-const fetchUserState = async (userID) => {
+export const getUserInfoById = async (userID) => {
 	try {
 		/* check id regex needed */
-		const response = await fetch(`http://54.180.96.16:4242/users/${userID}`, {
+		const response = await fetchUserStateQuery("id", userID);
+		console.log(response);
+		return response;
+	} catch (err) {
+		throw err;
+	};
+}
+
+export const getUserInfoByName = async (userName) => {
+	try {
+		/* check id regex needed */
+		const response = await fetchUserStateQuery("name", userName);
+		return response;
+	} catch (err) {
+		throw err;
+	};
+}
+
+const fetchUserStateQuery = async (param, search) => {
+	try {
+		/* check id regex needed */
+		const response = await fetch(`http://54.180.96.16:4242/users?${param}=${search}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 			},
 		});
-		if (response.status != 200)
-			throw new Error("userApi: fetch user info failed");
+		if (response.status !== 200)
+			throw new Error("fetchUserStateQuery : fetching path is invaild");
 		return response.json();
 	} catch (err) {
 		throw err;
@@ -58,7 +79,7 @@ export const fetchUserCurrentBook = selectorFamily({
 					"Content-Type": "appication/json",
 				},
 			});
-			if (response.status != 200)
+			if (response.status !== 200)
 				throw new Error('failed to fecth user current booking');
 			return await response.json();
 		} catch (error) {
@@ -78,38 +99,13 @@ export const fetchUserHistory = selectorFamily ({
 					"Content-Type": "appication/json",
 				},
 			});
-			if (response.status != 200)
+			if (response.status !== 200)
 				throw new Error('failed to fecth user current booking');
 			return response.json();
 		} catch (error) {
 			console.error(error);
 		}
 	},
-});
-
-// fetching User Info by Id
-export const fetchUserStateQuery = selectorFamily({
-	key: 'FetchUserStateQuery',
-	get: (id) => async () => {
-		try {
-			/* check id regex needed */
-			/* process.env.REACT_APP_URL */
-			const response = await fetch("http://54.180.96.16:4242/users/" + id, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			if (response.status != 200)
-				throw new Error("userApi: fetch user info failed");
-			return response.json();
-		} catch (err) {
-			console.error(err);
-		}
-	},
-	set: ({set}, value) => {
-		set(userState, value)
-	}
 });
 
 export const UserlistStateQuery = selector({
@@ -123,7 +119,7 @@ export const UserlistStateQuery = selector({
 					/* Token */
 				},
 			});
-			if (response != 200)
+			if (response !== 200)
 				throw new Error("failed to fetch Users Data");
 		} catch (err) {
 			throw err;

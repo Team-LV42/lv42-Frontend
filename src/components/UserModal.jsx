@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { Suspense } from "react";
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { useDate } from '../hooks/useDate.jsx';
@@ -9,31 +8,33 @@ import Record from "./Record.jsx";
 import { fetchUserCurrentBook, fetchUserHistory, userState } from "../api/userApi";
 import { booksState } from '../api/bookApi.jsx';
 
+const userPageState = atom({
+	key: 'UserPageState',
+	default: 'status',
+});
+
 export default function UserModal() {
-	const [ params ] = useSearchParams();
-	const date = useDate();
-	// const userID = params.get('userid'); 
 	// cookie로 대체해야함
 	const userID = 158010;
+	const date = useDate();
 	const [books, setBooks] = useRecoilState(booksState);
-	const searchParams = params.get('search');
 	const targetUser = useRecoilValue(userState(userID));
-	
+
 	const userHistory = useRecoilValue(fetchUserHistory(userID));
 	const userCurrentBook = useRecoilValue(fetchUserCurrentBook(userID));
+	const [pageStatus, setPageStatus] = useRecoilState(userPageState);
 
-	const renderActionButton = (params.get('search') === 'book' ? true : false);
-	
-	useEffect(() => {
-		switch (searchParams) {
-			case 'book':
-				setBooks(userCurrentBook)
-				break;
-			case 'history':
-				setBooks(userHistory)
-				break;
+	const isDeletable = (pageStatus === 'status' ? true : false);
+
+	const onClickTab = () => {
+		if (pageStatus === 'status') {
+			setPageStatus('history');
+			setBooks(userHistory);
+		} else {
+			setPageStatus('status');
+			setBooks(userCurrentBook);
 		}
-	}, [searchParams, books, setBooks]);
+	};
 
 	const passparams = (userID, param) => {
 		if (userID)
@@ -43,22 +44,51 @@ export default function UserModal() {
 	return (
 		<>
 			{/* side nav bar */}
-			<nav>
-				<ul>
-					{/* 둘중 하나만 누르도록 바꿔야함 */}
-					<li><Link to={passparams(userID, 'book')}>예약 현황</Link></li>
-					<li><Link to={passparams(userID, 'history')}>예약 기록</Link></li>
-				</ul>
-			</nav>
-			<div className="record-list">
-				<UserView object={targetUser}/>
-				<div className="user modal-content">
-					{/* <UserRecord records={} /> */}
-					{books && books.map((record) => (
-						<Record record={record} key={record._id} type={'user'} action={renderActionButton} />
-					))}
+			<Suspense fallback="Loading...</p>" >
+				<div className="content" id="user-content">
+					<div className="user">
+						{targetUser && (
+							<>
+							<div className="user-img-box">
+								<div className="user-img">
+									<img className="user-img" src={targetUser.profile_img} />
+								</div>
+							</div>
+							<div className="user-info">
+								<div className="user-name"><p>{targetUser.name}</p></div>
+								<div className="user-playtime"><p>80h</p></div>
+								<div className="user-status user-status-type-3"><p>Nintendo</p></div>
+							</div>
+							</>
+						)}
+						{!targetUser && (
+						<>
+							<div className="user-img-box">
+								<div className="user-img">
+									<img />
+								</div>
+							</div>
+							<div className="user-info">
+								<div className="user-name"><p></p></div>
+								<div className="user-playtime"><p></p></div>
+								<div className="user-status user-status-type-3"><p></p></div>
+							</div>
+						</>
+						)}
+					</div>
 				</div>
-			</div>
+				<div className="wrapper">
+					<div className="tabs">
+						<span className="tab" id="status-tab" onClick={() => onClickTab()}><p>예약현황</p></span>
+						<span className="tab" id="history-tab" onClick={() => onClickTab()}><p>예약기록</p></span>
+					</div>
+					<div className="slot-list-active" id={`${pageStatus}-slot-list`}>
+						{books && books.map((record) => (
+							<Record record={record} key={record._id} type={'user'} isDeletable={isDeletable} />
+						))}
+					</div>
+				</div>
+			</Suspense>
 		</>
 	)
 }

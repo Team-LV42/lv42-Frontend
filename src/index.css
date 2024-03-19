@@ -1,263 +1,154 @@
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* 방지용 */
-  background: linear-gradient(to bottom right, rgb(192, 216, 240), #5aace2d1); /* 그라디언트 배경 설정 */
-  height: 100vh; /* 화면 전체 높이로 설정 */
-  overflow: hidden;
-  justify-content: center;
-  align-items: flex-end;
-}
+@import "./styles/reset.css";
+@import "./styles/common.css";
+@import "./styles/user.css";
 
 #root {
-  height: 90vh;
-  max-width: 540px; /* 모바일 화면과 같은 넓이로 설정, 원하는 값으로 변경 가능 */
-  margin: 0 auto;
-  background-color: white;
-  padding: 5vw;
-  box-sizing: border-box;
-  margin-left:4vw;
-  margin-right:4vw;
+	height: 100%;
 }
 
-@media (min-width: 375px) {
-  /* iPhone 6/7/8 크기 이상의 모바일 화면에서는 더 큰 가로 마진을 주기 위한 스타일 */
-  .adaptive-container {
-      margin-left: 4vw;
-      margin-right: 4vw;
-      margin-top: 2vw;
-  }
-  #root {
-    padding-bottom:5vh;
-  }
-  .time-picker {
-    max-height: 50vh;
-  }
+/* header */
+#menu {
+	justify-content: right;
+	align-items: center;
+}
+#search {
+	visibility: hidden;
+	justify-content: left;
+	align-items: center;
 }
 
-@media (min-width: 768px) {
-  /* 태블릿 화면 이상에서는 더 큰 가로 마진을 주기 위한 스타일 */
-  .adaptive-container {
-      margin-left: 8vw;
-      margin-right: 8vw;
-  }
-  .time-picker {
-    max-height: 60vh;
-  }
+/* main content */
+#main-content {
+	flex-direction: column;
+	padding-bottom: 10px;
+	border: 1px solid black;
 }
 
-@media (min-width: 601px) {
-  /* 데스크탑 화면 스타일 */
-  #root {
-      border-radius: 10px; /* 둥근 테두리 설정, 원하는 값으로 변경 가능 */
-      max-width: 800px;
-      margin: 5% auto;
-  }
+/* tab */
+#main-content .tab {
+	max-width: 33.3333333333%;
+}
+#main-content .tab-active {
+	max-width: 33.3333333333%;
+}
+.tabs #xbox-tab {
+	border-top-left-radius: 10px;
+	border-right: 1px solid black;
+	background-color: #00C83B;
+}
+.tabs #nintendo-tab {
+	background-color: #EA2A36;
+}
+.tabs #ps5-tab {
+	border-top-right-radius: 10px;
+	border-left: 1px solid black;
+	background-color: #527FD8;
 }
 
-@media (hover: hover) {
-  .time-button:hover {
-    background-color: #f5f5f5;
-  }
-
-  .date-button:hover {
-    background-color: #f5f5f5;
-  }
+/* selected slot */
+.selected-xbox .slot-value{
+	font-family: "Bowlby One", sans-serif;
 }
-
-
-
-/* ------------------ */
-button {
-  -webkit-tap-highlight-color: transparent !important;
-  background: transparent;
-  border: 0;
+.selected-nintendo .slot-value{
+	font-family: "Bowlby One", sans-serif;
 }
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f5f5f5;
+.selected-ps5 .slot-value{
+	font-family: "Bowlby One", sans-serif;
 }
-
-.date-picker {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fff;
-  padding: 20px;
-  min-height: 150px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+.selected-xbox {
+	color : white;
+	background-color: #00C83B;
 }
-
-.submit-container {
-  padding : 5px;
-  border-bottom: 2px black solid;
-  border-radius: 5px;
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
+.selected-nintendo {
+	color : white;
+	background-color: #EA2A36;
 }
-
-.scroll-container {
-  display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding: 10px 0 10px 0;
-  float:bottom;
-  max-width: 98%;
-  max-height: 150px;
-  min-height:100px;
-  border-bottom: 2px black solid;
-}
-
-.date-button {
-  margin: 5px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  max-height:70px;
-  max-width: 50px;
-  min-width : 30px;
-  border-radius: 15px;
-}
-.time-picker {
-  display: flex;
-  flex-direction: row;
-  width:100%;
-}
-
-.time-picker-left {
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  max-height: 60vh;
-  width: 50%;
-  float:left;
-}
-
-.time-picker-right {
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  max-height: 600px;
-  width: 50%;
-  float: center;
-  align-items: center;
-}
-
-.time-button {
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  width: 90%;
-  text-align: center;
-  border-radius: 5px;
-}
-
-.time-button-selected {
-  background-color: rgba(0, 255, 255, 0.3);
-}
-
-.date-button-selected {
-  background-color: rgba(255, 127, 80, 0.9);
-  color: white;
-}
-
-.date-button div{
-  display:flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  flex-direction: column;
-}
-
-.selected-time {
-  display: flex;
-  flex-direction:row;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
-  margin: 5px;
-  font-size: 1.2rem;
-}
-
-.selected-time span, p{
-  margin: 0 10px;
-  display:inline;
-}
-
-.selected-time p {
-  font-size:0.8rem;
-  float: bottom;
-  padding-top: 5px;
+.selected-ps5 {
+	color : white;
+	background-color: #527FD8;
 }
 
 
-
-.time-picker-wheel {
-  overflow: hidden;
-  height: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* sub content */
+.sub-content-wrapper {
+	border: 1px solid black;
+    border-radius: 10px;
+	margin-top: 6vw;
+	width: 80%;
+	height: 91px;
 }
-
-.time-picker-item {
-  opacity: 0.5;
-  transition: opacity 0.3s;
+.sub-content-wrapper a {
+	border-radius: inherit;
+	display: block;
+	width: 100%;
+	height: 100%;
 }
-
-.time-picker-item.selected {
-  opacity: 1;
+.sub-content {
+	border-radius: 10px;
+    background-color: #ffffff;
+	filter:none;
+    width: 100%;
+	height: 100%;
+	box-shadow: inset 0px -4px rgba(0, 0, 0, 0.1);
 }
-
-.record-list {
-  overflow-y: auto;
-  max-height: 70vh; /* Adjust the max-height value as needed */
+.sub-content .section {
+	height: 50%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 }
-
-
-/* ===================================================================
-                                  modal                               
-====================================================================== */
-
-.modal-dimmer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.sub-content .time-wrap {
+	width: 80%;
+	height: 100%;
+	font-size: 26px;
+	font-weight: bold;
+	font-family: "Bowlby One", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items:end;
 }
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  max-width: 800px;
-  max-height: 600px;
-  min-width: 300px;
-  min-height: 100px;
-  background-color: #ffffff;
-  border: 1px solid #cbcbcb;
-  border-radius: 10px;
+.sub-content .comment-wrap {
+	width: 80%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	padding-top	: 5px;
+	align-items: start;
+	font-family: 'Wemakeprice-Regular';
+	font-size: 17px;
 }
-
-.modal-content {
-  padding: 1rem;
-  border-bottom: 1px solid #cbcbcb;
+.sub-content-wrapper .finished-xbox {
+	background-color: #00C83B;
 }
-
-.modal-action-button {
-  border: 1px solid black;
-  box-shadow: 1px 1px 1px 1px #cbcbcb;
-  border-radius: 5px;
+.sub-content-wrapper .finished-nintendo {
+	background-color: #EA2A36;
+}
+.sub-content-wrapper .finished-ps5 {
+	background-color: #527FD8;
+}
+@media (min-width : 390px) {
+	.sub-content-wrapper {
+		width: 312px;
+	}
+}
+.finished-xbox {
+	color: white;
+	background-color: #036e24;
+}
+.finished-nintendo {
+	color: white;
+	background-color: #901921;
+}
+.finished-ps5 {
+	color: white;
+	background-color: #2f497e;
+}
+.finished-nintendo .time-wrap {
+	color: black;
+}
+.finished-xbox .time-wrap {
+	color: black;
+}
+.finished-ps5 .time-wrap {
+	color: black;
 }
