@@ -10,6 +10,7 @@ export const Index = () => {
 	const { isopen, modalDataState, closeModal, } = useModal();
 	const { isSideBarOpen, onClickMenu } = useSideMenu();
 
+
 	const onClickDimmer = () => {
 		closeModal();
 	};

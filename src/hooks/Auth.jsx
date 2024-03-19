@@ -5,13 +5,16 @@ import {
 	useSetRecoilState,
 } from 'recoil';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CheckToken, LoginTest } from './Token';
+import {Login } from './Login';
+import {ReissueAccessToken} from './tokenAction';
+import {useToken} from './useToken';
 
 const Auth = () => {
-	const loginState = CheckToken()
+	const {checkToken} = useToken();
+	const loginState = checkToken();
 	console.log(loginState);
 	if (loginState === false)		//rt가 없으면
-		LoginTest();				//로그인 쿼리 보내고 쿠키 저장, 함수 이름 바꿀 예정
+		Login();				//로그인 쿼리 보내고 쿠키 저장, 함수 이름 바꿀 예정
 	return (
 		<div>
 			<button>	
