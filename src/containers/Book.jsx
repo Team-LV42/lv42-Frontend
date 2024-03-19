@@ -68,8 +68,10 @@ export function Book() {
 					consoleType === parseInt(record.type) && 
 					<Record
 						record={record}
+						time={record.start_time}
 						key={record._id}
-						type='book'
+						isDeletable={true}
+						type='admin'
 					/>
 				))}
 			</ul>

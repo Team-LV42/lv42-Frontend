@@ -3,6 +3,7 @@ import { atom } from "recoil";
 export const modalState = atom({
 	key: 'modalState',
 	default: {
+		action: 'normal',
 		title: '', //string
 		content: '', // string | JSX
 		callback: null, //callback => void,
