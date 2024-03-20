@@ -5,7 +5,7 @@ import {
 	useRecoilValue,
 	useSetRecoilState,
 } from 'recoil';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import { getAccessToken, Login, UserLoginQuery } from './Login';
@@ -38,6 +38,7 @@ const Auth = () => {
 	const [ params ] = useSearchParams(); 
 	const setIsLoggedIn = useSetRecoilState(isLoggedInState);
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const setUser = useSetRecoilState(userState);
 	const regenAccessToken = useRecoilValue(accessTokenSelector);
@@ -68,10 +69,17 @@ const Auth = () => {
 					setIsLoggedIn(true);
 					SetUserInfo(token.userid);
 				}
-
-			navigate(-1);
+			
+			if (location.state) {
+				console.log(location.state);
+				console.log('navigate to back');
+				navigate(-1);
+			} else {
+				console.log('navigate to index')
+				navigate('/');
+			}
 		}
-	}, [params, token, regenAccessToken, login]);
+	}, [params, token, regenAccessToken, login, setIsLoggedIn, navigate, location.state, setUser]);
 
 }
 
