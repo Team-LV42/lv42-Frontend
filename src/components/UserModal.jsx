@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useParams } from 'react-router-dom';
 
 import { useDate } from '../hooks/useDate.jsx';
 
-import UserView from "./UserView";
 import Record from "./Record.jsx";
-import { fetchUserCurrentBook, fetchUserHistory, userState } from "../api/userApi";
+import { fetchUserCurrentBook, fetchUserHistory, usersState, userState } from "../api/userApi";
 import { booksState } from '../api/bookApi.jsx';
 
 const userPageState = atom({
@@ -13,12 +13,18 @@ const userPageState = atom({
 	default: 'status',
 });
 
-export default function UserModal() {
-	// cookie로 대체해야함
-	const userID = 158010;
+
+export default function UserModal({ match }) {
 	const date = useDate();
+	const user = useRecoilValue(userState);
+	const { id } = useParams();
+	const userID = id ? id : user.id;
 	const [books, setBooks] = useRecoilState(booksState);
-	const targetUser = useRecoilValue(userState(userID));
+
+	if (userID === 0)
+		console.error('no login & path');
+	//specific user search 같을 때 조건으로 처리해서 두번 호출하지않게 수정하기
+	const targetUser = useRecoilValue(usersState(userID));
 
 	const userHistory = useRecoilValue(fetchUserHistory(userID));
 	const userCurrentBook = useRecoilValue(fetchUserCurrentBook(userID));
@@ -35,12 +41,7 @@ export default function UserModal() {
 			setBooks(userCurrentBook);
 		}
 	};
-
-	const passparams = (userID, param) => {
-		if (userID)
-			return (`?search=${param}`);
-		return (`?param`);
-	}
+	
 	return (
 		<>
 			{/* side nav bar */}

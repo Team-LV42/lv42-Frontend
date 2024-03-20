@@ -1,4 +1,5 @@
-import { 
+import {
+	atom,
 	atomFamily,
 	selector, 
 	selectorFamily 
@@ -18,10 +19,20 @@ import { dateState } from '../store/State.jsx';
 // const userId = cookie.get('userid');
 // const userId = '';
 
-export const userState = atomFamily({
-	key: 'userState',
+export const userState = atom({
+	key: 'UserState',
+	default: {
+		id: 0,
+		name: '',
+		profile_img: '',
+	},
+});
+
+//특정 유저의 정보를 한번 가져온 경우 들고있음
+export const usersState = atomFamily({
+	key: 'UsersState',
 	default: selectorFamily({
-		key: 'userState/Default',
+		key: 'UsersState/Default',
 		get: userID => async () => {
 			const response = await fetchUserStateQuery("id", userID);
 			return response;
@@ -29,11 +40,11 @@ export const userState = atomFamily({
 	}),
 });
 
+//특정한 사용자 검색을 위한 api
 export const getUserInfoById = async (userID) => {
 	try {
 		/* check id regex needed */
 		const response = await fetchUserStateQuery("id", userID);
-		console.log(response);
 		return response;
 	} catch (err) {
 		throw err;
@@ -92,7 +103,7 @@ export const fetchUserHistory = selectorFamily ({
 	key: 'FetchUserHistory',
 	get : (id) => async () => {
 		try {
-			const response = await fetch(`http://54.180.96.16:4242/books/${id}/history?`, {
+			const response = await fetch(`http://54.180.96.16:4242/books/${id}/history`, {
 
 				method: "GET",
 				headers: {

@@ -4,8 +4,16 @@ import { atom, useRecoilValue, useRecoilState } from 'recoil';
 
 import useDate from '../hooks/useDate.jsx';
 import useModal from '../hooks/useModal.jsx';
-import { booksState, fetchBookRecordsListQuery, patchBookRecord, postBookRecord } from '../api/bookApi.jsx';
+import {
+	booksState,
+	fetchBookRecordsListQuery,
+	patchBookRecord,
+	postBookRecord
+} from '../api/bookApi.jsx';
+import { userState } from '../api/userApi';
 import { consoleTypeState } from '../store/State.jsx';
+import { reservationModal, failedReservationModal } from '../store/Modal';
+
 import Record from './Record';
 
 export const selectState = atom({
@@ -20,13 +28,24 @@ const Book = ({bookid}) => {
 	const [selects, setSelects] = useRecoilState(selectState);
 	const [books, setBooks] = useRecoilState(booksState);
 	const [consoleType, setConsoleType] = useRecoilState(consoleTypeState);
+	const user = useRecoilValue(userState);
 
 	const { openModal, closeModal } = useModal();
 	const date = useDate();
 
-	const userID = 158010;
+	const userID = user.id;
 	const bookList = useRecoilValue(fetchBookRecordsListQuery);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const eventSource = newEventSource(`http://54.180.96.16:4242/sse/subscribe?userId=${userID}`);
+
+		eventSource.onmessage = (event) => {
+			const newRecord = JSON.parse(event);
+			
+
+		}
+	}, [])
 
 	useEffect(() => {
 		if (books.length === 0)
@@ -81,7 +100,6 @@ const Book = ({bookid}) => {
 				}
 			}
 		}
-
 		addSelect(time);
 	};
 
@@ -132,11 +150,7 @@ const Book = ({bookid}) => {
 		});
 	};
 
-	const reservationModal = {
-		title: getSelectedTime(),
-		content: '예약하시겠습니까?',
-		callback: (e) => submitBookForm(e),
-	};
+
 
 	const getTypeIDtag = (consoleType) => {
 		switch (consoleType) {
@@ -166,13 +180,9 @@ const Book = ({bookid}) => {
 
 	const onClickReservation = () => {
 		if (selects.s !== -1)
-			openModal(reservationModal);
+			openModal(reservationModal(getSelectedTime, submitBookForm));
 		else
-			openModal({
-				title: '예약 실패',
-				content: '예약할 시간을 선택해주세요',
-				callback: () => closeModal(),
-			});
+			openModal(failedReservationModal(closeModal));
 	}
 
 	async function submitBookForm(e) {
@@ -188,9 +198,7 @@ const Book = ({bookid}) => {
 			} else {
 				response = await postBookRecord(userID, data);
 			}
-	
-			console.log(response);
-			console.log("success to post data");
+
 			closeModal();
 			navigate(0);
 		} catch (error) {
@@ -219,7 +227,7 @@ const Book = ({bookid}) => {
 								e.preventDefault();
 								onClickRecord(i);
 							}}
-							isDeletable={book.length !== 0 && userID === parseInt(book[0].user_id)}
+							isDeletable={book.length !== 0 && userID === book[0].user_id}
 							isSelected={checkSelects(i)}
 							type='book'
 						/>

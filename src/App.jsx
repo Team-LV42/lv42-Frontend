@@ -28,8 +28,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/test" element={<Search />} />
               <Route path="/callback" element={<Auth />} />
+              <Route path="/user/:id" element={<UserModal />} />
               <Route path="/user" element={<UserModal />} />
-              <Route path="/book" element={<BookModal />} />
+              <Route path="/" index element={<BookModal />} />
             </Routes>
           </div>
         </Suspense>
