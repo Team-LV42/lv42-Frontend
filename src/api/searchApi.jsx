@@ -1,6 +1,6 @@
 
 
-const testUrl = "http://52.79.233.180:4242/users";
+const testUrl = "http://54.180.96.16:4242/users";
 
 export const searchUserByPattern = async (pattern) => {
 	try {
