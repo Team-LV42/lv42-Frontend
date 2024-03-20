@@ -14,7 +14,6 @@ export function useToken() {
     const [ at, setat ] = useRecoilState(accessTokenState);
     const rt = cookies.refreshToken;
     const userid = cookies.userId;
-    // const authRes = useRecoilValue(getAccessToken({userId: cookies.userId, refreshToken: cookies.refreshToken}));
 
     const refreshToken = () => {
 		  return rt ? rt : null;

@@ -43,7 +43,19 @@ const Book = ({bookid}) => {
 		eventSource.onmessage = (event) => {
 			const newRecord = JSON.parse(event);
 
+			if (newRecord.action	 === 'DUMMY') return ;
+			const prevConsoleType = consoleType;
+			if (consoleType !== newRecord.type) setConsoleType(newRecord.type);
+			if (newRecord.action === 'DELETE') {
+				setBooks(books.filter((book) => book.id !== newRecord.id));
+			} else if (newRecord.action === 'add') {
+				setBooks([...books, newRecord[0]]);
+			}
+			setConsoleType(prevConsoleType);
+		};
 
+		return () => {
+			eventSource.close();
 		}
 	}, [])
 
