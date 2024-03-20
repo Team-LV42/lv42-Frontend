@@ -38,11 +38,11 @@ const Book = ({bookid}) => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const eventSource = newEventSource(`http://54.180.96.16:4242/sse/subscribe?userId=${userID}`);
+		const eventSource = new EventSource(`http://54.180.96.16:4242/sse/subscribe?userId=${userID}`);
 
 		eventSource.onmessage = (event) => {
 			const newRecord = JSON.parse(event);
-			
+
 
 		}
 	}, [])

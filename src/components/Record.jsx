@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import { consoleTypeState } from '../store/State.jsx';
+import { deleteModal } from '../store/Modal.jsx';
 import { useModal } from '../hooks/useModal.jsx';
 import { deleteBookRecord } from '../api/bookApi.jsx';
 
@@ -11,7 +12,7 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 	const navigate = useNavigate()
 
 	const getDuration = (start, end) => {
-		const hour = (end - start) / 2;
+		const hour = (end + 1 - start) / 2;
 		return (`${hour}h`);
 	};
 
@@ -28,12 +29,6 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 		await deleteBookRecord(record._id, record.user_id);
 		closeModal();
 		navigate(0);
-	};
-	
-	const deleteModal = {
-		title: getDuration(record.start_time, record.end_time),
-		content: '취소하시겠습니까?',
-		callback: () => deleteAction(),
 	};
 
 	const typeToString = (type, flag) => {
@@ -96,7 +91,7 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 					value={time}
 					onClick={(event) => {
 						event.preventDefault();
-						(isDeletable && openModal(deleteModal))
+						(isDeletable && openModal(deleteModal(record, getDuration, deleteAction)))
 					}}
 					type='reserve'
 					// onClick="showModal('reservationModal')"
