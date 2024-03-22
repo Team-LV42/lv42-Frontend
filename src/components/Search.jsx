@@ -19,18 +19,15 @@ const SearchResult = (props) => {
 	const user = props.result.split(":");
     return (
         <Link to={`/user/${user[1]}`} style={{ width: '100%' }}>
-            <div className="css-89wdbn" onClick={() => setInput(user[0])}>
-                <div className="css-1bvnv1j" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                    <div style={{ position: 'relative' }}>
-                        <img src="https://cdn.intra.42.fr/users/3377bda71cadad65d0706702d04b14b7/minjacho.jpg" alt="minjacho 사진" className="css-rzm9qd" style={{ width: '2rem', height: '2rem' }} />
-                    </div>  
-                    <p className="css-1la63b2">{user[0]}</p>
-                    <div className="css-yp9swi"></div>
+            <div onClick={() => setInput(user[0])}>
+                <div  style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                    <p >{user[0]}</p>
                 </div>
             </div>
         </Link>
     );
 };
+
 
 
 const Search = () => {
