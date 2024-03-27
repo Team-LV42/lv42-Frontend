@@ -9,7 +9,7 @@ const accessTokenState = atom({
 });
 
 export function useToken() {
-    const { getCookies, setCookie } = Cookie();
+    const { getCookies, setCookie, removeCookie } = Cookie();
     const cookies = getCookies();
     const [ at, setat ] = useRecoilState(accessTokenState);
     const rt = cookies.refreshToken;
@@ -32,7 +32,12 @@ export function useToken() {
       setat(accessToken);
     }
 
-    return { refreshToken, accessToken, setRefreshToken, setAccessToken, userid };
+    const logout = () => {
+      removeCookie('refreshToken');
+      removeCookie('userId');
+    }
+
+    return { refreshToken, accessToken, setRefreshToken, setAccessToken, userid, logout };
 }
 
 export default useToken;
