@@ -1,11 +1,19 @@
 import { useEffect, Suspense } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { atom, useRecoilValue, useRecoilState } from 'recoil';
+import { atom, useRecoilValue, useRecoilState, useRecoilCallback } from 'recoil';
 
 import useDate from '../hooks/useDate.jsx';
 import useModal from '../hooks/useModal.jsx';
-import { booksState, fetchBookRecordsListQuery, patchBookRecord, postBookRecord } from '../api/bookApi.jsx';
+import {
+	booksState,
+	fetchBookRecordsListQuery,
+	patchBookRecord,
+	postBookRecord
+} from '../api/bookApi.jsx';
+import { userState } from '../api/userApi';
 import { consoleTypeState } from '../store/State.jsx';
+import { reservationModal, failedReservationModal } from '../store/Modal';
+
 import Record from './Record';
 
 export const selectState = atom({
@@ -20,30 +28,82 @@ const Book = ({bookid}) => {
 	const [selects, setSelects] = useRecoilState(selectState);
 	const [books, setBooks] = useRecoilState(booksState);
 	const [consoleType, setConsoleType] = useRecoilState(consoleTypeState);
+	const user = useRecoilValue(userState);
 
 	const { openModal, closeModal } = useModal();
-	const date = useDate();
+	const { date, tickToTime, timeToTick } = useDate();
 
-	const userID = 158010;
+	const userID = user.id;
 	const bookList = useRecoilValue(fetchBookRecordsListQuery);
 	const navigate = useNavigate();
+
+	const updateAddBook = useRecoilCallback(({ set }) => (newRecord) => {
+		set(booksState, (prevBooks) => [...prevBooks, newRecord]);
+	}, [booksState]);
+
+	const updateDelBook = useRecoilCallback(({ set }) => (newRecord) => {
+		set(booksState, (prevBooks) => prevBooks.filter((book) => book.id !== newRecord._id));
+	}, [booksState]);
+
+	useEffect(() => {
+		const eventSource = new EventSource(`http://54.180.96.16:4242/sse/subscribe?userId=${userID}`, {
+			withCredentials: false,
+		});
+
+		eventSource.addEventListener('ADD', (event) => {
+			const newRecord = JSON.parse(event.data);
+			const prevType = consoleType;
+			if (!newRecord) return ;
+
+			if (consoleType !== newRecord.type) {
+				console.log(newRecord.type);
+				setConsoleType(newRecord.type);
+			}
+			
+			// updateAddBook(newRecord);
+			setBooks(prevBooks => [...prevBooks, newRecord]);
+			setConsoleType(prevType);
+		});
+
+		eventSource.addEventListener('DEL', (event) => {
+			const newRecord = JSON.parse(event.data);
+			const prevType = consoleType;
+			if (!newRecord) return ;
+			
+			if (consoleType !== newRecord.type)
+				setConsoleType(newRecord.type);
+			// updateDelBook(newRecord);
+			setBooks(prevBooks => prevBooks.filter((book) => book.id !== newRecord._id));
+			setConsoleType(prevType);
+		});
+
+		eventSource.onerror = (error) => {
+			console.error( error);
+		}
+
+		return () => {
+			eventSource.close();
+			console.log('eventSource is closed');
+		}
+	}, [userID]);
+
+	useEffect(() => {
+		console.log('updated books', books);
+	}, [books])
 
 	useEffect(() => {
 		if (books.length === 0)
 			setBooks(bookList);
 	}, [bookList, setBooks]);
 
+	// 다른타입으로 변경된 경우 해당 타입의 데이터로 갈아끼움
 	useEffect(() => {
 		setBooks(bookList);
+		// updateBook(bookList);
 		setSelects({s: -1, e: -1});
 	}, [setBooks, setSelects, consoleType, setConsoleType]);
 
 	//date 훅에 넣기?
-	const timeToTick = (tick) => {
-		const hour = Math.floor(tick / 2);
-		const minute = Math.floor(tick % 2 * 30);
-		return (hour < 10 ? '0' + hour : hour) + ':' + ((minute) < 10 ? '00': minute);
-	};
 	
 	const onClickRecord = (time) => {
 		const addSelect = (time) => {
@@ -81,7 +141,6 @@ const Book = ({bookid}) => {
 				}
 			}
 		}
-
 		addSelect(time);
 	};
 
@@ -99,19 +158,7 @@ const Book = ({bookid}) => {
 		return books.filter((book) => (book.start_time <= time && time <= book.end_time));
 	}
 
-	const getSelectedTime = () => {
-		if (selects.s === -1)
-			return '~';
-		if (selects.e === -1) {
-			return `${timeToTick(selects.s)}~${timeToTick(selects.s + 1)}`;
-		}
-		const start = (selects.s > selects.e) ? selects.e : selects.s;;
-		const end = (selects.s > selects.e) ? selects.s : selects.e;
-		return `${timeToTick(start)}~${timeToTick(end + 1)}`;
-	};
-
 	const setData = (selects) => {
-		// const userID = cookie.get('userid');
 		if (selects.s === -1) {
 			console.error('no selected time');
 			return ;
@@ -120,35 +167,16 @@ const Book = ({bookid}) => {
 			return ({
 				start: selects.s,
 				end: selects.s,
-				date: date.date,
+				date: date,
 				consoleType: consoleType,
 			})
 		}
 		return ({
 			start: (selects.s > selects.e) ? selects.e : selects.s,
 			end: (selects.s > selects.e) ? selects.s : selects.e,
-			date: date.date,
+			date: date,
 			consoleType: consoleType,
 		});
-	};
-
-	const reservationModal = {
-		title: getSelectedTime(),
-		content: '예약하시겠습니까?',
-		callback: (e) => submitBookForm(e),
-	};
-
-	const getTypeIDtag = (consoleType) => {
-		switch (consoleType) {
-			case 1:
-				return 'xbox-slot-list';
-			case 2:
-				return 'nintendo-slot-list';
-			case 3:
-				return 'ps5-slot-list';
-			default:
-				return '';
-		};
 	};
 
 	const getTypeID = (consoleType) => {
@@ -164,34 +192,46 @@ const Book = ({bookid}) => {
 		}; 
 	}
 
+	const getSelectedTime = () => {
+		if (selects.s === -1)
+			return '~';
+		if (selects.e === -1) {
+			return `${tickToTime(selects.s)}~${tickToTime(selects.s + 1)}`;
+		}
+		const start = (selects.s > selects.e) ? selects.e : selects.s;;
+		const end = (selects.s > selects.e) ? selects.s : selects.e;
+		return `${tickToTime(start)}~${tickToTime(end + 1)}`;
+	};
+
 	const onClickReservation = () => {
 		if (selects.s !== -1)
-			openModal(reservationModal);
+			openModal(reservationModal(getSelectedTime, submitBookForm));
 		else
-			openModal({
-				title: '예약 실패',
-				content: '예약할 시간을 선택해주세요',
-				callback: () => closeModal(),
-			});
+			openModal(failedReservationModal(closeModal));
 	}
 
 	async function submitBookForm(e) {
 		try {
 			e.preventDefault();
+			if (selects.s !== -1 && selects.e !== -1 && selects.e - selects.s > 4) {
+				console.log('2시간 초과 예약신청했음') //notification;
+				setSelects({s: -1, e: -1});
+				closeModal();
+				return ;
+			}
+
 			let response;
 			const data = setData(selects);
 
-			//test code
 			bookid = false;
 			if (bookid) {
 				response = await patchBookRecord(userID, bookid, data);
 			} else {
 				response = await postBookRecord(userID, data);
 			}
-	
-			console.log(response);
-			console.log("success to post data");
 			closeModal();
+
+			//삭제하거나 추가한 내용들 새로고침 없이 갱신하는 방법으로 유지하기
 			navigate(0);
 		} catch (error) {
 			console.error(`BookForm: handleSubmitBookForm: ${error}`);
@@ -207,7 +247,7 @@ const Book = ({bookid}) => {
 				<span className={`tab${consoleType === 2 ? '-active' : ''}`} id="nintendo-tab"  onClick={(e) => {e.preventDefault(); setConsoleType(2)}}><p>Switch</p></span>
 				<span className={`tab${consoleType === 3 ? '-active' : ''}`} id="ps5-tab"  onClick={(e) => {e.preventDefault(); setConsoleType(3)}}><p>PS5</p></span>
 			</div>
-			<div className="slot-list slot-list-active"  id={getTypeIDtag(consoleType)}>
+			<div className="slot-list slot-list-active"  id={`${getTypeID(consoleType)}-slot-list`}>
 				{Array.from({length: 48}, (_, i) => {
 					const book = searchBooks(i);
 					return (
@@ -219,13 +259,13 @@ const Book = ({bookid}) => {
 								e.preventDefault();
 								onClickRecord(i);
 							}}
-							isDeletable={book.length !== 0 && userID === parseInt(book[0].user_id)}
+							isDeletable={(book.length !== 0 && userID === book[0].user_id) || user.admin}
 							isSelected={checkSelects(i)}
 							type='book'
 						/>
 					)})}
-		</div>
 			</div>
+		</div>
 		<div className={`sub-content-wrapper ${selects.e !== -1 ? `finished-${getTypeID(consoleType)}` : ''}`} id="sub" onClick={() => onClickReservation()}>
 			<a href="#" onClick={(e) => e.preventDefault()}>
 				<div className={`sub-content ${selects.e !== -1 ? `finished-${getTypeID(consoleType)}` : ''}`}>
@@ -252,8 +292,8 @@ const DummyForm = () => {
 		<>
 		<div className='content' id='main-content'>
 			<div className='tabs'>
-				<span className="tab" id="xbox-tab"><p>Xbox</p></span>
-				<span className="tab" id="nintendo-tab"><p>Switch</p></span>
+				<span className="tab" id="xbox-tab"><p>XboX</p></span>
+				<span className="tab" id="nintendo-tab"><p>Nintendo</p></span>
 				<span className="tab" id="ps5-tab"><p>PS5</p></span>
 			</div>
 			<div className="slot-list slot-list-active" >
@@ -290,10 +330,6 @@ const DummyForm = () => {
 
 const BookForm = () => {
 	const [params, setParams] = useSearchParams();
-	const {date} = useDate();
-	const navigate = useNavigate();
-
-	const userid = 158010;
 	const bookid = (params.get('type')) ? params.get('bookid') : '';
 
 	return (

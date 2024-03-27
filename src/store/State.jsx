@@ -18,13 +18,3 @@ export const moveDateState = atom({
 	key: 'MoveDateState',
 	default: 0,
 });
-
-export const dateSelector = selector({
-	key: 'dateSelector',
-	get: ({ get }) => {
-		const moveDate = get(moveDateState);
-		const date = new Date(get(dateState));
-		date.setDate(date.getDate() + moveDate);
-		return ConvertDateFormat(date);
-	},
-})

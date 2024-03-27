@@ -1,4 +1,5 @@
 import { atom, useRecoilState} from 'recoil';
+import { Link } from 'react-router-dom';
 
 import useSideMenu from '../hooks/useSideMenu';
 
@@ -18,9 +19,9 @@ const Header = () => {
 				</span>
 			</div>
 			<div className="section" id="logo">
-				<a href="/">
+				<Link to="/" >
 					<img src="logo.svg" alt="logo" />
-				</a>
+				</Link>
 			</div>
 			<div className="section" id="search">
 				<span className="material-symbols-outlined" id="search-icon">

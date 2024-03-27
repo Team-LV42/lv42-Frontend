@@ -1,4 +1,5 @@
-import { 
+import {
+	atom,
 	atomFamily,
 	selector, 
 	selectorFamily 
@@ -18,22 +19,36 @@ import { dateState } from '../store/State.jsx';
 // const userId = cookie.get('userid');
 // const userId = '';
 
-export const userState = atomFamily({
-	key: 'userState',
+export const userState = atom({
+	key: 'UserState',
+	default: {
+		id: 0,
+		name: '',
+		admin: false,
+		displayname: '',
+		profile_img: '',
+	},
+});
+
+//특정 유저의 정보를 한번 가져온 경우 들고있음
+export const usersState = atomFamily({
+	key: 'UsersState',
 	default: selectorFamily({
-		key: 'userState/Default',
-		get: userID => async () => {
+		key: 'UsersState/Default',
+		get: userID => async ({ get }) => {
+			const checkDuplicateUser = get(userState);
+			if (checkDuplicateUser.id === userID || userID === 0) return null;
 			const response = await fetchUserStateQuery("id", userID);
 			return response;
 		}
 	}),
 });
 
+//특정한 사용자 검색을 위한 api
 export const getUserInfoById = async (userID) => {
 	try {
 		/* check id regex needed */
 		const response = await fetchUserStateQuery("id", userID);
-		console.log(response);
 		return response;
 	} catch (err) {
 		throw err;
@@ -52,7 +67,7 @@ export const getUserInfoByName = async (userName) => {
 
 const fetchUserStateQuery = async (param, search) => {
 	try {
-		/* check id regex needed */
+		/* check id regex 	needed */
 		const response = await fetch(`http://54.180.96.16:4242/users?${param}=${search}`, {
 			method: "GET",
 			headers: {
@@ -72,6 +87,7 @@ export const fetchUserCurrentBook = selectorFamily({
 	key: 'FetchUserCurrentBook',
 	get: (id) => async ({ get }) => {
 		try {
+			if (id === 0) return null;
 			const today = get(dateState);
 			const response = await fetch(`http://54.180.96.16:4242/books/${id}/list?date=${today}`, {
 				method: "GET",
@@ -92,7 +108,8 @@ export const fetchUserHistory = selectorFamily ({
 	key: 'FetchUserHistory',
 	get : (id) => async () => {
 		try {
-			const response = await fetch(`http://54.180.96.16:4242/books/${id}/history?`, {
+			if (id === 0) return null;
+			const response = await fetch(`http://54.180.96.16:4242/books/${id}/history`, {
 
 				method: "GET",
 				headers: {

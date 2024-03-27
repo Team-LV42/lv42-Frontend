@@ -4,8 +4,8 @@ import {
 	selectorFamily,
 } from "recoil";
 
-
-import { consoleTypeState, dateSelector } from "../store/State.jsx";
+import { dateSelector } from "../hooks/useDate.jsx";
+import { consoleTypeState } from "../store/State.jsx";
 
 const url = "http://54.180.96.16:4242/books";
 
@@ -20,6 +20,7 @@ export const fetchBookRecordsListQuery = selector({
 		try {
 			const consoleType = get(consoleTypeState);
 			const date = get(dateSelector);
+			if (date === 'NaN-0NaN-0NaN') return null;
 			//process.env.REACT_APP_URL
 			const response = await fetch(`${url}?date=${date}&type=${consoleType}`, {
 				method: "GET",

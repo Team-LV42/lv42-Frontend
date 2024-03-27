@@ -6,22 +6,10 @@
 	height: 100%;
 }
 
-/* header */
-#menu {
-	justify-content: right;
-	align-items: center;
-}
-#search {
-	visibility: hidden;
-	justify-content: left;
-	align-items: center;
-}
-
 /* main content */
 #main-content {
 	flex-direction: column;
 	padding-bottom: 10px;
-	border: 1px solid black;
 }
 
 /* tab */
@@ -31,15 +19,17 @@
 #main-content .tab-active {
 	max-width: 33.3333333333%;
 }
-.tabs #xbox-tab {
+#xbox-tab {
 	border-top-left-radius: 10px;
 	border-right: 1px solid black;
 	background-color: #00C83B;
 }
-.tabs #nintendo-tab {
+#nintendo-tab {
+	border-right: 1px solid black;
+	border-left: 1px solid black;
 	background-color: #EA2A36;
 }
-.tabs #ps5-tab {
+#ps5-tab {
 	border-top-right-radius: 10px;
 	border-left: 1px solid black;
 	background-color: #527FD8;
@@ -67,7 +57,6 @@
 	color : white;
 	background-color: #527FD8;
 }
-
 
 /* sub content */
 .sub-content-wrapper {
@@ -100,12 +89,13 @@
 .sub-content .time-wrap {
 	width: 80%;
 	height: 100%;
-	font-size: 26px;
+	font-size: 20px;
 	font-weight: bold;
 	font-family: "Bowlby One", sans-serif;
 	display: flex;
 	justify-content: center;
 	align-items:end;
+	padding-bottom: 2px;
 }
 .sub-content .comment-wrap {
 	width: 80%;
