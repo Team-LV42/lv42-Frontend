@@ -1,29 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
-import { consoleTypeState } from '../store/State.jsx';
-import { deleteModal } from '../store/Modal.jsx';
-import { useModal } from '../hooks/useModal.jsx';
-import { deleteBookRecord } from '../api/bookApi.jsx';
+import useModal from '../hooks/useModal';
+import useDate from '../hooks/useDate';
+
+import { consoleTypeState } from '../store/State';
+import { deleteModal } from '../store/Modal';
+import { deleteBookRecord } from '../api/bookApi';
 
 export default function Record({ record, type, time, onClick, isDeletable = false, isSelected = false }) {
 	const { openModal, closeModal } = useModal();
+	const { tickToTime, getDuration } = useDate();
 	const consoleType = useRecoilValue(consoleTypeState);
-	const navigate = useNavigate()
-
-	const getDuration = (start, end) => {
-		const hour = (end + 1 - start) / 2;
-		return (`${hour}h`);
-	};
-
-	//date
-	const timeToTick = (tick) => {
-		if (tick < 0)
-			return '';
-		const hour = Math.floor(tick / 2);
-		const minute = Math.floor(tick % 2 * 30);
-		return (hour < 10 ? '0' + hour : hour) + ':' + ((minute) < 10 ? '00': minute);
-	};
+	const navigate = useNavigate();
 
 	const deleteAction = async () => {
 		await deleteBookRecord(record._id, record.user_id);
@@ -80,7 +69,7 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 					// onClick="showModal('reservationModal')"
 				>
 					<div className="slot-wrapper">
-						<div className="slot-time">{timeToTick(time)} ~</div>
+						<div className="slot-time">{tickToTime(time)} ~</div>
 						<div className="slot-value">{isSelected ? 'SELECTED' : '-'}</div>
 					</div>
 				</span>
@@ -97,7 +86,7 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 					// onClick="showModal('reservationModal')"
 				>
 					<div className="slot-wrapper">
-						<div className="slot-time">{timeToTick(time)} ~</div>
+						<div className="slot-time">{tickToTime(time)} ~</div>
 						<div className="slot-value">{record.user[0].name}</div>
 					</div>
 				</span>
@@ -111,7 +100,7 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 						(isDeletable && openModal(deleteModal))
 					}}
 				>
-					<div>{timeToTick(time)}</div>
+					<div>{tickToTime(time)}</div>
 					<div>{getDuration(record.start_time, record.end_time)}</div>
 					<div>
 						<h1>{record.user[0].name}</h1>

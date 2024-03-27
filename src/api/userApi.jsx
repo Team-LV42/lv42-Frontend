@@ -24,6 +24,8 @@ export const userState = atom({
 	default: {
 		id: 0,
 		name: '',
+		admin: false,
+		displayname: '',
 		profile_img: '',
 	},
 });
@@ -33,7 +35,9 @@ export const usersState = atomFamily({
 	key: 'UsersState',
 	default: selectorFamily({
 		key: 'UsersState/Default',
-		get: userID => async () => {
+		get: userID => async ({ get }) => {
+			const checkDuplicateUser = get(userState);
+			if (checkDuplicateUser.id === userID || userID === 0) return null;
 			const response = await fetchUserStateQuery("id", userID);
 			return response;
 		}
@@ -63,7 +67,7 @@ export const getUserInfoByName = async (userName) => {
 
 const fetchUserStateQuery = async (param, search) => {
 	try {
-		/* check id regex needed */
+		/* check id regex 	needed */
 		const response = await fetch(`http://54.180.96.16:4242/users?${param}=${search}`, {
 			method: "GET",
 			headers: {
@@ -83,6 +87,7 @@ export const fetchUserCurrentBook = selectorFamily({
 	key: 'FetchUserCurrentBook',
 	get: (id) => async ({ get }) => {
 		try {
+			if (id === 0) return null;
 			const today = get(dateState);
 			const response = await fetch(`http://54.180.96.16:4242/books/${id}/list?date=${today}`, {
 				method: "GET",
@@ -103,6 +108,7 @@ export const fetchUserHistory = selectorFamily ({
 	key: 'FetchUserHistory',
 	get : (id) => async () => {
 		try {
+			if (id === 0) return null;
 			const response = await fetch(`http://54.180.96.16:4242/books/${id}/history`, {
 
 				method: "GET",

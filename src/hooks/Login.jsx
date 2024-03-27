@@ -82,8 +82,7 @@ export const getAccessToken = selectorFamily({
 				},
 			});
 
-			if (400 <= response.status && response.status <= 599)
-				throw new Error("response is failed");
+			if (400 <= response.status && response.status <= 599) return null;
 			
 			return response.json();
 		} catch (err) {
