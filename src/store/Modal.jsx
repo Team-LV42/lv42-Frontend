@@ -15,6 +15,20 @@ export const actionState = atom({
 	default: false,
 });
 
+export const notiState = atom({
+	key: 'notiState',
+	default: {
+		type: 'notification',
+		title: '', //string
+		content: '', // string | JSX
+	},
+});
+
+export const notiActionState = atom({
+	key: 'notiActionState',
+	default: false,
+});
+
 export const deleteModal = (record, getDuration, deleteAction) => {
 	return ({
 		title: getDuration(record.start_time, record.end_time),
