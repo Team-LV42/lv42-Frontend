@@ -20,7 +20,7 @@ const useNotification = () => {
 		if (isNotiOpen)
 			setTimeout(() => {
 				setActionNoti(false);
-			}, 3000);
+			}, 1500);
 	}, [isNotiOpen]);
 
 	return { isNotiOpen, openNoti, noti };
