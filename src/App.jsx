@@ -49,13 +49,11 @@ function App() {
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
       <RecoilRoot>
         <Suspense fallback={<FullLoading />} >
-          <div className='main'>
-             <Routes>
-              <Route path="/callback" element={<Auth />} />
-              <Route path="/" index element={<Tournament />}/>
-              <Route path='/*' element={<Error />} /> 
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="/callback" element={<Auth />} />
+            <Route path="/" index element={<Tournament />}/>
+            <Route path='/*' element={<Error />} /> 
+          </Routes>
         </Suspense>
       </RecoilRoot>
     </ErrorBoundary>

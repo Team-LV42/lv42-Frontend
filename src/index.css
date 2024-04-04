@@ -1,6 +1,7 @@
 @import "./styles/reset.css";
 @import "./styles/common.css";
 @import "./styles/user.css";
+@import "./styles/tournament.css";
 
 #root {
 	height: 100%;
