@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 
 import useModal from '../hooks/useModal';
 import useDate from '../hooks/useDate';
+import useToken from '../hooks/useToken';
 
 import { consoleTypeState } from '../store/State';
 import { deleteModal } from '../store/Modal';
@@ -10,16 +11,18 @@ import { deleteBookRecord } from '../api/bookApi';
 
 export default function Record({ record, type, time, onClick, isDeletable = false, isSelected = false }) {
 	const { openModal, closeModal } = useModal();
-	const { tickToTime, getDuration } = useDate();
+	const { tickToTime, getDuration, curTick } = useDate();
 	const consoleType = useRecoilValue(consoleTypeState);
 	const navigate = useNavigate();
+	const accessToken = useToken().accessToken();
 
 	const deleteAction = async () => {
-		await deleteBookRecord(record._id, record.user_id);
+		await deleteBookRecord(record._id, record.user_id, accessToken);
 		closeModal();
-		navigate(0);
+		window.location.reload();
+		// navigate(0);
 	};
-
+	
 	const typeToString = (type, flag) => {
 		let str;
 		switch (type) {
@@ -59,8 +62,9 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 			)}
 			{type === 'book' && record.length === 0 && (
 				<span
-					className={`slot ${isSelected ? (`selected-${typeToString(consoleType, 1)}`) : ''}`}
+					className={`slot ${isSelected ? (`selected-${typeToString(consoleType, 1)}`) : ''}${curTick > time ? 'disabled' : ''}`}
 					value={time}
+					id={time}
 					onClick={(event) => {
 						event.preventDefault();
 						onClick(event);
@@ -76,11 +80,12 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 			)}
 			{type === 'book' && record.length !== 0 && (
 				<span
-					className={`slot reserved ${isSelected ? 'selected' : ''}`}
+					className={`slot reserved ${isSelected ? 'selected' : ''}${curTick > time ? 'disabled' : ''}`}
 					value={time}
+					id={time}
 					onClick={(event) => {
 						event.preventDefault();
-						(isDeletable && openModal(deleteModal(record, getDuration, deleteAction)))
+						(isDeletable && curTick <= time && openModal(deleteModal(record, getDuration, deleteAction)))
 					}}
 					type='reserve'
 					// onClick="showModal('reservationModal')"

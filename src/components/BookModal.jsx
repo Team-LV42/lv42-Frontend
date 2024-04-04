@@ -1,9 +1,11 @@
 import { useEffect, Suspense } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, redirect } from "react-router-dom";
 import { atom, useRecoilValue, useRecoilState, useRecoilCallback } from 'recoil';
 
 import useDate from '../hooks/useDate.jsx';
 import useModal from '../hooks/useModal.jsx';
+import useNotification from "../hooks/useNotification.jsx";
+import useToken from '../hooks/useToken.jsx';
 import {
 	booksState,
 	fetchBookRecordsListQuery,
@@ -12,7 +14,14 @@ import {
 } from '../api/bookApi.jsx';
 import { userState } from '../api/userApi';
 import { consoleTypeState } from '../store/State.jsx';
-import { reservationModal, failedReservationModal } from '../store/Modal';
+import {
+	reservationModal,
+	loginModal,
+	reserveTimeLimitError,
+	reserveSubmitError,
+	reserveSubmitHistoryTick,
+	failedReservationModal,
+} from '../store/Modal';
 
 import Record from './Record';
 
@@ -31,50 +40,62 @@ const Book = ({bookid}) => {
 	const user = useRecoilValue(userState);
 
 	const { openModal, closeModal } = useModal();
-	const { date, tickToTime, timeToTick } = useDate();
+	const { openNoti } = useNotification();
+	const { date, tickToTime, curTick} = useDate();
+	const accessToken = useToken().accessToken();
 
 	const userID = user.id;
 	const bookList = useRecoilValue(fetchBookRecordsListQuery);
 	const navigate = useNavigate();
 
-	const updateAddBook = useRecoilCallback(({ set }) => (newRecord) => {
-		set(booksState, (prevBooks) => [...prevBooks, newRecord]);
-	}, [booksState]);
+	useEffect(() => {
+		setTimeout(() => {
+			window.location.hash = `#${curTick}`;
+		}, 100);
+	}, [])
 
-	const updateDelBook = useRecoilCallback(({ set }) => (newRecord) => {
-		set(booksState, (prevBooks) => prevBooks.filter((book) => book.id !== newRecord._id));
-	}, [booksState]);
+	// const updateAddBook = useRecoilCallback(({ set }) => (newRecord) => {
+	// 	set(booksState, (prevBooks) => [...prevBooks, newRecord]);
+	// }, [booksState]);
+
+	// const updateDelBook = useRecoilCallback(({ set }) => (newRecord) => {
+	// 	set(booksState, (prevBooks) => prevBooks.filter((book) => book.id !== newRecord._id));
+	// }, [booksState]);
 
 	useEffect(() => {
-		const eventSource = new EventSource(`http://54.180.96.16:4242/sse/subscribe?userId=${userID}`, {
+		const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}/sse/subscribe?userId=${userID}`, {
 			withCredentials: false,
 		});
 
 		eventSource.addEventListener('ADD', (event) => {
-			const newRecord = JSON.parse(event.data);
-			const prevType = consoleType;
-			if (!newRecord) return ;
+			window.location.reload();
+			// navigate(0);
+			// const newRecord = JSON.parse(event.data);
+			// const prevType = consoleType;
+			// if (!newRecord) return ;
 
-			if (consoleType !== newRecord.type) {
-				console.log(newRecord.type);
-				setConsoleType(newRecord.type);
-			}
+			// if (consoleType !== newRecord.type) {
+			// 	console.log(newRecord.type);
+			// 	setConsoleType(newRecord.type);
+			// }
 			
-			// updateAddBook(newRecord);
-			setBooks(prevBooks => [...prevBooks, newRecord]);
-			setConsoleType(prevType);
+			// // updateAddBook(newRecord);
+			// setBooks(prevBooks => [...prevBooks, newRecord]);
+			// setConsoleType(prevType);
 		});
 
 		eventSource.addEventListener('DEL', (event) => {
-			const newRecord = JSON.parse(event.data);
-			const prevType = consoleType;
-			if (!newRecord) return ;
+			window.location.reload();
+			// navigate(0);
+			// const newRecord = JSON.parse(event.data);
+			// const prevType = consoleType;
+			// if (!newRecord) return ;
 			
-			if (consoleType !== newRecord.type)
-				setConsoleType(newRecord.type);
-			// updateDelBook(newRecord);
-			setBooks(prevBooks => prevBooks.filter((book) => book.id !== newRecord._id));
-			setConsoleType(prevType);
+			// if (consoleType !== newRecord.type)
+			// 	setConsoleType(newRecord.type);
+			// // updateDelBook(newRecord);
+			// setBooks(prevBooks => prevBooks.filter((book) => book.id !== newRecord._id));
+			// setConsoleType(prevType);
 		});
 
 		eventSource.onerror = (error) => {
@@ -88,10 +109,6 @@ const Book = ({bookid}) => {
 	}, [userID]);
 
 	useEffect(() => {
-		console.log('updated books', books);
-	}, [books])
-
-	useEffect(() => {
 		if (books.length === 0)
 			setBooks(bookList);
 	}, [bookList, setBooks]);
@@ -99,7 +116,6 @@ const Book = ({bookid}) => {
 	// 다른타입으로 변경된 경우 해당 타입의 데이터로 갈아끼움
 	useEffect(() => {
 		setBooks(bookList);
-		// updateBook(bookList);
 		setSelects({s: -1, e: -1});
 	}, [setBooks, setSelects, consoleType, setConsoleType]);
 
@@ -107,6 +123,10 @@ const Book = ({bookid}) => {
 	
 	const onClickRecord = (time) => {
 		const addSelect = (time) => {
+			if (time < curTick) {
+				openNoti(reserveSubmitHistoryTick());
+				return ;
+			}
 			if (selects.s === -1) { // 비어있을 때
 				setSelects({ s: time, e: -1 });
 			} else if (selects.e === -1) { // 첫 번째는 값이 있고 두 번째가 비어있을 때
@@ -204,35 +224,40 @@ const Book = ({bookid}) => {
 	};
 
 	const onClickReservation = () => {
-		if (selects.s !== -1)
+		console.log(user);
+		if (user.id === 0)
+			openModal(loginModal(loginModalAction));
+		else if (selects.s !== -1)
 			openModal(reservationModal(getSelectedTime, submitBookForm));
 		else
 			openModal(failedReservationModal(closeModal));
 	}
 
+	const loginModalAction = () => {
+		window.location.href = process.env.REACT_APP_LOGIN_URL;
+	}
+
 	async function submitBookForm(e) {
 		try {
 			e.preventDefault();
-			if (selects.s !== -1 && selects.e !== -1 && selects.e - selects.s > 4) {
-				console.log('2시간 초과 예약신청했음') //notification;
-				setSelects({s: -1, e: -1});
+			if (selects.s !== -1 && selects.e !== -1 && Math.abs(selects.e - selects.s) >= 4) {
+				openNoti(reserveTimeLimitError());
 				closeModal();
+				setSelects({s: -1, e: -1});
 				return ;
 			}
 
-			let response;
 			const data = setData(selects);
+			const response = await postBookRecord(userID, data, accessToken);
 
-			bookid = false;
-			if (bookid) {
-				response = await patchBookRecord(userID, bookid, data);
-			} else {
-				response = await postBookRecord(userID, data);
+			if (response.status === 400) {
+				openNoti(reserveSubmitError());
 			}
+			setSelects({s: -1, e: -1});
 			closeModal();
-
 			//삭제하거나 추가한 내용들 새로고침 없이 갱신하는 방법으로 유지하기
-			navigate(0);
+			if (response.status === 200)
+				window.location.reload();
 		} catch (error) {
 			console.error(`BookForm: handleSubmitBookForm: ${error}`);
 			closeModal();

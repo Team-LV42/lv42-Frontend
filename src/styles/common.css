@@ -44,6 +44,11 @@ body {
 	cursor: pointer;
 }
 
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
 /* color */
 .green {
 	color: #00C83B;
@@ -162,15 +167,17 @@ body {
     overflow-y: scroll;
 	overflow-x: hidden;
 	scroll-snap-type: y mandatory;
+	scroll-behavior: smooth;
 }
 .slot-list-active {
 	display: block;
+	
 }
 .slot {
+	cursor: pointer;
 	position: relative;
 	width: 100%;
 	background-color: #ffffff;
-	border-bottom: 0.2px solid black;
 	height: 67px;
 	display: flex;
 	flex-direction: column;
@@ -265,7 +272,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	position: fixed;
-	z-index: 1;
+	z-index: 3000;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -465,6 +472,12 @@ body {
 	left: 0px;
 	transition: left 0.5s;
 }
+
+.disabled {
+	cursor: pointer;
+	background-color: #ebebeb;
+}
+
 /* menu header */
 .sidebar-menu .header {
 	height: 28%;
@@ -626,7 +639,8 @@ body {
 	border: 1px solid black;
 	padding-left: 15px;
 	padding-right: 15px;
-	transition: all 1s ease-in-out;
+	transition: all 0.5s ease-in-out;
+	z-index: 3;
 }
 .active {
 	opacity: 1;
