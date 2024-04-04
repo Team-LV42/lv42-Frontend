@@ -18,9 +18,8 @@ const voteIDState = atom({
 const playerList = selector({
 	key: 'PlayerList',
 	get: async ({ get }) => {
-		console.log('1234');
 		const at = get(accessTokenState);
-		const response = await fetch(`${process.env.REACT_APP_TEST_URL}/tournament`, {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/tournament`, {
 			method: 'GET',
 			headers: {
 				"Content-Type": "application/json",
@@ -174,7 +173,7 @@ const PlayerList = () => {
 	const onClickSubmit = async (at) => {
 		try {
 			if (votePlayer === undefined || data.user === 0) return null;
-			const response = await fetch(`${process.env.REACT_APP_TEST_URL}/tournament?vote=${votePlayer}`, {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/tournament?vote=${votePlayer}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
