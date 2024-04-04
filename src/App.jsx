@@ -14,26 +14,46 @@ import Index from './pages/index.jsx';
 import Error from './components/redirect/Error';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 
+import Tournament from './pages/Tournament.jsx';
+
 
 
 import './App.css';
+
+// function App() {
+//   return (
+//     <ErrorBoundary fallback={<p>Something went wrong</p>}>
+//       <RecoilRoot>
+//         <Suspense fallback={<FullLoading />} >
+//           {/* <Index /> */}
+//           {/* <Header /> */}
+//           <div className='main'>
+//              <Routes>
+//               <Route path="/" index element={<TournamentVote />} />
+//               <Route path="/callback" element={<Auth />} />
+//               <Route path='/*' element={<Error />} /> 
+//               {/* <Route path="/" index element={<BookModal />} />
+//               <Route path="/test" element={<Search />} />
+//               <Route path="/user" element={<UserModal />} />
+//               <Route path="/user/:id" element={<UserModal />} /> */}
+//             </Routes>
+//           </div>
+//         </Suspense>
+//       </RecoilRoot>
+//     </ErrorBoundary>
+//   );
+// }
 
 function App() {
   return (
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
       <RecoilRoot>
         <Suspense fallback={<FullLoading />} >
-          <Index />
-          <Header />
           <div className='main'>
              <Routes>
-              <Route path="/" index element={<BookModal />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/test" element={<Search />} />
               <Route path="/callback" element={<Auth />} />
-              <Route path="/user" element={<UserModal />} />
-              <Route path="/user/:id" element={<UserModal />} />
-              <Route path='/*' element={<Error />} />
+              <Route path="/" index element={<Tournament />}/>
+              <Route path='/*' element={<Error />} /> 
             </Routes>
           </div>
         </Suspense>
