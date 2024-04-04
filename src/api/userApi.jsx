@@ -68,7 +68,7 @@ export const getUserInfoByName = async (userName) => {
 const fetchUserStateQuery = async (param, search) => {
 	try {
 		/* check id regex 	needed */
-		const response = await fetch(`http://54.180.96.16:4242/users?${param}=${search}`, {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/users?${param}=${search}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -81,6 +81,20 @@ const fetchUserStateQuery = async (param, search) => {
 		throw err;
 	};
 }
+
+export const logoutUser = async (authToken) => {
+	try {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/logout`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${authToken}`, 
+			}
+		})
+	} catch (error) {
+		console.error('logoutUser:', error);
+	}
+}
 /* Test Code End */
 
 export const fetchUserCurrentBook = selectorFamily({
@@ -89,7 +103,7 @@ export const fetchUserCurrentBook = selectorFamily({
 		try {
 			if (id === 0) return null;
 			const today = get(dateState);
-			const response = await fetch(`http://54.180.96.16:4242/books/${id}/list?date=${today}`, {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/books/${id}/list?date=${today}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "appication/json",
@@ -109,7 +123,7 @@ export const fetchUserHistory = selectorFamily ({
 	get : (id) => async () => {
 		try {
 			if (id === 0) return null;
-			const response = await fetch(`http://54.180.96.16:4242/books/${id}/history`, {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/books/${id}/history`, {
 
 				method: "GET",
 				headers: {
@@ -124,24 +138,5 @@ export const fetchUserHistory = selectorFamily ({
 		}
 	},
 });
-
-export const UserlistStateQuery = selector({
-	key: 'UserlistStateQuery',
-	get: async () => {
-		try {
-			const response = await fetch(process.env.REACT_APP_URL + "/users", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					/* Token */
-				},
-			});
-			if (response !== 200)
-				throw new Error("failed to fetch Users Data");
-		} catch (err) {
-			throw err;
-		}
-	}
-})
 
 export default fetchUserStateQuery;

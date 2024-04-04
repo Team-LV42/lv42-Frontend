@@ -2,12 +2,12 @@ import {
 	atom,
 	selector,
 	selectorFamily,
+	useRecoilValue,
 } from "recoil";
 
 import { dateSelector } from "../hooks/useDate.jsx";
 import { consoleTypeState } from "../store/State.jsx";
-
-const url = "http://54.180.96.16:4242/books";
+import { getAT } from "../hooks/useToken.jsx";
 
 export const booksState = atom({
 	key: 'BooksState',
@@ -22,7 +22,7 @@ export const fetchBookRecordsListQuery = selector({
 			const date = get(dateSelector);
 			if (date === 'NaN-0NaN-0NaN') return null;
 			//process.env.REACT_APP_URL
-			const response = await fetch(`${url}?date=${date}&type=${consoleType}`, {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/books?date=${date}&type=${consoleType}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -57,12 +57,13 @@ export const getRecordByBookID = selectorFamily({
 	},
 });
 
-export const deleteBookRecord = async (bookid, userid) => {
+export const deleteBookRecord = async (bookid, userid, authToken) => {
 	try {
-		const response = await fetch(`${url}?bookId=${bookid}&userId=${userid}`, {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/books?bookId=${bookid}&userId=${userid}`, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
+				"Authorization": `Bearer ${authToken}`,
 			},
 		});
 	
@@ -76,13 +77,13 @@ export const deleteBookRecord = async (bookid, userid) => {
 	}
 };
 
-export const postBookRecord = async (userid, data) => {
+export const postBookRecord = async (userid, data, authToken) => {
 	try {
-		const response = await fetch((`http://54.180.96.16:4242/books?userId=${userid}`), {
+		const response = await fetch((`${process.env.REACT_APP_API_URL}/books?userId=${userid}`), {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				// Token
+				"Authorization": `Bearer ${authToken}`,
 			},
 			body: JSON.stringify({
 				"start": data.start,
@@ -91,11 +92,6 @@ export const postBookRecord = async (userid, data) => {
 				"type" : data.consoleType,
 			}),
 		});
-	
-		if (response.status !== 200) {
-			console.error("failed to post record");
-			return ;
-		}
 		return response;
 	} catch (error) {
 		console.error('postBookRecord: Error',error);
@@ -104,7 +100,7 @@ export const postBookRecord = async (userid, data) => {
 
 export const patchBookRecord = async (userid, bookid, data) => {
 	try {
-		const response = await fetch(`http://54.180.96.16:4242/books?userId=${userid}&bookId=${bookid}`, {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/books?userId=${userid}&bookId=${bookid}`, {
 			method: "PATCH",
 			headers: {
 				"Content-Type": "application/json",

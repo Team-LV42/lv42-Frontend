@@ -11,8 +11,6 @@ import { Cookie } from './Cookie';
 import { accessTokenState } from './useToken';
 import { userState, usersState } from '../api/userApi';
 
-const testUrl = "http://54.180.96.16:4242/auth";
-
 /*로그인 쿼리 보내고 쿠키 저장하기*/
 // export function Login() {
 // 	const [params] = useSearchParams();
@@ -49,7 +47,7 @@ export const UserLoginQuery = selectorFamily({
 	key: 'UserLoginQuery',
 	get: (code) => async () => {
 		try {
-			const response = await fetch(`${testUrl}/login?code=${code}`, {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login?code=${code}`, {
 				method: "get",
 				headers: {
 					"Content-Type": "application/json",
@@ -74,7 +72,7 @@ export const getAccessToken = selectorFamily({
 				console.log('getAccessToken');
 				return ;
 			}
-			const response = await fetch(`${testUrl}/refresh?userId=${userId}`, {
+			const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/refresh?userId=${userId}`, {
 				method: "get",
 				headers: {
 					"Content-Type": "application/json",
