@@ -12,6 +12,16 @@ export const dateSelector = selector({
 	},
 });
 
+export const currentTick = selector({
+	key: 'CurrentTickSelector',
+	get: () => {
+		const date = new Date();
+		const hour = date.getHours();
+		const minute = date.getMinutes()
+		return parseInt(hour * 2) + parseInt(minute / 30);
+	},
+})
+
 export const dateObjectSelector = selector({
 	key: 'DateObjectSelector',
 	get: ({ get }) => {
@@ -38,6 +48,7 @@ export const ConvertDateFormat = (day) => {
 export const useDate = () => {
 	const [date, setS_Date] = useRecoilState(dateState);
 	const [move, setMoveDate] = useRecoilState(moveDateState);
+	const curTick = useRecoilValue(currentTick);
 	const moveDate = useRecoilValue(dateSelector);
 	const moveDateObject = useRecoilValue(dateObjectSelector);
 
@@ -133,6 +144,7 @@ export const useDate = () => {
 		getWeek,
 		getWeekDay,
 		getDay,
+		curTick,
 	};
 };
 
