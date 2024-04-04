@@ -1,12 +1,13 @@
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Cookie } from './Cookie';
-import { ReissueAccessToken } from './tokenAction';
-import { getAccessToken, SetTokens } from './Login';
 
-const accessTokenState = atom({
+import { logoutUser } from '../api/userApi';
+
+export const accessTokenState = atom({
     key: 'accessTokenState',
     default: null,
 });
+
 
 export function useToken() {
     const { getCookies, setCookie, removeCookie } = Cookie();
@@ -33,6 +34,7 @@ export function useToken() {
     }
 
     const logout = () => {
+      logoutUser(at)
       removeCookie('refreshToken');
       removeCookie('userId');
     }
