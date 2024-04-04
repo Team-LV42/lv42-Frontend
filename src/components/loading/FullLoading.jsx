@@ -6,7 +6,7 @@ const FullLoading = () => {
 	useEffect(() => {
 		setTimeout(() => {
 			setStyle('loading animate');
-		}, 100);
+		}, 1000);
 	}, []);
 
 	return (

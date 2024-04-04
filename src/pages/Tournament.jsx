@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { atom, useRecoilState, useRecoilValue, selector } from "recoil";
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Cookie } from '../hooks/Cookie';
 
 import { isLoggedInState } from "../hooks/Auth";
 import { useToken, accessTokenState } from '../hooks/useToken';
 import useModal from '../hooks/useModal';
-import { userState } from '../api/userApi';
 
 const voteIDState = atom({
 	key: 'VoteIDState',
@@ -18,27 +17,29 @@ const voteIDState = atom({
 //참가 선수 리스트
 const playerList = selector({
 	key: 'PlayerList',
-	get: async () => {
+	get: async ({ get }) => {
+		console.log('1234');
 		const at = get(accessTokenState);
-		const response = await fetch(`${process.env.REACT_APP_API_URL}/tournament`, {
+		const response = await fetch(`${process.env.REACT_APP_TEST_URL}/tournament`, {
 			method: 'GET',
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `${at ? at : ''}`
+				"Authorization": `Bearer ${at ? at : ''}`
 			},
 		});
 
 		const data = await response.json();
-		return {
-			players: data.players,
-			user: data.vote,
-		};
+		return data;
 	}
 });
 
 
 const ModalArea = () => {
 	const { isopen, modalDataState, closeModal, } = useModal();
+
+	const onClickDimmer = () => {
+		closeModal();
+	}
 
 	return (
 		<>
@@ -144,66 +145,111 @@ const User = ({ player }) => {
 	)
 }
 
-const PlayerList = () => {
-	const [ votePlayer, setVotePlayer ] = useRecoilState(voteIDState);
-	const { players, user } = useRecoilValue(playerList);
-	
-	const onClickPlayer = (event) => {
-		setVotePlayer(event.target.value);
+const Header = () => {
+
+	const onClickLogin = () => {
+		window.location.href = process.env.REACT_APP_LOGIN_URL;
 	}
 
-	const onClickSubmit = async () => {
+	return (
+		<div>
+			<Link to="/">홈</Link>
+			<Link>로고</Link>
+			<button onClick={() => onClickLogin()}>로그인</button>
+		</div>
+	);
+}
+
+const PlayerList = () => {
+	const [ votePlayer, setVotePlayer ] = useRecoilState(voteIDState);
+	const data = useRecoilValue(playerList);
+	const navigate = useNavigate();
+
+	const at = useRecoilValue(accessTokenState);
+	
+	const onClickPlayer = (id) => {
+		setVotePlayer(id);
+	}
+
+	const onClickSubmit = async (at) => {
 		try {
-			if (votePlayer === undefined || user.id === 0) return null;
-			const response = await fetch(`${process.env.REACT_APP_API_URL}/tournament?vote_id=${votePlayer}`, {
+			if (votePlayer === undefined || data.user === 0) return null;
+			const response = await fetch(`${process.env.REACT_APP_TEST_URL}/tournament?vote=${votePlayer}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${at}`
 				},
 			});
+			navigate(0);
 		} catch (error) {
 			console.error('Failed to Post Vote Player: ',error);
 		}
 	}
 
-	const leftGroup = players !== 0 ? players.slice(0, 4) : [];
-	const rightGroup = players !== 0 ? players.slice(4) : [];
+	useEffect(() => {
+		// data.players.sort((a, b) => {
+		// 	return a.preliminary_rank - b.preliminary_rank;
+		// });
+	}, [data]);
+
+	const leftGroup = data.players.length !== 0 ? data.players.slice(0, 4) : [];
+	const rightGroup = data.players.length !== 0 ? data.players.slice(4) : [];
 	
 	return (
 		<>
-			<div>
+		{data.length !== 0 && (
+		<div>
+			{data.vote === undefined ? (
 				<div>
-					{leftGroup.map((player) => {
+					<span>TestButton</span>
+					<div>
+						<p>현재 선택 선수 : {votePlayer}번</p>
+					</div>
+					<button onClick={() => onClickSubmit(at)}>확인</button>
+				</div>
+			) : (
+				<div>
+					<p>투표 완료</p>
+					<span>{data.vote}번 선수 투표완료</span>
+				</div>
+			
+			)}
+			<div>
+				{leftGroup.length !== 0 && leftGroup.map((player) => {
+					return (
+						<div key={player.tournament_participant_id} onClick={() => onClickPlayer(player.tournament_participant_id)}>
+							<img src={player.clubImg} alt={player.club_name} />
+							<p>{player.name}</p>
+							<p>{player.tournament_participant_id}</p>
+							<p>{player.team_name}</p>
+						</div>
+					)
+				})}
+			</div>
+			<div>
+				{/* spacer && line */}
+			</div>
+			<div>
+				{rightGroup.length !== 0 && rightGroup.map((player) => {
 						return (
-							<div key={player.id} onClick={() => onClickPlayer(player.id)}>
-								<img src={player.clubImg} alt={player.club_name} />
-								<p>{player.name}</p>
-								<p>{player.team_name}</p>
-							</div>
+							<div key={player.tournament_participant_id} onClick={() => onClickPlayer(player.tournament_participant_id)}>
+							<img src={player.clubImg} alt={player.club_name} />
+							<p>{player.name}</p>
+							<p>{player.tournament_participant_id}</p>
+							<p>{player.team_name}</p>
+						</div>
 						)
 					})}
-				</div>
-				<div>
-					{/* spacer && line */}
-				</div>
-				<div>
-					{rightGroup.map((player) => {
-							return (
-								<div key={player.id} onClick={() => onClickPlayer(player.id)}>
-									<img src={player.clubImg} alt={player.club_name} />
-									<p>{player.name}</p>
-									<p>{player.team_name}</p>
-								</div>
-							)
-						})}
-				</div>
 			</div>
+		</div>
+		)}
+			
 		</>
 	)
 }
 
 const Tournament = () => {
-	const auth = useToken();
 	const cookie = Cookie().getCookies();
 	const loginState = useRecoilValue(isLoggedInState);
 	
@@ -211,7 +257,7 @@ const Tournament = () => {
 	const navigate = useNavigate();
 	
 	useEffect(() => {
-		if (!loginState) {
+		if (!loginState && cookie.refreshToken) {
 			navigate('/callback', { state: { from: location.pathname }});
 		}
 	}, []);
@@ -220,16 +266,9 @@ const Tournament = () => {
 
 	return (
 		<>
-			<div>
-				<PlayerList />
-				<div>
-					{
-					isVotedUser 
-					? <button> 이미 투표하였습니다 </button>
-					: <button onClick={() => onClickSubmit()}>투표하기</button>
-					}
-				</div>
-			</div>
+			<Header />
+			<PlayerList />
+			<ModalArea />
 		</>
 	)
 }
