@@ -29,6 +29,45 @@ export const notiActionState = atom({
 	default: false,
 });
 
+export const reserveTimeLimitError = () => {
+	return ({
+		title: '!',
+		content: '예약은 최대 2시간까지 가능합니다.',
+	});
+};
+
+export const reserveSubmitError = () => {
+	return ({
+		title: '!',
+		content: '예약 실패',
+	});
+};
+
+export const reserveSubmitHistoryTick = () => {
+	return ({
+		title: '!',
+		content: '지나간 시간은 예약 할 수 없습니다.'
+	});
+};
+
+export const loginModal = (callback) => {
+	return ({
+		type: 'login',
+		title: '!',
+		content: '로그인이 필요합니다',
+		callback: () => callback(),
+	})
+}
+
+export const searchModal = () => {
+	return ({
+		type: 'search',
+		title: '유저 검색',
+		content: '',
+		
+	})
+}
+
 export const deleteModal = (record, getDuration, deleteAction) => {
 	return ({
 		title: getDuration(record.start_time, record.end_time),
