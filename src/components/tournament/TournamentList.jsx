@@ -1,35 +1,37 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
-import { voteIDState, playerList, postVotePlayer } from '../../api/tournamentApi';
+import { voteIDState, postVotePlayer } from '../../api/tournamentApi';
+import { tournament8Group } from '../../store/tournament';
+import { userState } from '../../api/userApi';
 import { accessTokenState } from '../../hooks/useToken';
+import { loginModal } from '../../store/Modal';
 import useModal from '../../hooks/useModal';
 
 import TournamentUser from './TournamentUser';
 
 const TournamentList = () => {
-	const [ votePlayer, setVotePlayer ] = useRecoilState(voteIDState);
 	const { openModal } = useModal();
-	const data = useRecoilValue(playerList);
+	const data = useRecoilValue(tournament8Group);
+	const user = useRecoilValue(userState);
 	const navigate = useNavigate();
 
 	const at = useRecoilValue(accessTokenState);
 	
-	const onClickPlayer = (id) => {
-		setVotePlayer(id);
+	const loginModalAction = () => {
+		window.location.href = process.env.REACT_APP_LOGIN_URL;
 	}
 
-	const onClickSubmit = async (at) => {
-		postVotePlayer(at, votePlayer);
-		navigate(0);
+	const onClickSubmit = async (at, id) => {
+		await postVotePlayer(at, id, navigate);
 	}
 
-	const voteModal = (name) => {
+	const voteModal = (name, at, id) => {
 		return ({
 			type: 'voteSubmit',
 			title: '이 플레이어에게 투표하시겠습니까?',
 			content: name,
-			callback: () => onClickSubmit(),
+			callback: () => onClickSubmit(at, id),
 		});
 	}
 	
@@ -40,32 +42,26 @@ const TournamentList = () => {
 		});
 	}
 
-	const leftSize = 4;
-	const rightSize = 4;
-	const leftGroup = data.players.length !== 0 ? data.players.slice(0, 4) : [];
-	const rightGroup = data.players.length !== 0 ? data.players.slice(4) : [];
-
 	return (
 		<div className="main">
 			<div className="tournament grid">
-			{leftGroup.length !== 0 && leftGroup.map((player, index) => {
+			{data.left.length !== 0 && data.left.map((player, index) => {
 				return (
 					<div key={index + 1} className={`p${index + 1} flex-column-end`}>
 						<div className="l-player flex-row-center border-black">
-							<div
-								className="vote flex-column-center"
-								onClick={() => {
-									onClickPlayer(player.tournament_participant_id);
-									openModal(voteModal(player.name));
-									}}
-								>
-								<p className="check">✔️</p>
-								<p className="text">VOTE</p>
-							</div>
-							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
-								<div className="team-logo flex-column-center">
-									<img src="/menu-logo.svg" alt="team-logo" />
+							{!data.vote && (
+								<div
+									className="vote flex-column-center"
+									onClick={() => {
+										openModal(user.id !== 0 ? voteModal(player.name, at, player.tournament_participant_id) : loginModal(loginModalAction));
+										}}
+									>
+									<p className="check">✔️</p>
+									<p className="text">VOTE</p>
 								</div>
+							)}
+							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
+								<span className="team-logo" />
 								<div className="team-name flex-column-center">
 									<p>{player.name}</p>
 								</div>
@@ -75,28 +71,27 @@ const TournamentList = () => {
 				)
 			})}
 			<TournamentBracket />
-			{rightGroup.length !== 0 && rightGroup.map((player, index) => {
+			{data.right !== 0 && data.right.map((player, index) => {
 				return (
-					<div key={index + 1 + leftSize} className={`p${index + 1 + leftSize} flex-column-start`}>
+					<div key={index + 1 + 4} className={`p${index + 1 + 4} flex-column-start`}>
 						<div className="r-player flex-row-center border-black">
 							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
-								<div className="team-logo flex-column-center">
-									<img src="/menu-logo.svg" alt="team-logo" />
-								</div>
+								<span className="team-logo" />
 								<div className="team-name flex-column-center">
 									<p>{player.name}</p>
 								</div>
 							</div>
-							<div
-								className="vote flex-row-center"
-								onClick={() => {
-									onClickPlayer(player.tournament_participant_id);
-									openModal(voteModal(player.name));
-									}}
-								>
-								<p className="text">VOTE</p>
-								<p className="check">✔️</p>
-							</div>
+							{!data.vote && (
+								<div
+									className="vote flex-column-center"
+									onClick={() => {
+										openModal(user.id !== 0 ? voteModal(player.name, at, player.tournament_participant_id) : loginModal(loginModalAction));
+										}}
+									>
+									<p className="text">VOTE</p>
+									<p className="check">✔️</p>
+								</div>
+							)}
 						</div>
 					</div>
 				)
