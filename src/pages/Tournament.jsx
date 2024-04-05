@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Cookie } from '../hooks/Cookie';
 
 import { isLoggedInState } from "../hooks/Auth";
-import { accessTokenState } from '../hooks/useToken';
 import { userState } from '../api/userApi';
 
 import TournamentList from '../components/tournament/TournamentList';

@@ -96,6 +96,12 @@ html, body {
 	justify-content: center;
 	align-items: start;
 }
+.flex-row-start {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: start;
+}
 
 /* grid */
 .grid {
@@ -124,17 +130,20 @@ html, body {
 .section.center {
 	flex-grow: 1;
 }
+.section.center img {
+	width: 160px;
+}
 .material-symbols-outlined.home, .material-symbols-outlined.signed-out {
-	font-size: 38px;
+	font-size: 40px;
 	margin: 0px;
-	margin-bottom: 100%;
+	margin-bottom: 76px;
 }
 .signed-in {
 	width: 35px;
 	height: 35px;
 	border-radius: 100%;
 	overflow: hidden;
-	margin-bottom: 100%;
+	margin-bottom: 76px;
 }
 .signed-in img {
 	width: 100%;
@@ -147,10 +156,10 @@ html, body {
 	height: 76%;
 }
 .tournament {
-	width: 100%;
+	max-width: 390px;
 	height: calc(100% - 88px);
 	grid-template-columns: 7.5fr 1fr 1fr 1fr 1fr 1fr 7.5fr;
-	grid-template-areas: 
+	grid-template-areas:
 		'p1 q1 sf1 f1 sf5 q9 p5'
 		'p1 q2 sf1 f1 sf5 q10 p5'
 		'p2 q3 sf2 f1 sf6 q11 p6'
@@ -159,7 +168,7 @@ html, body {
 		'p3 q6 sf3 f2 sf7 q14 p7'
 		'p4 q7 sf4 f2 sf8 q15 p8'
 		'p4 q8 sf4 f2 sf8 q16 p8'
-		;
+	;
 }
 
 /* player */
@@ -168,12 +177,12 @@ html, body {
 	background-color: white;
 }
 .vote {
-	height: 102px;
+	height: 12vh;
 	width: 32px;
 	font-family: "Bowlby One SC", sans-serif;
   	font-weight: 400;
   	font-style: normal;
-	font-size: 15px;
+	font-size: 84%;
 	color: #EA2A36;
 }
 .check { 
@@ -207,22 +216,27 @@ html, body {
 	-ms-transform: rotate(-180deg);
 }
 .profile {
-	height: 102px;
-	width: 84px;
+	height: 12vh;
+	width: 21vw;
 }
 .profile .team-logo {
 	width: 100%;
-	flex-grow: 1;
+	height: 70%;
+	background-image: url('../../public/real-logo.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
 }
 .profile .team-name {
 	width: 100%;
-	flex-grow: 1;
+	height: 30%;
 	font-family: "Outfit", sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 700;
 	font-style: normal;
-	font-size: 14px;
+	font-size: 3.5vw;
 	border-top: 0.2px solid black; 
+	padding: 7%;
 }
 
 /* footer */
@@ -234,20 +248,22 @@ html, body {
 	width: 100%;
 }
 .footer img {
-	width: 83px;
-	height: 42px;
+	width: 18%;
 }
 
 /* modal */
-.modal {
-	display: flex;
-}
 #player-info-modal .modal-content{
 	font-family: "Outfit", sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 700;
 	font-style: normal;
-	height: 66%;
+	width: 80vw;
+	height: 66vh;
+	background-image: url('../../public/real-logo-background.svg');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	z-index: 2;
 }
 .section.top {
 	height: 32%;
@@ -303,14 +319,22 @@ html, body {
 	height: 100%;
 	align-items: end;
 }
-.section.right .material-symbols-outlined {
+#player-info-modal .material-symbols-outlined {
 	margin-top: 15px;
 	margin-right: 15px;
 	font-size: 30px;
 }
 
 /* section middle */
-.section.middle .rank-title { 
+.section.middle div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.title {
+	background-color: #E9EDF1;
+}
+.section.middle .rank.title { 
 	grid-area: rt;
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
@@ -320,7 +344,7 @@ html, body {
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
 }
-.section.middle .formation-title { 
+.section.middle .formation.title { 
 	grid-area: ft;
 	border-bottom: 1px solid black;
 }
@@ -328,7 +352,7 @@ html, body {
 	grid-area: f;
 	border-bottom: 1px solid black;
 }
-.section.middle .coach-title { 
+.section.middle .coach.title { 
 	grid-area: cot;
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
@@ -337,13 +361,14 @@ html, body {
 	grid-area: co;
 	border-right: 1px solid black;
 }
-.section.middle .career-title {
+.section.middle .career.title {
 	grid-area: cat;
 	border-bottom: 1px solid black;
 }
 .section.middle .career { grid-area: ca;}
 .section.middle {
 	border-top : 1px solid black;
+	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr 2fr 1fr 2fr;
 	grid-template-areas:
 	'rt ft'
@@ -351,4 +376,97 @@ html, body {
 	'cot cat'
 	'co ca'
 	;
+}
+
+/* section bottom */
+.section.bottom .comment.title {
+	grid-area: comt;
+	border-top : 1px solid black;
+	border-bottom: 1px solid black;
+}
+.section.bottom .comment {
+	grid-area: com;
+}
+.section.bottom {
+	grid-template-rows: 1fr 2fr;
+	grid-template-areas: 
+	'comt'
+	'com'
+	;
+}
+.section.bottom div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+#vote-modal .modal-content {
+	height: 20%;
+}
+#vote-modal .name-wrap {
+	font-family: "Bowlby One SC", sans-serif;
+  	font-weight: 400;
+  	font-style: normal;
+	font-size: 24px;
+	flex-grow: 1;
+}
+#vote-modal .warn-wrap {
+	height: 15%;
+	align-items: start;
+	font-size: 15px;
+}
+#vote-modal .material-symbols-outlined {
+	font-size: 16px;
+}
+
+@media (min-width:786px) {
+	.section.center img {
+		width: 270px;
+	}
+	.profile {
+		width: 120px;
+	}
+	.profile .team-name {
+		font-size: 145%;
+	}
+	.header .material-symbols-outlined {
+		font-size: 50px;
+	}
+	.vote {
+		font-size: 17px;
+	}
+	#player-info-modal .modal-content {
+		width: 580px;
+		font-size :23px; 
+	}
+	.footer img {
+		width: 100px;
+	}
+}
+@media (min-width:1024px) {
+	.tournament {
+		max-width: 800px;
+	}
+	.profile {
+		width: 180px;
+	}
+	.vote {
+		width: 40px;
+		font-size: 20px;
+	}
+}
+@media (min-width:1280px) {
+	.tournament {
+		max-width: 1000px;
+	}
+	.profile {
+		width: 200px;
+	}
+	.profile .team-name {
+		font-size: 160%;
+	}
+	.header .material-symbols-outlined {
+		font-size : 60px;
+	}
 }
