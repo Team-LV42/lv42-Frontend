@@ -2,11 +2,6 @@ import { atom, selector } from 'recoil';
 
 import { accessTokenState } from '../hooks/useToken';
 
-export const voteIDState = atom({
-	key: 'VoteIDState',
-	default: undefined,
-});
-
 
 //참가 선수 리스트
 export const playerList = selector({
@@ -20,22 +15,24 @@ export const playerList = selector({
 				"Authorization": `Bearer ${at ? at : ''}`
 			},
 		});
-
 		const data = await response.json();
+		data.players.sort((a,b) => a.bracket_pos - b.bracket_pos);
 		return data;
 	}
 });
 
-export const postVotePlayer = async (at, votePlayer) => {
+export const postVotePlayer = async (at, id, navigate) => {
 	try {
-		if (votePlayer === undefined) return null;
-		const response = await fetch(`${process.env.REACT_APP_API_URL}/tournament?vote=${votePlayer}`, {
+		if (id === undefined) return null;
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/tournament?vote=${id}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${at}`
 			},
 		});
+		await response;
+		navigate(0);
 	} catch (error) {
 		console.error('Failed to Post Vote Player: ',error);
 	}
