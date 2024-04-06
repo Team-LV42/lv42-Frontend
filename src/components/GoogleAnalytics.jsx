@@ -14,7 +14,7 @@ const GoogleAnalytics = ({ children }) => {
   useEffect(() => {
     ReactGA.set({page: location.pathname});
     ReactGA.send("pageview");
-    }, [location]);
+  }, [location]);
   
   return (
     <>
