@@ -16,6 +16,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 import Tournament from './pages/Tournament.jsx';
 
+import GoogleAnalycis from './components/GoogleAnalytics';
 
 
 import './App.css';
@@ -47,17 +48,19 @@ import './App.css';
 function App() {
   return (
     <BrowserRouter>
-      <ErrorBoundary fallback={<p>Something went wrong</p>}>
-        <RecoilRoot>
-          <Suspense fallback={<FullLoading />} >
-            <Routes>
-              <Route path="/callback" element={<Auth />} />
-              <Route path="/" index element={<Tournament />}/>
-              <Route path='/*' element={<Error />} /> 
-            </Routes>
-          </Suspense>
-        </RecoilRoot>
-      </ErrorBoundary>
+      <GoogleAnalycis>
+        <ErrorBoundary fallback={<p>Something went wrong</p>}>
+          <RecoilRoot>
+            <Suspense fallback={<FullLoading />} >
+              <Routes>
+                <Route path="/callback" element={<Auth />} />
+                <Route path="/" index element={<Tournament />}/>
+                <Route path='/*' element={<Error />} /> 
+              </Routes>
+            </Suspense>
+          </RecoilRoot>
+        </ErrorBoundary>
+      </GoogleAnalycis>
     </BrowserRouter>
   );
 }
