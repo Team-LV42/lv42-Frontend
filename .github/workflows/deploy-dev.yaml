@@ -17,6 +17,7 @@ jobs:
       CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       REACT_APP_LOGIN_URL: ${{ secrets.REACT_APP_LOGIN_URL }}
+      REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
 
     steps:
       - name: Checkout Repository
