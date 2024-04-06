@@ -6,8 +6,8 @@ const GoogleAnalytics = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (process.env.GOOGLE_ANALYTICS_ID) {
-      ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID);
+    if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID) {
+      ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID);
     }
   }, []);
 
