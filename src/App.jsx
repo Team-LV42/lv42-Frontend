@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { RecoilRoot } from 'recoil';
 
 import Login from './pages/Login.jsx';
@@ -46,17 +46,19 @@ import './App.css';
 
 function App() {
   return (
-    <ErrorBoundary fallback={<p>Something went wrong</p>}>
-      <RecoilRoot>
-        <Suspense fallback={<FullLoading />} >
-          <Routes>
-            <Route path="/callback" element={<Auth />} />
-            <Route path="/" index element={<Tournament />}/>
-            <Route path='/*' element={<Error />} /> 
-          </Routes>
-        </Suspense>
-      </RecoilRoot>
-    </ErrorBoundary>
+    <BrowserRouter>
+      <ErrorBoundary fallback={<p>Something went wrong</p>}>
+        <RecoilRoot>
+          <Suspense fallback={<FullLoading />} >
+            <Routes>
+              <Route path="/callback" element={<Auth />} />
+              <Route path="/" index element={<Tournament />}/>
+              <Route path='/*' element={<Error />} /> 
+            </Routes>
+          </Suspense>
+        </RecoilRoot>
+      </ErrorBoundary>
+    </BrowserRouter>
   );
 }
 
