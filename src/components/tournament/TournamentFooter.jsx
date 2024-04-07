@@ -1,7 +1,7 @@
 const TournamentFooter = () => {
 	return (
 		<div className="footer flex-column-center">
-			<img src="/logo-contact.svg" alt="" />
+			<p>sponsored boy JAEM'S 25</p>
 		</div>
 	)
 }

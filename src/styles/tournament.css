@@ -1,6 +1,13 @@
 html, body {
-	width: 100%;
-	height: 100%;
+	background-color: rgb(105, 105, 105);
+}
+
+body {
+	background-image: url('../../public/lfc-background.svg');
+	background-color: rgb(105, 105, 105);
+	font-family: "Outfit", sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
 }
 
 /* grid-area */
@@ -41,10 +48,10 @@ html, body {
 
 /* hide */
 .hidden {
-	visibility: hidden;
+	visibility: hidden !important;
 }
 .none {
-	display: none;
+	display: none !important;
 }
 
 /* border */
@@ -52,23 +59,23 @@ html, body {
 	border: 1px solid black;
 }
 .border-high-left {
-	border-top: 1px solid black;
-	border-right: 1px solid black;
+	border-top: 2px solid white;
+	border-right: 2px solid white;
 }
 .border-low-left {
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
+	border-bottom: 2px solid white;
+	border-right: 2px solid white;
 }
 .border-high-right {
-	border-top: 1px solid black;
-	border-left: 1px solid black;
+	border-top: 2px solid white;
+	border-left: 2px solid white;
 }
 .border-low-right {
-	border-bottom: 1px solid black;
-	border-left: 1px solid black;
+	border-bottom: 2px solid white;
+	border-left: 2px solid white;
 }
 .border-bottom {
-	border-bottom: 1px solid black;
+	border-bottom: 2px solid white;
 }
 
 /* flex */
@@ -119,31 +126,43 @@ html, body {
 	justify-content: center;
 }
 .section.left, .section.right {
-	width: 19%;
+	width: 25%;
+	padding-bottom: 76px;
 }
 .section.left {
-	justify-content: right;
+	justify-content: end;
 }
-.section.right {
-	justify-content: left;
+.section.left img {
+	width: 69px;
 }
 .section.center {
+	padding-top: 40px;
 	flex-grow: 1;
-}
-.section.center img {
-	width: 160px;
-}
-.material-symbols-outlined.home, .material-symbols-outlined.signed-out {
+	font-family: 'Abril Fatface', serif;
+	font-weight: 400;
+	font-style: normal;
 	font-size: 40px;
-	margin: 0px;
-	margin-bottom: 76px;
+}
+#lv42 {
+	font-size: 48px;
+	color: white;
+}
+#fifa-cup {
+	color: #E3D5AC;
+}
+.signed-out, .signed-in {
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	background-color: white;
+	padding-right: 3px;
+}
+.signed-out .material-symbols-outlined {
+	font-size: 28px;
 }
 .signed-in {
-	width: 35px;
-	height: 35px;
-	border-radius: 100%;
+	padding: 0px;
 	overflow: hidden;
-	margin-bottom: 76px;
 }
 .signed-in img {
 	width: 100%;
@@ -157,8 +176,8 @@ html, body {
 }
 .tournament {
 	max-width: 390px;
-	height: calc(100% - 88px);
-	grid-template-columns: 7.5fr 1fr 1fr 1fr 1fr 1fr 7.5fr;
+	height: calc(100% - 45px);
+	grid-template-columns: 5.5fr 1fr 1fr 1fr 1fr 1fr 5.5fr;
 	grid-template-areas:
 		'p1 q1 sf1 f1 sf5 q9 p5'
 		'p1 q2 sf1 f1 sf5 q10 p5'
@@ -173,17 +192,21 @@ html, body {
 
 /* player */
 .l-player, .r-player {
+	width: 116px;
+	height: 102px;
 	border-radius: 15px;
-	background-color: white;
+	background-color: #F6E8BD;
+	color: black;
+	max-width: 116px;
+	max-height: 102px;
 }
 .vote {
-	height: 12vh;
-	width: 32px;
+	height: 102px;
+	width: 27.5%;
 	font-family: "Bowlby One SC", sans-serif;
   	font-weight: 400;
   	font-style: normal;
-	font-size: 84%;
-	color: #EA2A36;
+	font-size: 15px;
 }
 .check { 
 	color: black;
@@ -216,13 +239,13 @@ html, body {
 	-ms-transform: rotate(-180deg);
 }
 .profile {
-	height: 12vh;
-	width: 21vw;
+	height: 100%;
+	flex-grow: 1;
+	justify-content: space-between;
 }
 .profile .team-logo {
 	width: 100%;
 	height: 70%;
-	background-image: url('../../public/real-logo.svg');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
@@ -230,33 +253,60 @@ html, body {
 .profile .team-name {
 	width: 100%;
 	height: 30%;
-	font-family: "Outfit", sans-serif;
-	font-optical-sizing: auto;
-	font-weight: 700;
-	font-style: normal;
 	font-size: 3.5vw;
 	border-top: 0.2px solid black; 
 	padding: 7%;
+}
+.voted {
+	border-radius: 15px;
+	border: 3px solid #00C83B;
+}
+
+/* teams */
+.team-mun {
+	background-image: url('../../public/manchester-united.svg');
+}
+.team-rma {
+	background-image: url('../../public/real-madrid.svg');
+}
+.team-mil {
+	background-image: url('../../public/ac-milan.svg');
+}
+.team-liv {
+	background-image: url('../../public/liverpool.svg');
+}
+.team-mci {
+	background-image: url('../../public/manchester-city.svg');
+}
+.team-psg {
+	background-image: url('../../public/psg.svg');
+}
+.team-atm {
+	background-image: url('../../public/atletico-madrid.svg');
+}
+.team-int {
+	background-image: url('../../public/internazionale-milano.svg');
+}
+.team-dor {
+	background-image: url('../../public/Borussia_Dortmund-O9DpWngdg_brandlogos.net.svg');
 }
 
 /* footer */
 .footer {
 	position: absolute;
 	left: 0;
-	top: calc(100% - 88px);
-	height: 88px;
+	top: calc(100% - 55px);
+	height: 55px;
 	width: 100%;
-}
-.footer img {
-	width: 18%;
+	font-style:italic;
+	font-weight: 500;
+	font-size: 12px;
+	color: #F2E3B6;
 }
 
 /* modal */
 #player-info-modal .modal-content{
-	font-family: "Outfit", sans-serif;
-	font-optical-sizing: auto;
 	font-weight: 700;
-	font-style: normal;
 	width: 80vw;
 	height: 66vh;
 	background-image: url('../../public/real-logo-background.svg');
@@ -430,8 +480,12 @@ html, body {
 	.profile .team-name {
 		font-size: 145%;
 	}
-	.header .material-symbols-outlined {
+	.header .material-symbols-outlined{
 		font-size: 50px;
+	}
+	.signed-in {
+		width: 50px;
+		height: 50px;
 	}
 	.vote {
 		font-size: 17px;
@@ -468,5 +522,9 @@ html, body {
 	}
 	.header .material-symbols-outlined {
 		font-size : 60px;
+	}
+	.signed-in {
+		width: 60px;
+		height: 60px;
 	}
 }
