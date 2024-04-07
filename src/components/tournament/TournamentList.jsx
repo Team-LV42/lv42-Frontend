@@ -48,7 +48,7 @@ const TournamentList = () => {
 			{data.left.length !== 0 && data.left.map((player, index) => {
 				return (
 					<div key={index + 1} className={`p${index + 1} flex-column-end`}>
-						<div className="l-player flex-row-center border-black">
+						<div className="l-player flex-row-center">
 							{!data.vote && (
 								<div
 									className="vote flex-column-center"
@@ -61,7 +61,7 @@ const TournamentList = () => {
 								</div>
 							)}
 							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
-								<span className="team-logo" />
+								<span className="team-logo team-mun" />
 								<div className="team-name flex-column-center">
 									<p>{player.name}</p>
 								</div>
@@ -74,9 +74,9 @@ const TournamentList = () => {
 			{data.right !== 0 && data.right.map((player, index) => {
 				return (
 					<div key={index + 1 + 4} className={`p${index + 1 + 4} flex-column-start`}>
-						<div className="r-player flex-row-center border-black">
+						<div className="r-player flex-row-center">
 							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
-								<span className="team-logo" />
+								<span className="team-logo team-mci" />
 								<div className="team-name flex-column-center">
 									<p>{player.name}</p>
 								</div>
