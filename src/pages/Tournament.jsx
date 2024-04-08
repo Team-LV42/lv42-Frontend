@@ -11,6 +11,7 @@ import TournamentList from '../components/tournament/TournamentList';
 import TournamentFooter from '../components/tournament/TournamentFooter';
 import TournamentHeader from '../components/tournament/TournamentHeader';
 import TournamentModal from '../components/tournament/TournamentModal';
+import '../styles/tournament.css';
 
 const Tournament = () => {
 	const cookie = Cookie().getCookies();
