@@ -12,7 +12,7 @@ const TournamentUser = ({ player }) => {
 				</div>
 				<div className="profile-img flex-column-center">
 					<span id="profile-img">
-						<img src={player.profile_img ? player.profile_img : "%PUBLIC_URL%/default-profile.svg"} alt="profile-img" />
+						<img src={player.profile_img ? player.profile_img : "/default-profile.svg"} alt="profile-img" />
 					</span>
 				</div>
 				<div className="intra-id flex-column-center">
