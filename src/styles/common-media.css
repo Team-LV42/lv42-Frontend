@@ -1,0 +1,45 @@
+@media (min-width: 430px), (min-height: 844px) {
+	body {
+		background-image: url('../../public/background-desktop.svg');
+		background-repeat: no-repeat;
+		background-position-y: center;
+		background-position-x: center;
+	}
+	.content {
+		width: 312px;
+	}
+	.slot-wrapper {
+		padding-left: 13px;
+		padding-right: 13px;
+	}
+	.slot-time {
+		margin-left: 20px;
+	}
+	.slot-value {
+		padding-left: 54px;
+		padding-right: 23px;
+	}
+	.modal-content {
+		width: 312px;
+		height: 170px;
+	}
+	.alert{
+		width: 312px;
+	}
+	.search-result-list {
+		width: 312px;
+	}
+	.sidebar-menu {
+		width: 360px;
+		left: -360px;
+	}
+	.open {
+		left: 0px;
+	}
+	.error-background-404 {
+		background-image: url('../../public/error-background-404-desktop.svg');
+	}
+	#search-modal .modal-content {
+		margin-top: 30px;
+	}
+}
