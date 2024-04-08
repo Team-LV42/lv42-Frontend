@@ -25,7 +25,7 @@ const TournamentHeader = ({ user }) => {
 					</div>
 				) : (
 					<span className="signed-in flex-column-center border-black">
-						<img src={user.profile_img} alt="user-img" />
+						<img src={user.profile_img ? user.profile_img : "/default-profile.svg"} alt="user-img" />
 					</span>
 				)}
 			</div>
