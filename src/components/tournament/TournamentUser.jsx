@@ -6,13 +6,13 @@ const TournamentUser = ({ player }) => {
 		<>
 		<div className="section top flex-row-center">
 			<div className="section left" />
-			<div className="section center">
+			<div className="section center flex-column-center">
 				<div className="team-name flex-column-center">
 					<p>{player.team_name}</p>
 				</div>
 				<div className="profile-img flex-column-center">
 					<span id="profile-img">
-						<img src={player.profile_img} alt="profile-img" />
+						<img src={player.profile_img ? player.profile_img : "%PUBLIC_URL%/default-profile.svg"} alt="profile-img" />
 					</span>
 				</div>
 				<div className="intra-id flex-column-center">
@@ -26,7 +26,7 @@ const TournamentUser = ({ player }) => {
 			</div>
 		</div>
 
-		<div className="section middle grid">
+		<div className="section middle grid team-int bg">
 			<div className="rank title">
 				<p>예선 순위</p>
 			</div>
