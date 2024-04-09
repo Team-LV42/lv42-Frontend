@@ -10,7 +10,7 @@ const TournamentHeader = ({ user }) => {
 	return (
 		<div className="header">
 			<div className="section left flex-row-center">
-				<img src="./FC24 LOGO white.png" alt="fc24-logo" />
+				<img src="./logo/FC24 LOGO white.png" alt="fc24-logo" />
 			</div>
 			<div className="section center flex-column-center">
       			<p id="lv42">LV42</p>

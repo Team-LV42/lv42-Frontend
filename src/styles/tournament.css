@@ -534,10 +534,6 @@ body::before {
 	font-size: 15px;
 }
 
-#vote-modal .select-wrap div {
-	cursor:pointer;
-}
-
 #vote-modal .material-symbols-outlined {
 	font-size: 16px;
 }
