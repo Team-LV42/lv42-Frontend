@@ -31,7 +31,7 @@ const TournamentUser = ({ player }) => {
 				<p>예선 순위</p>
 			</div>
 			<div className="rank">
-				<p>{player.preliminary_rank}위</p>
+				<p>{player.preliminary_rank ? `${player.preliminary_rank}위` : '부전승'}</p>
 			</div>
 			<div className="formation title">
 				<p>사용 전술</p>
