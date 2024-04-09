@@ -436,7 +436,7 @@ a {
 	top: 50%;
 	left: 50%;    
 	transform: translate(-50%, -50%);
-	background: url('../../public/42logo-loading.svg') -130px 0 / 260px no-repeat;
+	background: url('../../public/logo/42logo-loading.svg') -130px 0 / 260px no-repeat;
 }
 .loading::after {
 	content: '';
@@ -446,7 +446,7 @@ a {
 	left: 0;    
 	width: 0px;
 	height: 80px;
-	background: url('../../public/42logo-loading.svg') 0 0 / 260px no-repeat;
+	background: url('../../public/logo/42logo-loading.svg') 0 0 / 260px no-repeat;
 	transition: all 2s ease-in-out;
 }
 .animate::after{ width: 130px; }

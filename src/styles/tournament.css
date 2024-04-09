@@ -12,10 +12,23 @@ body {
 	background-image: linear-gradient(
 		rgba(0, 0, 0, 0.3),
 		rgba(0, 0, 0, 0.5)
-	), url('../../public/lfc-bg.png');
+	), url('../../public/lfc-background-mini-2.png');
 	font-family: "Outfit", sans-serif;
 	font-optical-sizing: auto;
 	font-style: normal;
+	position: relative;
+	z-index: 0;
+}
+body::before {
+	content: "";
+	position: absolute;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	backdrop-filter: blur(1px);
+	-webkit-backdrop-filter: blur(5px);
+	z-index: -1;
 }
 
 /* grid-area */
@@ -276,37 +289,65 @@ body {
 	padding: 7%;
 }
 .voted {
+	position: relative;
 	border-radius: 15px;
-	border: 3px solid #00C83B;
+	border: 5px solid transparent;
+	background-image:
+	linear-gradient(#F6E8BD, #F6E8BD),
+	linear-gradient(#FBB502, #956B01)
+	;
+	background-origin:border-box;
+	background-clip: content-box, border-box;
+}
+.voted::before {
+	content: "";
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top:-15px;
+	left:-15px;
+	width: 30px;
+	height: 30px;
+	background-image: url('../../public/voted-img.svg');
+	border-radius: 100%;
 }
 
 /* teams */
-.team-mun {
-	background-image: url('../../public/manchester-united.svg');
-}
-.team-rma {
-	background-image: url('../../public/real-madrid.svg');
-}
-.team-mil {
-	background-image: url('../../public/ac-milan.svg');
-}
-.team-liv {
-	background-image: url('../../public/liverpool.svg');
-}
-.team-mci {
-	background-image: url('../../public/manchester-city.svg');
-}
-.team-psg {
-	background-image: url('../../public/psg.svg');
-}
-.team-atm {
-	background-image: url('../../public/atletico-madrid.svg');
-}
-.team-int {
-	background-image: url('../../public/internazionale-milano.svg');
-}
-.team-dor {
-	background-image: url('../../public/Borussia_Dortmund-O9DpWngdg_brandlogos.net.svg');
+.team-mun {background-image: url('../../public/team-logo/manchester-united.svg');}
+.team-rma {background-image: url('../../public/team-logo/real-madrid.svg');}
+.team-mil {background-image: url('../../public/team-logo/ac-milan.svg');}
+.team-liv {background-image: url('../../public/team-logo/liverpool.svg');}
+.team-mci {background-image: url('../../public/team-logo/manchester-city.svg');}
+.team-psg {background-image: url('../../public/team-logo/psg.svg');}
+.team-atm {background-image: url('../../public/team-logo/atletico-madrid.svg');}
+.team-bay {background-image: url('../../public/team-logo/bayern-munchen.svg');}
+.team-cph {background-image: url('../../public/team-logo/kobenhavn.svg');}
+.team-tot {background-image: url('../../public/team-logo/Tottenham_Hotspur.svg');}
+.team-ars {background-image: url('../../public/team-logo/arsenal.svg');}
+.team-lev {background-image: url('../../public/team-logo/Bayer_Leverkusen_Logo.svg');}
+
+/* team-bg */
+.team-acm-bg {background-image: url('../../public/team-logo/background/ac-milan-bg.svg');}
+.team-mun-bg {background-image: url('../../public/team-logo/background/manchester-united-bg.svg');}
+.team-rma-bg {background-image: url('../../public/team-logo/background/real-madrid-bg.svg');}
+.team-mil-bg {background-image: url('../../public/team-logo/background/ac-milan-bg.svg');}
+.team-liv-bg {background-image: url('../../public/team-logo/background/liverpool-bg.svg');}
+.team-mci-bg {background-image: url('../../public/team-logo/background/manchester-city-bg.svg');}
+.team-psg-bg {background-image: url('../../public/team-logo/background/psg-bg.svg');}
+.team-atm-bg {background-image: url('../../public/team-logo/background/atletico-madrid-bg.svg');}
+.team-ars-bg {background-image: url('../../public/team-logo/background/arsenal-bg.svg');}
+.team-bay-bg {background-image: url('../../public/team-logo/background/bayern-munchen-bg.svg');}
+.team-cph-bg {background-image: url('../../public/team-logo/background/kobenhavn-bg.svg');}
+.team-tot-bg {background-image: url('../../public/team-logo/background/Tottenham_Hotspur-bg.svg');}
+.team-lev-bg {background-image: url('../../public/team-logo/background/Bayer_Leverkusen_Logo-bg.svg');}
+
+/* team-logo-background */
+.bg {
+	position: relative;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
 }
 
 /* footer */
@@ -394,13 +435,6 @@ body {
 	margin-top: 15px;
 	margin-right: 15px;
 	font-size: 30px;
-}
-
-/* team-logo-background */
-.bg {
-	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
 }
 
 /* section middle */
@@ -499,6 +533,11 @@ body {
 	align-items: start;
 	font-size: 15px;
 }
+
+#vote-modal .select-wrap div {
+	cursor:pointer;
+}
+
 #vote-modal .material-symbols-outlined {
 	font-size: 16px;
 }

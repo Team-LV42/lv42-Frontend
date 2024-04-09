@@ -9,6 +9,7 @@ export const tournament8Group = selector({
 		const left = data.players.slice(0, 4);
 		const right = data.players.slice(4, 8);
 		const vote = data.vote ? data.vote : false;
-		return { left, right, vote };
+		const fin = data.fin;
+		return { left, right, vote, fin };
 	}
 })
