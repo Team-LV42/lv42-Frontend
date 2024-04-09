@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import useModal from "../../hooks/useModal";
 
 const TournamentModal = () => {
@@ -7,8 +8,25 @@ const TournamentModal = () => {
 		closeModal();
 	}
 
+	useEffect(() => {
+		if (isopen && modalDataState.type === 'alert')
+		{
+			setTimeout(() => {
+				closeModal();
+			}, 3000);
+		}
+	}, [isopen]);
+
 	return (
 		<>
+			<div className={`alert ${isopen && modalDataState.type === 'alert' ? 'active' : ''}`}  id="warning-alert">
+				{/* <div className="warning red">
+					<p>{noti.title ? noti.title : ''}</p>
+				</div> */}
+				<div className="warning-message">
+					<p>{modalDataState.type === 'alert' && modalDataState.content}</p>
+				</div>	
+			</div>
 			{isopen && modalDataState.type === 'login' && (
 				<div className="modal" id="login-modal" onClick={() => onClickDimmer()}>
 					<div className="modal-content" onClick={(event) => event.stopPropagation()}>

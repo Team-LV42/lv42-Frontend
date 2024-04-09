@@ -26,7 +26,7 @@ const TournamentUser = ({ player }) => {
 			</div>
 		</div>
 
-		<div className="section middle grid team-int bg">
+		<div className={`section middle grid bg team-${player.club_name}-bg`}>
 			<div className="rank title">
 				<p>예선 순위</p>
 			</div>

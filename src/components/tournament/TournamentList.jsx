@@ -1,7 +1,8 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
-import { voteIDState, postVotePlayer } from '../../api/tournamentApi';
+import { postVotePlayer } from '../../api/tournamentApi';
 import { tournament8Group } from '../../store/tournament';
 import { userState } from '../../api/userApi';
 import { accessTokenState } from '../../hooks/useToken';
@@ -42,14 +43,26 @@ const TournamentList = () => {
 		});
 	}
 
+	useEffect(() => {
+		if (data && data.fin === true)
+		{
+			setTimeout(() => {
+				openModal({
+					type: 'alert',
+					content: '아... 투표 종료요~',
+				});
+			}, 500);
+		}
+	}, [data]);
+
 	return (
 		<div className="main">
 			<div className="tournament grid">
 			{data.left.length !== 0 && data.left.map((player, index) => {
 				return (
 					<div key={index + 1} className={`p${index + 1} flex-column-end`}>
-						<div className="l-player flex-row-center">
-							{!data.vote && (
+						<div className={`l-player flex-row-center ${player.tournament_participant_id === data.vote ? 'voted' : ''}`}>
+							{!data.fin && !data.vote && (
 								<div
 									className="vote flex-column-center"
 									onClick={() => {
@@ -61,7 +74,7 @@ const TournamentList = () => {
 								</div>
 							)}
 							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
-								<span className="team-logo team-mun" />
+								<span className={`team-logo team-${player.club_name}`} />
 								<div className="team-name flex-column-center">
 									<p>{player.name}</p>
 								</div>
@@ -74,14 +87,14 @@ const TournamentList = () => {
 			{data.right !== 0 && data.right.map((player, index) => {
 				return (
 					<div key={index + 1 + 4} className={`p${index + 1 + 4} flex-column-start`}>
-						<div className="r-player flex-row-center">
+						<div className={`r-player flex-row-center ${player.tournament_participant_id === data.vote ? 'voted' : ''}`}>
 							<div className="profile flex-column-center" onClick={() => openModal(userModal(player))}>
-								<span className="team-logo team-mci" />
+								<span className={`team-logo team-${player.club_name}`} />
 								<div className="team-name flex-column-center">
 									<p>{player.name}</p>
 								</div>
 							</div>
-							{!data.vote && (
+							{!data.fin && !data.vote && (
 								<div
 									className="vote flex-column-center"
 									onClick={() => {
