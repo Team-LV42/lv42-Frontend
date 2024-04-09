@@ -49,7 +49,7 @@ const TournamentList = () => {
 			setTimeout(() => {
 				openModal({
 					type: 'alert',
-					content: '아... 투표 종료요~',
+					content: '승부예측 이벤트가 마감되었습니다.',
 				});
 			}, 500);
 		}
