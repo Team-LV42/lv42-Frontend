@@ -587,3 +587,23 @@ body::before {
 		width: 70px;
 	}
 }
+
+.error-main {
+	width: 70%;
+	height: 163px;
+	font-family: 'Abril Fatface', serif;
+	font-weight: 400;
+	font-style: normal;
+}
+.error-code {
+	width: 100%;
+	color:white;
+	text-align: center;
+	font-size:100px;
+}
+.error-status {
+	width:100%;
+	color:#E3D5AC;
+	text-align: center;
+	font-size:30px;
+}
