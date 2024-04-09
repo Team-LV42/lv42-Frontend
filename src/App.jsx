@@ -11,10 +11,12 @@ import BookModal from './components/BookModal.jsx';
 import FullLoading from './components/loading/FullLoading.jsx';
 import Index from './pages/index.jsx';
 
-import Error from './components/redirect/Error';
+import { Error404, Error500 } from './components/redirect/Error';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 import Tournament from './pages/Tournament.jsx';
+import Panel from './pages/TournamentTest.jsx';
+import { T404, T500 } from './components/tournament/TournamentError.jsx';
 
 import GoogleAnalycis from './components/GoogleAnalytics';
 
@@ -49,13 +51,14 @@ function App() {
   return (
     <BrowserRouter>
       <GoogleAnalycis>
-        <ErrorBoundary fallback={<p>Something went wrong</p>}>
+        <ErrorBoundary fallback={<T500 />}>
           <RecoilRoot>
             <Suspense fallback={<FullLoading />} >
               <Routes>
                 <Route path="/callback" element={<Auth />} />
                 <Route path="/" index element={<Tournament />}/>
-                <Route path='/*' element={<Error />} /> 
+                <Route path={`/${process.env.REACT_APP_PANEL_URL}`} element={<Panel />} />
+                <Route path='/*' element={<T404 />} /> 
               </Routes>
             </Suspense>
           </RecoilRoot>

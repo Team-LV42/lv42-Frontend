@@ -1,14 +1,21 @@
 
-import Error404 from './Error404';
-
 // error state
 const errorState = 404;
 
-const Error = () => {
+export const Error500 = () => {
 	return (
 		<div>
-			<Error404 />
+			<h1>500</h1>
+			<span>이런...</span>
 		</div>
+	);
+}
+
+export const Error404 = () => {
+	return (
+		<>
+			<div className="error-background-404" />
+		</>
 	);
 }
 
