@@ -21,7 +21,7 @@ export const T500 = () => {
 					<p>500</p>
 				</div>
 				<div className="error-status">
-					<p>어림없는 상황</p>
+					<p>OOPS</p>
 				</div>
 			</div>
 		</div>
