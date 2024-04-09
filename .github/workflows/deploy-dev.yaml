@@ -18,6 +18,8 @@ jobs:
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       REACT_APP_LOGIN_URL: ${{ secrets.REACT_APP_LOGIN_URL }}
       REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
+      REACT_APP_PANEL_URL: ${{ secrets.REACT_APP_PANEL_URL }}
+      REACT_APP_PANEL_API_URL: ${{ secrets.REACT_APP_PANEL_API_URL }}
 
     steps:
       - name: Checkout Repository
