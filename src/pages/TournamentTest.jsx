@@ -2,6 +2,7 @@ import { useState } from "react";
 import { selector, selectorFamily, useRecoilValue } from "recoil";
 
 import '../styles/panel.css';
+import { tournament8Group } from "../store/tournament";
 
 
 const fetchVotersByWinnerID = selectorFamily({
@@ -21,6 +22,7 @@ const fetchVotersByWinnerID = selectorFamily({
 
 const TournamentTest = () => {
 	const [targetID, setTargetID] = useState(0);
+	const players = useRecoilValue(tournament8Group);
 	const voters = useRecoilValue(fetchVotersByWinnerID(targetID ? targetID : 0));
 
 	const onChange = (event) => {

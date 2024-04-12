@@ -4,8 +4,15 @@
 /* @import "./styles/tournament.css"; */
 /* @import "./styles/user.css"; */
 
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 #root {
-	height: 100%;
+	/* height: 100%; */
 }
 
 /* main content */
