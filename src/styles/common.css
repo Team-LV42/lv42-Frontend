@@ -452,6 +452,28 @@ a {
 }
 .animate::after{ width: 130px; }
 
+.flex-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+.flex-column {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.logo-darkened {
+	width: 330px;
+	height: 200px;
+	background-image: url('../../public/logo/logo-darkened.svg');
+	font-family: "Outfit", sans-serif;
+	font-weight: 700;
+	font-size: 30px;
+}
+
 /* sidebar menu */
 .sidebar-menu {
 	z-index: 1;
