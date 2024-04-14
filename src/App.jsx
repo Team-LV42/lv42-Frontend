@@ -50,7 +50,7 @@ function App() {
   return (
     <BrowserRouter>
       <GoogleAnalycis>
-        <ErrorBoundary fallback={<T500 />}>
+        <ErrorBoundary fallback={<Error500 />}>
           <RecoilRoot>
             <Suspense fallback={<FullLoading />} >
               <Routes>
@@ -58,7 +58,7 @@ function App() {
                 {/* <Route path="/callback" element={<Auth />} /> */}
                 {/* <Route path="/" index element={<Tournament />}/> */}
                 {/* <Route path={`/${process.env.REACT_APP_PANEL_URL}`} element={<Panel />} /> */}
-                <Route path='/*' element={<T404 />} /> 
+                <Route path='/*' element={<Error404 />} /> 
               </Routes>
             </Suspense>
           </RecoilRoot>
