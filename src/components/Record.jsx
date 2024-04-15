@@ -1,0 +1,119 @@
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+
+import useModal from '../hooks/useModal';
+import useDate from '../hooks/useDate';
+import useToken from '../hooks/useToken';
+
+import { consoleTypeState } from '../store/State';
+import { deleteModal } from '../store/Modal';
+import { deleteBookRecord } from '../api/bookApi';
+
+export default function Record({ record, type, time, onClick, isDeletable = false, isSelected = false }) {
+	const { openModal, closeModal } = useModal();
+	const { tickToTime, getDuration, curTick } = useDate();
+	const consoleType = useRecoilValue(consoleTypeState);
+	const navigate = useNavigate();
+	const accessToken = useToken().accessToken();
+
+	const deleteAction = async () => {
+		await deleteBookRecord(record._id, record.user_id, accessToken);
+		closeModal();
+		window.location.reload();
+		// navigate(0);
+	};
+	
+	const typeToString = (type, flag) => {
+		let str;
+		switch (type) {
+			case 1:
+				str = 'Xbox';
+				break ;
+			case 2:
+				str = 'Nintendo';
+				break ;
+			case 3:
+				str = 'PS5';
+				break ;
+			default :
+				str = '';
+				break ;
+		}
+		if (flag)
+			return str.toLowerCase();
+		return str;
+	};
+	
+	return (
+		<>
+			{type === 'user' && record.length !== 0 && (
+				<span
+				className="slot"
+				value={time}
+				onClick={(event) => {
+					event.preventDefault();
+					(isDeletable && openModal(deleteModal));
+				}}
+				// onClick="showModal('reservationModal')"
+			>
+				<div className="slot-time"><p>{record.date}</p><p>{getDuration(record.start_time, record.end_time)}</p></div>
+				<div className={`slot-value content-type-${record.type}`}><p>{typeToString(record.type, 0)}</p></div>
+			</span>
+			)}
+			{type === 'book' && record.length === 0 && (
+				<span
+					className={`slot ${isSelected ? (`selected-${typeToString(consoleType, 1)}`) : ''}${curTick > time ? 'disabled' : ''}`}
+					value={time}
+					id={time}
+					onClick={(event) => {
+						event.preventDefault();
+						onClick(event);
+					}}
+					type='empty'
+					// onClick="showModal('reservationModal')"
+				>
+					<div className="slot-wrapper">
+						<div className="slot-time">{tickToTime(time)} ~</div>
+						<div className="slot-value">{isSelected ? 'SELECTED' : '-'}</div>
+					</div>
+				</span>
+			)}
+			{type === 'book' && record.length !== 0 && (
+				<span
+					className={`slot reserved ${isSelected ? 'selected' : ''}${curTick > time ? 'disabled' : ''}`}
+					value={time}
+					id={time}
+					onClick={(event) => {
+						event.preventDefault();
+						(isDeletable && curTick <= time && openModal(deleteModal(record, getDuration, deleteAction)))
+					}}
+					type='reserve'
+					// onClick="showModal('reservationModal')"
+				>
+					<div className="slot-wrapper">
+						<div className="slot-time">{tickToTime(time)} ~</div>
+						<div className="slot-value">{record.user[0].name}</div>
+					</div>
+				</span>
+			)}
+			{type === 'admin' && (
+				<button
+					className='time-button'
+					value={time}
+					onClick={(event) => {
+						event.preventDefault();
+						(isDeletable && openModal(deleteModal))
+					}}
+				>
+					<div>{tickToTime(time)}</div>
+					<div>{getDuration(record.start_time, record.end_time)}</div>
+					<div>
+						<h1>{record.user[0].name}</h1>
+						<p>{typeToString(record.type, 0)}</p>
+						<span>{record.date}</span>	
+					</div>
+				</button>
+			)}
+		</>
+	);
+};

@@ -1,13 +1,153 @@
+@import "./styles/reset.css";
+@import "./styles/common.css";
+@import "./styles/common-media.css";
+/* @import "./styles/tournament.css"; */
+/* @import "./styles/user.css"; */
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+#root {
+	/* height: 100%; */
+}
+
+/* main content */
+#main-content {
+	flex-direction: column;
+	padding-bottom: 10px;
+}
+
+/* tab */
+#main-content .tab {
+	max-width: 33.3333333333%;
+}
+#main-content .tab-active {
+	max-width: 33.3333333333%;
+}
+#xbox-tab {
+	border-top-left-radius: 10px;
+	border-right: 1px solid black;
+	background-color: #00C83B;
+}
+#nintendo-tab {
+	border-right: 1px solid black;
+	border-left: 1px solid black;
+	background-color: #EA2A36;
+}
+#ps5-tab {
+	border-top-right-radius: 10px;
+	border-left: 1px solid black;
+	background-color: #527FD8;
+}
+
+/* selected slot */
+.selected-xbox .slot-value{
+	font-family: "Bowlby One", sans-serif;
+}
+.selected-nintendo .slot-value{
+	font-family: "Bowlby One", sans-serif;
+}
+.selected-ps5 .slot-value{
+	font-family: "Bowlby One", sans-serif;
+}
+.selected-xbox {
+	color : white;
+	background-color: #00C83B;
+}
+.selected-nintendo {
+	color : white;
+	background-color: #EA2A36;
+}
+.selected-ps5 {
+	color : white;
+	background-color: #527FD8;
+}
+
+/* sub content */
+.sub-content-wrapper {
+	border: 1px solid black;
+    border-radius: 10px;
+	margin-top: 6vw;
+	width: 80%;
+	height: 91px;
+}
+.sub-content-wrapper a {
+	border-radius: inherit;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.sub-content {
+	border-radius: 10px;
+    background-color: #ffffff;
+	filter:none;
+    width: 100%;
+	height: 100%;
+	box-shadow: inset 0px -4px rgba(0, 0, 0, 0.1);
+}
+.sub-content .section {
+	height: 50%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+.sub-content .time-wrap {
+	width: 80%;
+	height: 100%;
+	font-size: 20px;
+	font-weight: bold;
+	font-family: "Bowlby One", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items:end;
+	padding-bottom: 2px;
+}
+.sub-content .comment-wrap {
+	width: 80%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	padding-top	: 5px;
+	align-items: start;
+	font-family: 'Wemakeprice-Regular';
+	font-size: 17px;
+}
+.sub-content-wrapper .finished-xbox {
+	background-color: #00C83B;
+}
+.sub-content-wrapper .finished-nintendo {
+	background-color: #EA2A36;
+}
+.sub-content-wrapper .finished-ps5 {
+	background-color: #527FD8;
+}
+@media (min-width : 390px) {
+	.sub-content-wrapper {
+		width: 312px;
+	}
+}
+.finished-xbox {
+	color: white;
+	background-color: #036e24;
+}
+.finished-nintendo {
+	color: white;
+	background-color: #901921;
+}
+.finished-ps5 {
+	color: white;
+	background-color: #2f497e;
+}
+.finished-nintendo .time-wrap {
+	color: black;
+}
+.finished-xbox .time-wrap {
+	color: black;
+}
+.finished-ps5 .time-wrap {
+	color: black;
 }

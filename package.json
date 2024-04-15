@@ -8,12 +8,14 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-ga4": "^2.1.0",
+    "react-router-dom": "^6.22.1",
     "react-scripts": "^5.0.1",
     "recoil": "^0.7.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "export PORT=3131 && react-scripts start",
+    "start": "export PORT=4242 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

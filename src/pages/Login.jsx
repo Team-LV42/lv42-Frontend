@@ -1,48 +1,12 @@
-import {
-	atom,
-	selector,
-	useRecoilState,
-	useRecoilValue,
-} from "recoil";
+import { redirect } from 'react-router-dom';
 
+const loginUrl="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-a74331b456cc2db0bfb71c584a1d8b8cc6369d5c8b8f775d59a19e6483b9ddbd&redirect_uri=http%3A%2F%2F13.124.198.32%3A4242%2Fcallback&response_type=code";
 
-
-const UserLoginState = atom({
-	key: 'UserLoginState',
-	default: '',
-});
-
-const UserLoginQuery = selector({
-	key: 'UserLoginQuery',
-	get: async () => {
-		try {
-			const response = await fetch("", {
-				method: "get",
-				mode: "no-cors",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			if (400 <= response.status && response.status <= 599)
-				throw new Error("response is failed");
-			return response;
-		} catch (err) {
-			console.log("fetch error: " + err);
-		}
-	}
-})
-
-function Login() {
-	const [userState, setUserState] = useRecoilState(UserLoginState);
-	const getUser = useRecoilValue(UserLoginQuery);
-
-	const onClick = () => {
-		setUserState(getUser());
-	}
+const Login = () => {
 	return (
-		<div>
-			<button value={userState} onClick={onClick}>Login</button>
-		</div>
+		<>
+		{redirect(loginUrl)}
+		</>
 	)
 };
 
