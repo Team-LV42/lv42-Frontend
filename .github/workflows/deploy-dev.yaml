@@ -37,10 +37,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload Files to S3
-        run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }}
+        run: aws s3 sync build/ s3://${{ secrets.DEV_S3_BUCKET_NAME }}
 
       - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
       - name: Notify Discord on failure
         uses: sarisia/actions-status-discord@v1
