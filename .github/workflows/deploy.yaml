@@ -1,8 +1,8 @@
-name: Deploy Level42 Dev
+name: Deploy Level42
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
 
 jobs:
   deploy:
@@ -22,10 +22,12 @@ jobs:
 
       - name: Build
         env:
-          REACT_APP_API_URL: ${{ secrets.DEV_REACT_APP_API_URL }}
-          REACT_APP_LOGIN_URL: ${{ secrets.DEV_REACT_APP_LOGIN_URL }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_LOGIN_URL: ${{ secrets.REACT_APP_LOGIN_URL }}
+          REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
           REACT_APP_PANEL_URL: ${{ secrets.REACT_APP_PANEL_URL }}
           REACT_APP_PANEL_API_URL: ${{ secrets.REACT_APP_PANEL_API_URL }}
+          GENERATE_SOURCEMAP: false
         run: npm run build
 
       - name: Configure AWS credentials
@@ -47,7 +49,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           status: ${{ job.status }}
-          content: "[dev] 배포 실패"
+          content: "[main] 배포 실패"
           color: 0xff0000
           username: GitHub Actions
           avatar_url: 'https://avatars.githubusercontent.com/u/44036562'
@@ -58,7 +60,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           status: ${{ job.status }}
-          content: "[dev] 배포 성공"
+          content: "[main] 배포 성공"
           color: 0x00ff00
           username: GitHub Actions
           avatar_url: 'https://avatars.githubusercontent.com/u/44036562'
