@@ -57,6 +57,10 @@ h3 {
 	max-height: 80%;
 	border-radius: 10px;
   }
+
+  .none { 
+	display: none !important;
+  }
   
   .header {
 	text-align: center;
@@ -93,6 +97,10 @@ h3 {
 	font-size: 14px;
 	margin: 5px;
 	cursor: pointer;
+  }
+
+  .option.long {
+	flex: 100%;
   }
 
   .sml-option {
