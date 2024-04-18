@@ -14,35 +14,38 @@ import Index from './pages/index.jsx';
 import { Error404, Error500 } from './components/redirect/Error';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 
-import { T404, T500 } from './components/tournament/TournamentError.jsx';
-import ComingSoon from './pages/comingsoon.jsx';
+import Report from './pages/report.jsx';
+import DashBoard from './pages/dashboard.jsx';
 
 import GoogleAnalycis from './components/GoogleAnalytics';
 
 
 import './App.css';
+import Controller from './components/controller/Controller.jsx';
 
 // function App() {
 //   return (
-//     <ErrorBoundary fallback={<p>Something went wrong</p>}>
-//       <RecoilRoot>
-//         <Suspense fallback={<FullLoading />} >
-//           {/* <Index /> */}
-//           {/* <Header /> */}
-//           <div className='main'>
-//              <Routes>
-//               <Route path="/" index element={<TournamentVote />} />
-//               <Route path="/callback" element={<Auth />} />
-//               <Route path='/*' element={<Error />} /> 
-//               {/* <Route path="/" index element={<BookModal />} />
-//               <Route path="/test" element={<Search />} />
-//               <Route path="/user" element={<UserModal />} />
-//               <Route path="/user/:id" element={<UserModal />} /> */}
-//             </Routes>
-//           </div>
-//         </Suspense>
-//       </RecoilRoot>
-//     </ErrorBoundary>
+//     <BrowserRouter>
+//       <ErrorBoundary fallback={<Error500 />}>
+//         <RecoilRoot>
+//           <Suspense fallback={<FullLoading />} >
+//             {/* <Index /> */}
+//             {/* <Header /> */}
+//             <div className='main'>
+//               <Routes>
+//                 {/* <Route path="/" index element={<TournamentVote />} /> */}
+//                 <Route path="/" index element={<BookModal />} />
+//                 <Route path="/callback" element={<Auth />} />
+//                 <Route path="/test" element={<Search />} />
+//                 <Route path="/user" element={<UserModal />} />
+//                 <Route path="/user/:id" element={<UserModal />} />
+//                 <Route path='/*' element={<Error404 />} /> 
+//               </Routes>
+//             </div>
+//           </Suspense>
+//         </RecoilRoot>
+//       </ErrorBoundary>
+//     </BrowserRouter>
 //   );
 // }
 
@@ -53,13 +56,16 @@ function App() {
         <ErrorBoundary fallback={<Error500 />}>
           <RecoilRoot>
             <Suspense fallback={<FullLoading />} >
-              <Routes>
-                <Route path="/" index element={<ComingSoon />} />
-                {/* <Route path="/callback" element={<Auth />} /> */}
-                {/* <Route path="/" index element={<Tournament />}/> */}
-                {/* <Route path={`/${process.env.REACT_APP_PANEL_URL}`} element={<Panel />} /> */}
-                <Route path='/*' element={<Error404 />} /> 
-              </Routes>
+              <Header />
+              <div className='main'>
+                  <Routes>
+                    <Route path="/" index element={<Report />} />
+                    <Route path="/dashboard" index element={<DashBoard />} />
+                    {/* <Route path="/c" element={<Controller />} />  */}
+                    {/* <Route path="/callback" element={<Auth />} /> */}
+                    <Route path='/*' element={<Error404 />} /> 
+                  </Routes>
+              </div>
             </Suspense>
           </RecoilRoot>
         </ErrorBoundary>

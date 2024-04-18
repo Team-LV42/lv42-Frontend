@@ -22,7 +22,7 @@ const Header = () => {
 			</div>
 			<div className="section" id="logo">
 				<Link to="/" >
-					<img src="logo.svg" alt="logo" />
+					<img src="logo/logo.svg" alt="logo" />
 				</Link>
 			</div>
 			<div className="section" id="search">
