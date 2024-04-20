@@ -20,16 +20,17 @@
     border: 3px solid #ffffff;
   }
 
-
-body, html {
-	overflow: hidden;
-}
-
 h3 {
 	font-size: 20px;
 	font-weight: bold;
 	padding-bottom : 5px;
 	border-bottom: 2px solid black;
+}
+
+.selected {
+	color: white !important;
+	font-weight: bold;
+	background-color: lightskyblue !important;
 }
 
 .container {
