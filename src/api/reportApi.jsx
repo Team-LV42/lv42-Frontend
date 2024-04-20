@@ -52,6 +52,7 @@ export const deviceButtonListSelector = selector({
 	}
 });
 
+//store로 이전해야함
 export const setSelected = selector({
 	key: 'SetSelected',
 	get: ({get}) => get(deviceTotalSelectedMalfList),

@@ -55,6 +55,8 @@ export const deviceTotalSelectedMalfList = atom({
 	},
 });
 
+
+/* ==================== UNSTABLE =============================*/
 /* 컨트롤러 선택된(고장에 접수된) 버튼 목록 */
 export const selectedBtnListState = atom({
 	key: 'SelectedBtnListState',
