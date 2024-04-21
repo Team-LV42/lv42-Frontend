@@ -16,6 +16,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 import Report from './pages/report.jsx';
 import DashBoard from './pages/dashboard.jsx';
+import ComingSoon from './pages/comingsoon'
 
 import GoogleAnalycis from './components/GoogleAnalytics';
 
@@ -51,26 +52,25 @@ import Controller from './components/controller/Controller.jsx';
 
 function App() {
   return (
-    <BrowserRouter>
-      <GoogleAnalycis>
-        <ErrorBoundary fallback={<Error500 />}>
-          <RecoilRoot>
-            <Suspense fallback={<FullLoading />} >
-              <Header />
-              <div className='main'>
-                  <Routes>
-                    <Route path="/" index element={<Report />} />
-                    <Route path="/dashboard" index element={<DashBoard />} />
-                    {/* <Route path="/c" element={<Controller />} />  */}
-                    {/* <Route path="/callback" element={<Auth />} /> */}
-                    <Route path='/*' element={<Error404 />} /> 
-                  </Routes>
-              </div>
-            </Suspense>
-          </RecoilRoot>
-        </ErrorBoundary>
-      </GoogleAnalycis>
-    </BrowserRouter>
+	<BrowserRouter>
+	  <GoogleAnalycis>
+		<ErrorBoundary fallback={<Error500 />}>
+		  <RecoilRoot>
+			<Suspense fallback={<FullLoading />} >
+				{/* <Header /> */}
+				<Routes>
+					<Route path="/" index element={<ComingSoon />} />
+					<Route path="/report" element={<Report />} />
+					<Route path="/dashboard" index element={<DashBoard />} />
+					{/* <Route path="/c" element={<Controller />} />  */}
+						{/* <Route path="/callback" element={<Auth />} /> */}
+					<Route path='/*' element={<Error404 />} /> 
+				  </Routes>
+			</Suspense>
+		  </RecoilRoot>
+		</ErrorBoundary>
+	  </GoogleAnalycis>
+	</BrowserRouter>
   );
 }
 

@@ -18,7 +18,7 @@ const ToggleItem = ({ title, content, index }) => {
 		  <div
 			className={`toggle-content ${isVisible ? 'slide-in' : 'slide-out'}`}
 		  >
-			<p>{content}</p>
+			<div>{content}</div>
 		  </div>
 		</div>
 	  );

@@ -1,9 +1,7 @@
 import { useRecoilValue } from 'recoil';
 
 import { controllerType } from '../../store/report';
-import DualSense from './Dualsense';
-
-import '../../styles/controller/dualsense.css';
+// import DualSense from './Dualsense';
 
 
 const Controller = () => {
@@ -11,7 +9,7 @@ const Controller = () => {
 
 	return (
 		<>
-			<DualSense />
+			{/* <DualSense /> */}
 		</>
 	)
 }
