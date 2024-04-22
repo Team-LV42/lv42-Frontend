@@ -55,6 +55,28 @@ export const deviceTotalSelectedMalfList = atom({
 	},
 });
 
+// export const animationListState = atom({
+// 	key: 'AnimationListState',
+// 	default: [],
+// });
+
+// export const elementAnimState = selectorFamily({
+// 	key: 'ElementAnimState',
+// 	get: index => ({ get }) => {
+// 		get(animationListState).find((item) => item.index === index);
+// 	},
+// 	set: index => ({ set }, newValue) => {
+// 		set(animationListState, (prev) => {
+// 			return prev.map((item) => {
+// 				if (item.index === index) {
+// 					return newValue;
+// 				}
+// 				return item;
+// 			})
+// 		})
+// 	}
+// })
+
 
 /* ==================== UNSTABLE =============================*/
 /* 컨트롤러 선택된(고장에 접수된) 버튼 목록 */
