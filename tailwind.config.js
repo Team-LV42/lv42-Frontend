@@ -10,7 +10,7 @@ module.exports = {
     },
     extend: {
       animation: {
-        shake: 'shake .5s ease-in-out infinite'
+        shake: 'shake .5s ease-in-out'
       },
       keyframes: {
         shake: {
