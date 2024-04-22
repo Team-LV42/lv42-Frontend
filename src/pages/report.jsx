@@ -67,6 +67,7 @@ const DeviceHeader = ({ page }) => {
 	const { onClickMenu } = useSideMenu();
 
 	const resetBtnMalfList = () => {
+		//다른 상태도 초기화 필요??
 		const list = content.controller_malf_btn_list.map((item, i) => {
 			index = i;
 			setContent();
@@ -174,9 +175,9 @@ const MainIssueReporting = () => {
 
 	useEffect(() => {
 		if (deviceID !== '')
-		setDeviceID('');
+			setDeviceID('');
 		if (deviceType === 1)
-		setDeviceID(deviceList[0].id);
+			setDeviceID(deviceList[0].id);
 	}, [consoleType, deviceType])
 
 	return (
@@ -313,6 +314,8 @@ const ControllerIssueReporting = () => {
 	const [malfTypeList, setMalfTypeList] = useRecoilState(malfTypeState);
 	const [select, setSelect] = useRecoilState(setSelected);
 
+	const [animState, setAnimState] = useState([false, false, false]);
+	const malfTypeRef = useRef(null);
 	const btnListRef = useRef(null);
 	const etcRef = useRef(null);
 
@@ -331,7 +334,7 @@ const ControllerIssueReporting = () => {
 		});
 	};
 
-	const shakeAnim = (elementRef) => {
+	const shakeAnim = (elementRef, setState, index) => {
 		if (elementRef.current) {
 			const target = elementRef.current;
 			const offset = 0;
@@ -344,15 +347,24 @@ const ControllerIssueReporting = () => {
 			});
 		
 			// add animate-shake class
-			target.classList.add('animate-shake');
+			setState((prev) => {
+				const newState = [...prev];
+				newState[index] = true;
+				return newState;
+			});
+			// target.classList.add('animate-shake');
 		
 			// remove animate-shake class after a delay
 			setTimeout(() => {
-			  target.classList.remove('animate-shake');
+				setState((prev) => {
+					const newState = [...prev];
+					newState[index] = false;
+					return newState;
+				});
+				// target.classList.remove('animate-shake');
 			}, 1100);
 		  }
 	}
-
 	
 	const getConsoleName = () => {
 		if (deviceID.startsWith('x'))
@@ -373,15 +385,18 @@ const ControllerIssueReporting = () => {
 
 	const submitCondition = () => {
 		switch (select.controller_malf_type) {
+			case '':
+				shakeAnim(malfTypeRef, setAnimState, 0);
+				return false;
 			case 'button':
 				if (select.controller_malf_btn_list.length === 0 || !validate_btn_list()) {
-					shakeAnim(btnListRef);
+					shakeAnim(btnListRef, setAnimState, 1);
 					return false;
 				}
 				break;
 			default:
 				if (select.etc_description === '') {
-					shakeAnim(etcRef);
+					shakeAnim(etcRef, setAnimState, 2);
 					return false;
 				}
 		}
@@ -394,14 +409,13 @@ const ControllerIssueReporting = () => {
 		});
 	}
 
-	useEffect(() => {
-		console.log('vaidate:', validate_btn_list());
-	}, [select])
-
 	return (
 		<>
 			{malfTypeList.length !== 0 && (
-			<div className="flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-20">
+			<div
+			ref={malfTypeRef}
+			className={`${animState[0] ? 'animate-shake' : ''} flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-20`}
+			>
 				<p className="is-required md:text-2xl text-start text-lg font-semibold w-full my-2 px-2">
 					어떤 상태인가요?
 				</p>
@@ -421,7 +435,10 @@ const ControllerIssueReporting = () => {
 			</div>
 			)}
 			{select.controller_malf_type === 'button' && (
-				<div ref={btnListRef} className="flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-30">
+				<div
+				ref={btnListRef}
+				className={`${animState[1] ? 'animate-shake' : ''} flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-30`}
+				>
 					<p className="is-required md:text-2xl text-start text-lg font-semibold w-full my-2 px-2">
 						고장 위치와 문제를 선택해주세요
 					</p>
@@ -435,7 +452,10 @@ const ControllerIssueReporting = () => {
 			)}
 			{select.controller_malf_type !== '' && (
 			<>
-			<div ref={etcRef} className="flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-20">
+			<div
+			ref={etcRef}
+			className={`${animState[2] ? 'animate-shake' : ''} flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-20`}
+			>
 				<p className={`${select.controller_malf_type !== 'button' && 'is-required'} md:text-2xl text-start text-lg font-semibold w-full my-2 px-2`}>어떤 문제가 발생했는지 알려주세요</p>
 				<textarea
 				onBlur={(e) => onDescriptionSet(e.target.value)}
