@@ -183,7 +183,7 @@ const MainIssueReporting = () => {
 	return (
 		<>
 			<div class="flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-30">
-				<p className="text-start md:text-2xl text-lg font-semibold w-full my-2 px-2">게임 선택</p>
+				<p className="text-start md:text-2xl text-lg font-semibold w-full my-2 px-2">콘솔 선택</p>
 				<div className='w-full flex flex-row items-around justify-around text-sm'>
 					<button
 					className={`${consoleType === 1 ? 'button-active' : 'button-inactive'} bg-white flex flex-row items-center justify-center text-center mx-2 grow md:h-14 h-9 md:text-lg pointerhover:hover:bg-gray-300 rounded p-2`}
