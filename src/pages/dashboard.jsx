@@ -49,8 +49,6 @@ export const requestState = atom({
 const IssueList = ({ list }) => {
 	const request = useRecoilValue(requestState);
 
-	console.log(list);
-
 	return (
 		<>
 		{list.length !== 0 && request === 'reports' && list.map((report, index) => {
@@ -104,7 +102,19 @@ const Dashboard = () => {
 		}));
 	};
 
-	console.log(request);
+	
+	const showDeviceAndConsoleType = (console_id, status_id) => {
+		let console, status;
+		if (console_id === 1) console = 'XBOX';
+		if (console_id === 2) console = 'NINTENDO';
+		if (console_id === 3) console = 'PS5';
+
+		if (status_id === 0) status = '고장';
+		if (status_id === 1) status = '수리중';
+		if (status_id === 2) status = '정상';
+
+		return (`${console} / ${status}`);
+	}
 
 	useEffect(() => {
 		setToggleState(TestToggle);
@@ -141,14 +151,13 @@ const Dashboard = () => {
 									>
 										<div>{device.id}</div>
 										<div>{device.name}</div>
-										<div>{device.console_id}</div>
-										<div>{device.device_type}</div>
-										<div>{device.status}</div>
+										<div>{showDeviceAndConsoleType(device.console_id, device.status)}</div>
 									</div>
 								))}
 							</div>
 						)}
-						{/* <button onClick={deleteDevice}>삭제</button> */}
+						<p>선택된 기기: {deviceId}</p>
+						<button onClick={() => deleteDevice(deviceId)}>삭제</button>
 						</div>
 						<div className="section">
 							<h3>#고장 신고 <button className='sml-option' onClick={() => setRequest('reports')}>조회</button></h3>

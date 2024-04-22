@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from "recoil";
 
-import { controllerType, deviceTypeState, deviceIDState } from "../../store/report";
+import { controllerType, deviceTypeState } from "../../store/report";
 import { deviceListSelector } from "../../api/reportApi";
 import { updateDeviceStatus_TEST } from '../../api/dashboardApi';
 import { requestState } from '../../pages/dashboard';
@@ -10,18 +10,15 @@ export const UpdateDeviceForm = () => {
 	const [request, setRequest] = useRecoilState(requestState);
 	const [consoleType, setConsoleType] = useRecoilState(controllerType);
 	const [deviceType, setDeviceType] = useRecoilState(deviceTypeState);
-	const [deviceId, setDeviceId] = useRecoilState(deviceIDState);
 	
+	const [deviceId, setDeviceId] = useState(0);
 	const [deviceStatus, setDeviceStatus] = useState(2);
 	const deviceList = useRecoilValue(deviceListSelector);
 
 	const onClickSubmit = async () => {
 		const response = await updateDeviceStatus_TEST(deviceId, deviceStatus);
+		window.location.reload();
 	}
-
-	const onChangeStatus = ( value ) => {
-		setDeviceStatus(value);
-	};
 
 	const controllerStatus = (status) => {
 		if (status === 0) return '고장';
@@ -41,7 +38,7 @@ export const UpdateDeviceForm = () => {
 	return (
 		<>
 			<div>
-				<h3>선택된 기기 : {deviceId}</h3>
+				<h3>선택된 기기 : {deviceId !== 0 ? deviceId : '없음'}</h3>
 				<label>콘솔 타입</label>
 				<select value={consoleType} onChange={(e) => {setConsoleType(e.target.value); setRequest('updateDevice')}}>
 					<option value={0}>콘솔을 선택해주세요</option>
@@ -74,7 +71,7 @@ export const UpdateDeviceForm = () => {
 				{deviceId !== '' && (
 					<>
 						<h3>선택기기: {controllerStatus(deviceStatus)}</h3>
-						<select onChange={(e) => onChangeStatus(e.target.value)} id="status">
+						<select onChange={(e) => setDeviceStatus(parseInt(e.target.value))} id="status" defaultValue={2}>
 							<option value="2">정상</option>
 							<option value="1">수리중</option>
 							<option value="0">고장</option>
