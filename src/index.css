@@ -17,17 +17,23 @@
 	.side-shown {
 		@apply fixed top-0 left-0
 	}
-	.button-inactive {
-		@apply opacity-30
+	.button-unavailable {
+		@apply opacity-30 border border-black cursor-not-allowed
 	}
-	.button-actvie {
-		@apply opacity-100
+	.button-inactive {
+		@apply opacity-100 border border-[#86868b]
+	}
+	.button-active {
+		@apply opacity-100 border-2 border-[#0071e3]
 	}
 	.tip-hidden {
 		@apply invisible
 	}
 	.tip-shown {
 		@apply visible
+	}
+	.is-required {
+		@apply after:content-['*'] after:ml-0.5 after:text-red-500
 	}
 }
 
