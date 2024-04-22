@@ -87,9 +87,9 @@ export const postNewBtnMalfType_TEST = async (name, description) => {
 	}
 };
 
-export const updateDeviceStatus_TEST = async (id, status ) => {
+export const updateDeviceStatus_TEST = async (id, status) => {
 	try {
-		if (!id || !status) {
+		if (id === 0) {
 			console.log("updateDeviceStatus_TEST: invailed input format");
 			return false;
 		}
@@ -125,7 +125,7 @@ export const deleteDevice = async (device_id) => {
 };
 
 export const deleteReport = async (report_id) => {
-	const response = await fetch(`${process.env.REACT_APP_API_URL}/reports`, {
+	const response = await fetch(`${process.env.REACT_APP_API_URL}/reports?id=${report_id}`, {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': "application/json",
