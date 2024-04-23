@@ -35,7 +35,7 @@ module.exports = {
         'switch': "url('../public/switch.png')",
         'ps5': "url('../public/ps5.png')",
         'controller-icon': "url('../public/controller-icon2.svg')",
-        'ps5-btn-info': "url('../public/ps5-button-info2.png')",
+        'ps5-btn-info': "url('../public/ps5-button-info.png')",
         'switch-btn-info': "url('../public/switch-button-info.png')",
         'switch-pro-btn-info': "url('../public/switch-pro-button-info.png')",
         'xbox-btn-info': "url('../public/xbox-button-info.png')"
