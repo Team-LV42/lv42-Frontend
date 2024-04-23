@@ -107,10 +107,10 @@ const AddableItem = ({index, btnList, btnMalfTypeList }) => {
 					))}
 					<span
 					onClick={() => {
-						onSet('controller_btn_malf_type', '0');
+						onSet('controller_btn_malf_type', '기타');
 						setSelectBtnMalfunisVisible(false);
 					}}
-					className="w-full my-1 md:h-12 h-8 rounded-md border bg-white pointerhover:hover:bg-gray-300 border-gray-500 flex items-center justify-start px-2"
+					className="w-full my-1 md:h-12 h-8 rounded-md border bg-whit타 pointerhover:hover:bg-gray-300 border-gray-500 flex items-center justify-start px-2"
 					>
 						기타
 					</span>
