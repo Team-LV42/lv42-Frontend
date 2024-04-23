@@ -35,6 +35,15 @@
 	.is-required {
 		@apply after:content-['*'] after:ml-0.5 after:text-red-500
 	}
+	.bg-color-xbox {
+		@apply bg-[#00C83B]
+	}
+	.bg-color-switch {
+		@apply bg-[#EA2A36]
+	}
+	.bg-color-ps5{
+		@apply bg-[#527FD8]
+	}
 }
 
 #root {

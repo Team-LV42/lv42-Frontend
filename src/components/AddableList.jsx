@@ -142,7 +142,12 @@ const AddableList = () => {
 				'controller_btn_id': 0,
 				'controller_btn_malf_type': '',
 			}});
-	}
+	};
+
+	useEffect(() => {
+		if (items.length === 0)
+			addItem();
+	}, []);
 
 	return (
 		<div id="btn-malf-list" className="w-full flex flex-col items-around justify-around text-sm">
