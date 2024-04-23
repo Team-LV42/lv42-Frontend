@@ -60,6 +60,7 @@ const DeviceHeader = ({ page }) => {
 	let index = 0;
 	const consoleType = useRecoilValue(controllerType);
 	const deviceType = useRecoilValue(deviceTypeState);
+	const navigate = useNavigate();
 
 	const content = useRecoilValue(deviceTotalSelectedMalfList);
 	const setContent = useSetRecoilState(getAddableContent(index));
@@ -109,7 +110,7 @@ const DeviceHeader = ({ page }) => {
 						: (showDeviceAndConsoleType())}
 					</p>
 				</div>
-				<span className="md:w-32 md:h-20 w-24 h-14 bg-basic bg-logo cursor-pointer" /* onClick={() => navigate('/')} */></span>
+				<span className="md:w-32 md:h-20 w-24 h-14 bg-basic bg-logo cursor-pointer" onClick={() => navigate('/')}></span>
 			</div>
 			
 		</>
