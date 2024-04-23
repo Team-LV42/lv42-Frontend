@@ -243,7 +243,7 @@ const MainIssueReporting = () => {
 							컨트롤러 선택
 						</p>
 						<div className="cursor-pointer relative group">
-							<p className="flex flex-wrap md:w-72 w-52 h-5 rounded-md items-center justify-center text-center md:text-[1rem] text-xs tip-hidden absolute md:top-0.5 md:left-8 -top-0.5 left-6 border border-gray-500 group-hover:tip-shown">
+							<p className="flex flex-wrap md:w-80 w-56 h-5 rounded-md items-center justify-center text-center md:text-[1rem] text-xs tip-hidden absolute md:top-0.5 md:left-8 -top-0.5 left-6 border border-gray-500 group-hover:tip-shown">
 								컨트롤러 앞/뒷면의 번호를 참고해주세요
 							</p>
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="md:w-6 md:h-6 w-4 h-4 ">
@@ -302,6 +302,33 @@ const postReport = async (select, setPage) => {
 	return await response.json();
 };
 
+const shakeAnim = (elementRef, setState, index) => {
+	if (elementRef.current) {
+		const target = elementRef.current;
+		const offset = 0;
+		const targetOffsetTop = target.offsetTop + offset;
+	
+		window.scrollTo({
+		  top: targetOffsetTop,
+		  behavior: 'smooth'
+		});
+	
+		setState((prev) => {
+			const newState = [...prev];
+			newState[index] = true;
+			return newState;
+		});
+	
+		setTimeout(() => {
+			setState((prev) => {
+				const newState = [...prev];
+				newState[index] = false;
+				return newState;
+			});
+		}, 1100);
+	}
+}
+
 const ControllerIssueReporting = () => {
 	const { openModal } = useModal();
 	const deviceBtnList = useRecoilValue(deviceButtonListSelector);
@@ -333,38 +360,6 @@ const ControllerIssueReporting = () => {
 			value: value,
 		});
 	};
-
-	const shakeAnim = (elementRef, setState, index) => {
-		if (elementRef.current) {
-			const target = elementRef.current;
-			const offset = 0;
-			const targetOffsetTop = target.offsetTop + offset;
-		
-			// scroll
-			window.scrollTo({
-			  top: targetOffsetTop,
-			  behavior: 'smooth'
-			});
-		
-			// add animate-shake class
-			setState((prev) => {
-				const newState = [...prev];
-				newState[index] = true;
-				return newState;
-			});
-			// target.classList.add('animate-shake');
-		
-			// remove animate-shake class after a delay
-			setTimeout(() => {
-				setState((prev) => {
-					const newState = [...prev];
-					newState[index] = false;
-					return newState;
-				});
-				// target.classList.remove('animate-shake');
-			}, 1100);
-		  }
-	}
 	
 	const getConsoleName = () => {
 		if (deviceID.startsWith('x'))
@@ -442,7 +437,7 @@ const ControllerIssueReporting = () => {
 					<p className="is-required md:text-2xl text-start text-lg font-semibold w-full my-2 px-2">
 						고장 위치와 문제를 선택해주세요
 					</p>
-					<span onClick={() => openModal(bgImgModal())} className={`cursor-pointer relative bg-basic ${getConsoleName()} bg-white md:w-96 md:h-80 w-72 h-44 border border-black rounded-md shadow-md mt-2 mb-3`}>
+					<span onClick={() => openModal(bgImgModal())} className={`cursor-zoom-in relative bg-basic ${getConsoleName()} bg-white md:w-96 md:h-80 w-72 h-44 border border-black rounded-md shadow-md mt-2 mb-3`}>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="absolute top-3 left-3 w-4 h-4">
 							<path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" />
 						</svg>
@@ -509,12 +504,15 @@ const EtcIssueReporting = () => {
 	const [select, setSelect] = useRecoilState(setSelected);
 	const setPage = useSetRecoilState(pageState);
 
+	const [animState, setAnimState] = useState([false]);
+	const etcRef = useRef(null);
+
 	useEffect(() => {
 		setSelect({
 			name: 'device',
 			value: 'etc',
 		});
-	}, [])
+	}, []);
 
 	const onDescriptionSet = (value) => {
 		setSelect({
@@ -523,19 +521,35 @@ const EtcIssueReporting = () => {
 		});
 	};
 
+	const submitCondition = () => {
+		if (select.etc_description === '') {
+			shakeAnim(etcRef, setAnimState, 0);
+			return false;
+		}
+		return true;
+	}
+
 	return (
 		<>
-		<div className="flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-20">
-			<p className="md:text-2xl text-start text-lg font-semibold w-full my-2 px-2">어떤 문제가 발생했는지 알려주세요</p>
+		<div
+		ref={etcRef}
+		className={`${animState[0] ? 'animate-shake' : ''} flex flex-col items-center my-5 justify-around lg:w-[800px] w-full min-h-16 z-20`}
+		>
+			<p
+			
+			className="is-required md:text-2xl text-start text-lg font-semibold w-full my-2 px-2"
+			>
+				어떤 문제가 발생했는지 알려주세요
+			</p>
 			<textarea
 			onBlur={(e) => onDescriptionSet(e.target.value)}
-			className="is-required md:text-lg text-sm w-full h-48 rounded-md border border-gray-500 p-4 resize-y"
+			className="md:text-lg text-sm w-full h-48 rounded-md border border-gray-500 p-4 resize-y"
 			maxLength="150"
 			placeholder="ex) 본체의 전원이 켜지지 않아요"
 			></textarea>
 		</div>
 		<div className="flex flex-row items-end justify-end lg:w-[800px] w-full min-h-32 z-30 py-6">
-			<button onClick={() => postReport(select, setPage)} className="group relative flex items-center justify-start p-3 rounded-3xl w-32 h-12 bg-gray-300 pointerhover:hover:bg-gray-400">
+			<button onClick={() => submitCondition() && postReport(select, setPage)} className="group relative flex items-center justify-start p-3 rounded-3xl w-32 h-12 bg-gray-300 pointerhover:hover:bg-gray-400">
 				<p className="ml-2 text-lg">Submit</p>
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="absolute top-3 left-[5rem] transition-all group-hover:ml-4 w-6 h-6">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
