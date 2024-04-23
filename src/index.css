@@ -1,18 +1,53 @@
-@import "./styles/reset.css";
-@import "./styles/common.css";
-@import "./styles/common-media.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @import "./styles/reset.css"; */
+/* @import "./styles/common.css"; */
+/* @import "./styles/common-media.css"; */
 /* @import "./styles/tournament.css"; */
 /* @import "./styles/user.css"; */
 
-body {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+@layer components {
+	.bg-basic {
+		@apply bg-no-repeat bg-contain bg-center
+	}
+	.side-hidden {
+		@apply fixed top-0 -left-96
+	}
+	.side-shown {
+		@apply fixed top-0 left-0
+	}
+	.button-unavailable {
+		@apply opacity-30 border border-black cursor-not-allowed
+	}
+	.button-inactive {
+		@apply opacity-100 border border-[#86868b]
+	}
+	.button-active {
+		@apply opacity-100 border-2 border-[#0071e3]
+	}
+	.tip-hidden {
+		@apply invisible
+	}
+	.tip-shown {
+		@apply visible
+	}
+	.is-required {
+		@apply after:content-['*'] after:ml-0.5 after:text-red-500
+	}
+	.bg-color-xbox {
+		@apply bg-[#00C83B]
+	}
+	.bg-color-switch {
+		@apply bg-[#EA2A36]
+	}
+	.bg-color-ps5{
+		@apply bg-[#527FD8]
+	}
 }
 
 #root {
-	/* height: 100%; */
+	height: 100%;
 }
 
 /* main content */

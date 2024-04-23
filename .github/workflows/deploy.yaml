@@ -1,8 +1,8 @@
-name: Deploy Level42 Dev
+name: Deploy Level42
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
 
 jobs:
   deploy:
@@ -23,10 +23,12 @@ jobs:
       - name: Build
         env:
           CI: false
-          REACT_APP_API_URL: ${{ secrets.DEV_REACT_APP_API_URL }}
-          REACT_APP_LOGIN_URL: ${{ secrets.DEV_REACT_APP_LOGIN_URL }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_LOGIN_URL: ${{ secrets.REACT_APP_LOGIN_URL }}
+          REACT_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID }}
           REACT_APP_PANEL_URL: ${{ secrets.REACT_APP_PANEL_URL }}
           REACT_APP_PANEL_API_URL: ${{ secrets.REACT_APP_PANEL_API_URL }}
+          GENERATE_SOURCEMAP: false
         run: npm run build
 
       - name: Configure AWS credentials
@@ -37,10 +39,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload Files to S3
-        run: aws s3 sync build/ s3://${{ secrets.DEV_S3_BUCKET_NAME }}
+        run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }}
 
       - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
 
       - name: Notify Discord on failure
         uses: sarisia/actions-status-discord@v1
@@ -48,7 +50,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           status: ${{ job.status }}
-          content: "[dev] 배포 실패"
+          content: "[main] 배포 실패"
           color: 0xff0000
           username: GitHub Actions
           avatar_url: 'https://avatars.githubusercontent.com/u/44036562'
@@ -59,7 +61,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           status: ${{ job.status }}
-          content: "[dev] 배포 성공"
+          content: "[main] 배포 성공"
           color: 0x00ff00
           username: GitHub Actions
           avatar_url: 'https://avatars.githubusercontent.com/u/44036562'
