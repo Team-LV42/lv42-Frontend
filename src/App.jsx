@@ -61,7 +61,7 @@ function App() {
 				<Routes>
 					<Route path="/" index element={<ComingSoon />} />
 					<Route path="/report" element={<Report />} />
-					<Route path="/dashboard" index element={<DashBoard />} />
+					<Route path={`/${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
 					{/* <Route path="/c" element={<Controller />} />  */}
 						{/* <Route path="/callback" element={<Auth />} /> */}
 					<Route path='/*' element={<Error404 />} /> 

@@ -105,17 +105,26 @@ const AddableItem = ({index, btnList, btnMalfTypeList }) => {
 							{malf.description}
 						</span>
 					))}
-					<input
+					<span
+					onClick={() => {
+						onSet('controller_btn_malf_type', '0');
+						setSelectBtnMalfunisVisible(false);
+					}}
+					className="w-full my-1 md:h-12 h-8 rounded-md border bg-white pointerhover:hover:bg-gray-300 border-gray-500 flex items-center justify-start px-2"
+					>
+						기타
+					</span>
+					{/* <input
 					ref={button2Ref}
 					type="text"
 					maxLength="15"
 					placeholder="직접입력"
-					onBlur={(e) => {
-						onSet('controller_btn_malf_type', e.target.value);
+					onBlur={(event) => {
+						onSet('controller_btn_malf_type', event.target.value);
 						setSelectBtnMalfunisVisible(false);
 					}}
 					className="w-full my-1 md:h-12 h-8 rounded-md border border-gray-500 flex items-center justify-start px-2"
-					></input>
+					></input> */}
 				</div>
 			</button>
 			<button onClick={deleteItem} className="flex items-center justify-center p-2">
