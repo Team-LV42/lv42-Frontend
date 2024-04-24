@@ -1,11 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* @import "./styles/reset.css"; */
-/* @import "./styles/common.css"; */
-/* @import "./styles/common-media.css"; */
+@import "./styles/reset.css";
+@import "./styles/common.css";
+@import "./styles/common-media.css";
 /* @import "./styles/tournament.css"; */
-/* @import "./styles/user.css"; */
+@import "./styles/user.css";
 
 @layer components {
 	.bg-basic {
