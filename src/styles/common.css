@@ -1,4 +1,4 @@
-* {
+/* * {
     box-sizing: border-box;
 }
 html, body {
@@ -14,7 +14,7 @@ body {
 	background-size: cover;
 	background-position-y: center;
 	background-position-x: center;
-}
+} */
 
 /* error-background */
 .error-background-404 {

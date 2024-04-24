@@ -1,15 +1,14 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom'
 import { RecoilRoot } from 'recoil';
 
 import Login from './pages/Login.jsx';
-import Header from './components/Header.jsx';
 import Auth from './hooks/Auth.jsx';
 import Search from './components/Search.jsx';
 import UserModal from './components/UserModal.jsx';
 import BookModal from './components/BookModal.jsx';
 import FullLoading from './components/loading/FullLoading.jsx';
-import Index from './pages/index.jsx';
+import { MainRoutes, IssueRoutes } from './Router.jsx';
 
 import { Error404, Error500 } from './components/redirect/Error';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
@@ -50,22 +49,27 @@ import Controller from './components/controller/Controller.jsx';
 //   );
 // }
 
-function App() {
+
+
+const App = () => {
   return (
 	<BrowserRouter>
 	  <GoogleAnalycis>
 		<ErrorBoundary fallback={<Error500 />}>
 		  <RecoilRoot>
 			<Suspense fallback={<FullLoading />} >
-				{/* <Header /> */}
 				<Routes>
-					<Route path="/" index element={<ComingSoon />} />
+					<Route path="/" element={<MainRoutes />}>
+						<Route index element={<BookModal />} />
+						<Route path="callback" element={<Auth />} />
+						<Route path="test" element={<Search />} /> 
+						<Route path="user" element={<UserModal />} />
+						<Route path="user/:id" element={<UserModal />} />
+					</Route>
 					<Route path="/report" element={<Report />} />
 					<Route path={`/${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
-					{/* <Route path="/c" element={<Controller />} />  */}
-						{/* <Route path="/callback" element={<Auth />} /> */}
 					<Route path='/*' element={<Error404 />} /> 
-				  </Routes>
+				</Routes>
 			</Suspense>
 		  </RecoilRoot>
 		</ErrorBoundary>
