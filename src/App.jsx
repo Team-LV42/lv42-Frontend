@@ -6,7 +6,7 @@ import Login from './pages/Login.jsx';
 import Auth from './hooks/Auth.jsx';
 import Search from './components/Search.jsx';
 import UserModal from './components/UserModal.jsx';
-import BookModal from './components/BookModal.jsx';
+import Book from './components/Book.jsx';
 import FullLoading from './components/loading/FullLoading.jsx';
 import { MainRoutes, IssueRoutes } from './Router.jsx';
 
@@ -60,7 +60,7 @@ const App = () => {
 			<Suspense fallback={<FullLoading />} >
 				<Routes>
 					<Route path="/" element={<MainRoutes />}>
-						<Route index element={<BookModal />} />
+						<Route index element={<Book />} />
 						<Route path="callback" element={<Auth />} />
 						<Route path="test" element={<Search />} /> 
 						<Route path="user" element={<UserModal />} />

@@ -1,18 +1,15 @@
-import { useEffect, Suspense } from "react";
-import { useSearchParams, useNavigate, redirect } from "react-router-dom";
-import { atom, useRecoilValue, useRecoilState, useRecoilCallback } from 'recoil';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useRecoilState } from 'recoil';
 
 import useDate from '../hooks/useDate.jsx';
 import useModal from '../hooks/useModal.jsx';
 import useNotification from "../hooks/useNotification.jsx";
 import useToken from '../hooks/useToken.jsx';
 import {
-	booksState,
-	fetchBookRecordsListQuery,
-	patchBookRecord,
-	postBookRecord
+	postBookRecord,
 } from '../api/bookApi.jsx';
-import { userState } from '../api/userApi';
+import { userState } from '../api/userApi.jsx';
 import { consoleTypeState } from '../store/State.jsx';
 import {
 	reservationModal,
@@ -21,22 +18,17 @@ import {
 	reserveSubmitError,
 	reserveSubmitHistoryTick,
 	failedReservationModal,
-} from '../store/Modal';
+} from '../store/Modal.jsx';
+import { booksState, selectState, initialBooksSelector } from "../store/book";
 
-import Record from './Record';
+import Record from "./Record.jsx";
 
-export const selectState = atom({
-	key: 'selectState',
-	default: {
-		s: -1,
-		e: -1,
-	},
-});
-
-const Book = ({bookid}) => {
+const Book = () => {
 	const [selects, setSelects] = useRecoilState(selectState);
 	const [books, setBooks] = useRecoilState(booksState);
+	const initialBooks = useRecoilValue(initialBooksSelector);
 	const [consoleType, setConsoleType] = useRecoilState(consoleTypeState);
+	const today = useDate();
 	const user = useRecoilValue(userState);
 
 	const { openModal, closeModal } = useModal();
@@ -45,57 +37,57 @@ const Book = ({bookid}) => {
 	const accessToken = useToken().accessToken();
 
 	const userID = user.id;
-	const bookList = useRecoilValue(fetchBookRecordsListQuery);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		setTimeout(() => {
 			window.location.hash = `#${curTick}`;
 		}, 100);
-	}, [])
-
-	// const updateAddBook = useRecoilCallback(({ set }) => (newRecord) => {
-	// 	set(booksState, (prevBooks) => [...prevBooks, newRecord]);
-	// }, [booksState]);
-
-	// const updateDelBook = useRecoilCallback(({ set }) => (newRecord) => {
-	// 	set(booksState, (prevBooks) => prevBooks.filter((book) => book.id !== newRecord._id));
-	// }, [booksState]);
+	}, []);
 
 	useEffect(() => {
+		if (books.init === false && initialBooks)
+			setBooks(initialBooks);
 		const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}/sse/subscribe?userId=${userID}`, {
 			withCredentials: false,
 		});
 
 		eventSource.addEventListener('ADD', (event) => {
-			window.location.reload();
-			// navigate(0);
-			// const newRecord = JSON.parse(event.data);
-			// const prevType = consoleType;
-			// if (!newRecord) return ;
-
-			// if (consoleType !== newRecord.type) {
-			// 	console.log(newRecord.type);
-			// 	setConsoleType(newRecord.type);
-			// }
-			
-			// // updateAddBook(newRecord);
-			// setBooks(prevBooks => [...prevBooks, newRecord]);
-			// setConsoleType(prevType);
+			const data = JSON.parse(event.data);
+		
+			setBooks((prevBooks) => {
+			const updatedBooks = { ...prevBooks };
+		
+			updatedBooks[data.type] = prevBooks[data.type].map((book, index) => {
+				if (index >= data.start_time && index <= data.end_time) {
+					return data;
+				} else {
+					return book;
+				}
+			});
+		
+			return updatedBooks;
+			});
 		});
-
+		
 		eventSource.addEventListener('DEL', (event) => {
-			window.location.reload();
-			// navigate(0);
-			// const newRecord = JSON.parse(event.data);
-			// const prevType = consoleType;
-			// if (!newRecord) return ;
-			
-			// if (consoleType !== newRecord.type)
-			// 	setConsoleType(newRecord.type);
-			// // updateDelBook(newRecord);
-			// setBooks(prevBooks => prevBooks.filter((book) => book.id !== newRecord._id));
-			// setConsoleType(prevType);
+			const data = JSON.parse(event.data);
+		
+			setBooks((prevBooks) => {
+			const updatedBooks = { ...prevBooks };
+		
+			updatedBooks[data.type] = prevBooks[data.type].map((book) => {
+				if (book === null) {
+				return null; // null인 경우 그대로 null 반환
+				} else if (book.id === data.id) {
+				return null; // 아이디가 일치하면 null로 변경 (삭제)
+				} else {
+				return book; // 그 외에는 기존 값 그대로 반환
+				}
+			});
+		
+			return updatedBooks;
+			});
 		});
 
 		eventSource.onerror = (error) => {
@@ -106,21 +98,12 @@ const Book = ({bookid}) => {
 			eventSource.close();
 			console.log('eventSource is closed');
 		}
-	}, [userID]);
+	}, [initialBooks, setBooks]);
 
 	useEffect(() => {
-		if (books.length === 0)
-			setBooks(bookList);
-	}, [bookList, setBooks]);
-
-	// 다른타입으로 변경된 경우 해당 타입의 데이터로 갈아끼움
-	useEffect(() => {
-		setBooks(bookList);
 		setSelects({s: -1, e: -1});
-	}, [setBooks, setSelects, consoleType, setConsoleType]);
+	}, [setSelects]);
 
-	//date 훅에 넣기?
-	
 	const onClickRecord = (time) => {
 		const addSelect = (time) => {
 			if (time < curTick) {
@@ -175,7 +158,14 @@ const Book = ({bookid}) => {
 	}
 
 	const searchBooks = (time) => {
-		return books.filter((book) => (book.start_time <= time && time <= book.end_time));
+		return books[consoleType].filter((book) => {
+			if (!book)
+				return false;
+			else if (book.start_time <= time && time <= book.end_time)
+				return true;
+			else
+				return false;
+		});
 	}
 
 	const setData = (selects) => {
@@ -224,7 +214,6 @@ const Book = ({bookid}) => {
 	};
 
 	const onClickReservation = () => {
-		console.log(user);
 		if (user.id === 0)
 			openModal(loginModal(loginModalAction));
 		else if (selects.s !== -1)
@@ -237,7 +226,7 @@ const Book = ({bookid}) => {
 		window.location.href = process.env.REACT_APP_LOGIN_URL;
 	}
 
-	async function submitBookForm(e) {
+	const submitBookForm = async (e) => {
 		try {
 			e.preventDefault();
 			if (selects.s !== -1 && selects.e !== -1 && Math.abs(selects.e - selects.s) >= 4) {
@@ -273,22 +262,23 @@ const Book = ({bookid}) => {
 				<span className={`tab${consoleType === 3 ? '-active' : ''}`} id="ps5-tab"  onClick={(e) => {e.preventDefault(); setConsoleType(3)}}><p>PS5</p></span>
 			</div>
 			<div className="slot-list slot-list-active"  id={`${getTypeID(consoleType)}-slot-list`}>
-				{Array.from({length: 48}, (_, i) => {
-					const book = searchBooks(i);
-					return (
-						<Record
-							key={i}
-							record={book.length !== 0 ? book[0] : ''}
-							time={i}
-							onClick={(e) => {
-								e.preventDefault();
-								onClickRecord(i);
-							}}
-							isDeletable={(book.length !== 0 && userID === book[0].user_id) || user.admin}
-							isSelected={checkSelects(i)}
-							type='book'
-						/>
-					)})}
+					{books[consoleType].map((book, index) => {
+						return (
+							<Record
+								key={index}
+								index={index}
+								type={consoleType}
+								onClick={(e) => {
+									e.preventDefault();
+									onClickRecord(index);
+								}}
+								// isDeletable={(book !== null && userID === book[0].user_id) || user.admin}
+								isSelected={checkSelects(index)}
+								state='book'
+							/>
+						)
+					}
+			)}
 			</div>
 		</div>
 		<div className={`sub-content-wrapper ${selects.e !== -1 ? `finished-${getTypeID(consoleType)}` : ''}`} id="sub" onClick={() => onClickReservation()}>
@@ -311,59 +301,15 @@ const Book = ({bookid}) => {
 	);
 }
 
-// dummyComponent.jsx
-const DummyForm = () => {
-	return (
-		<>
-		<div className='content' id='main-content'>
-			<div className='tabs'>
-				<span className="tab" id="xbox-tab"><p>XboX</p></span>
-				<span className="tab" id="nintendo-tab"><p>Nintendo</p></span>
-				<span className="tab" id="ps5-tab"><p>PS5</p></span>
-			</div>
-			<div className="slot-list slot-list-active" >
-				{Array.from({length: 48}, (_, i) => {
-					return (
-						<Record
-							key={i}
-							record={''}
-							time={i}
-							type='book'
-						/>
-					)})}
-			</div>
-		</div>
-		<div className="sub-content-wrapper"id="sub">
-			<a href="#">
-				<div className="sub-content">
-					<div className="section">
-						<div className="time-wrap">
-							<p></p>
-						</div>
-					</div>
-					<div className="section">
-						<div className="comment-wrap">
-							<p>원하는 시간대 슬롯을 선택하세요</p>
-						</div>
-					</div>
-				</div>
-			</a>
-		</div>
-	</>
-	)
+const BookConsoleTab = () => {
+
 }
 
-const BookForm = () => {
-	const [params, setParams] = useSearchParams();
-	const bookid = (params.get('type')) ? params.get('bookid') : '';
-
+const BookActionWrapper = ({ selects }) => {
 	return (
 		<>
-			<Suspense fallback={<DummyForm />}>
-				<Book bookid={bookid}/>
-			</Suspense>
 		</>
 	)
 }
 
-export default BookForm;
+export default Book;
