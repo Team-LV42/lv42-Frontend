@@ -272,7 +272,7 @@ const Book = () => {
 									e.preventDefault();
 									onClickRecord(index);
 								}}
-								// isDeletable={(book !== null && userID === book[0].user_id) || user.admin}
+								isDeletable={(book !== null && userID === book.user_id) || user.admin}
 								isSelected={checkSelects(index)}
 								state='book'
 							/>
