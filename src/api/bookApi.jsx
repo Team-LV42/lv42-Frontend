@@ -1,18 +1,29 @@
 import {
-	atom,
 	selector,
 	selectorFamily,
-	useRecoilValue,
 } from "recoil";
 
 import { dateSelector } from "../hooks/useDate.jsx";
 import { consoleTypeState } from "../store/State.jsx";
+import { booksState } from '../store/book';
 import { getAT } from "../hooks/useToken.jsx";
 
-export const booksState = atom({
-	key: 'BooksState',
-	default: [],
-});
+export const fetchBook = async (date) => {
+	try {
+		if (date === 'NaN-0NaN-0NaN') return [];
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/books?date=${date}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			}
+		});
+		if (response.status !== 200)
+			return [];
+		return await response.json();
+	} catch (err) {
+		console.log(err);
+	}	
+}
 
 export const fetchBookRecordsListQuery = selector({
 	key: 'fetchBookRecordsListQuery',
