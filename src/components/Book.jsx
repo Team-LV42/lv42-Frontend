@@ -77,9 +77,7 @@ const Book = () => {
 			const updatedBooks = { ...prevBooks };
 		
 			updatedBooks[data.type] = prevBooks[data.type].map((book) => {
-				if (book === null) {
-				return null; // null인 경우 그대로 null 반환
-				} else if (book.id === data.id) {
+				if (book && book._id === data._id) {
 				return null; // 아이디가 일치하면 null로 변경 (삭제)
 				} else {
 				return book; // 그 외에는 기존 값 그대로 반환

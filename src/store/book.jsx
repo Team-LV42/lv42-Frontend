@@ -26,8 +26,12 @@ export const initialBooksSelector = selector({
 	key: 'initialBooksSelector',
 	get: async ({ get }) => {
 		const today = get(dateSelector);
-		const initialData = await fetchBook(today);
 		const books = get(booksState);
+		
+		if (books.init) {
+			return books;
+		}
+		const initialData = await fetchBook(today);
 
 		const initialBooks = initialData.length !== 0 && {
 			init: true,
