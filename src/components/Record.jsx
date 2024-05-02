@@ -19,7 +19,6 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 	const deleteAction = async () => {
 		await deleteBookRecord(record._id, record.user_id, accessToken);
 		closeModal();
-		window.location.reload();
 	};
 	
 	const typeToString = (type, flag) => {
