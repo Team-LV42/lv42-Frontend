@@ -5,22 +5,21 @@ import useModal from '../hooks/useModal';
 import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
 
-import { consoleTypeState } from '../store/State';
 import { deleteModal } from '../store/Modal';
 import { deleteBookRecord } from '../api/bookApi';
+import { bookSelector } from '../store/book';
 
-export default function Record({ record, type, time, onClick, isDeletable = false, isSelected = false }) {
+export const Record = ({ index, type, state, onClick, isDeletable = false, isSelected = false }) => {
 	const { openModal, closeModal } = useModal();
 	const { tickToTime, getDuration, curTick } = useDate();
-	const consoleType = useRecoilValue(consoleTypeState);
 	const navigate = useNavigate();
 	const accessToken = useToken().accessToken();
+	const record = useRecoilValue(bookSelector({type, index}));
 
 	const deleteAction = async () => {
 		await deleteBookRecord(record._id, record.user_id, accessToken);
 		closeModal();
 		window.location.reload();
-		// navigate(0);
 	};
 	
 	const typeToString = (type, flag) => {
@@ -46,10 +45,10 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 	
 	return (
 		<>
-			{type === 'user' && record.length !== 0 && (
+			{state === 'user' && record !== null && (
 				<span
 				className="slot"
-				value={time}
+				value={index}
 				onClick={(event) => {
 					event.preventDefault();
 					(isDeletable && openModal(deleteModal));
@@ -60,11 +59,11 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 				<div className={`slot-value content-type-${record.type}`}><p>{typeToString(record.type, 0)}</p></div>
 			</span>
 			)}
-			{type === 'book' && record.length === 0 && (
+			{state === 'book' && record === null && (
 				<span
-					className={`slot ${isSelected ? (`selected-${typeToString(consoleType, 1)}`) : ''}${curTick > time ? 'disabled' : ''}`}
-					value={time}
-					id={time}
+					className={`slot ${isSelected ? (`selected-${typeToString(type, 1)}`) : ''}${curTick > index ? 'disabled' : ''}`}
+					value={index}
+					id={index}
 					onClick={(event) => {
 						event.preventDefault();
 						onClick(event);
@@ -73,39 +72,39 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 					// onClick="showModal('reservationModal')"
 				>
 					<div className="slot-wrapper">
-						<div className="slot-time">{tickToTime(time)} ~</div>
+						<div className="slot-time">{tickToTime(index)} ~</div>
 						<div className="slot-value">{isSelected ? 'SELECTED' : '-'}</div>
 					</div>
 				</span>
 			)}
-			{type === 'book' && record.length !== 0 && (
+			{state === 'book' && record !== null && (
 				<span
-					className={`slot reserved ${isSelected ? 'selected' : ''}${curTick > time ? 'disabled' : ''}`}
-					value={time}
-					id={time}
+					className={`slot reserved ${isSelected ? 'selected' : ''}${curTick > index ? 'disabled' : ''}`}
+					value={index}
+					id={index}
 					onClick={(event) => {
 						event.preventDefault();
-						(isDeletable && curTick <= time && openModal(deleteModal(record, getDuration, deleteAction)))
+						(isDeletable && curTick <= index && openModal(deleteModal(record, getDuration, deleteAction)))
 					}}
 					type='reserve'
 					// onClick="showModal('reservationModal')"
 				>
 					<div className="slot-wrapper">
-						<div className="slot-time">{tickToTime(time)} ~</div>
+						<div className="slot-time">{tickToTime(index)} ~</div>
 						<div className="slot-value">{record.user[0].name}</div>
 					</div>
 				</span>
 			)}
-			{type === 'admin' && (
+			{state === 'admin' && (
 				<button
 					className='time-button'
-					value={time}
+					value={index}
 					onClick={(event) => {
 						event.preventDefault();
 						(isDeletable && openModal(deleteModal))
 					}}
 				>
-					<div>{tickToTime(time)}</div>
+					<div>{tickToTime(index)}</div>
 					<div>{getDuration(record.start_time, record.end_time)}</div>
 					<div>
 						<h1>{record.user[0].name}</h1>
@@ -117,3 +116,5 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 		</>
 	);
 };
+
+export default Record;
