@@ -12,8 +12,8 @@ import {
 import { userState } from '../api/userApi.jsx';
 import { consoleTypeState } from '../store/State.jsx';
 import {
-	reservationModal,
 	loginModal,
+	reservationModal,
 	reserveTimeLimitError,
 	reserveSubmitError,
 	reserveSubmitHistoryTick,
@@ -40,14 +40,7 @@ const Book = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		setTimeout(() => {
-			window.location.hash = `#${curTick}`;
-		}, 100);
-	}, []);
-
-	useEffect(() => {
-		if (books.init === false && initialBooks)
-			setBooks(initialBooks);
+		/* SSE 및 이벤트 핸들러 등록 */
 		const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}/sse/subscribe?userId=${userID}`, {
 			withCredentials: false,
 		});
@@ -92,10 +85,20 @@ const Book = () => {
 			console.error( error);
 		}
 
+		/* 로딩시 tick위치로 이동 */
+		setTimeout(() => {
+			window.location.hash = `#${curTick}`;
+		}, 100);
+
 		return () => {
 			eventSource.close();
 			console.log('eventSource is closed');
 		}
+	}, []);
+
+	useEffect(() => {
+		if (books.init === false && initialBooks)
+			setBooks(initialBooks);
 	}, [initialBooks, setBooks]);
 
 	useEffect(() => {
@@ -279,12 +282,29 @@ const Book = () => {
 			)}
 			</div>
 		</div>
-		<div className={`sub-content-wrapper ${selects.e !== -1 ? `finished-${getTypeID(consoleType)}` : ''}`} id="sub" onClick={() => onClickReservation()}>
+		<BookActionWrapper 
+			selects={selects}
+			consoleType={getTypeID(consoleType)}
+			action={onClickReservation}
+			selectedTime={getSelectedTime()}
+		/>
+	</>
+	);
+}
+
+const BookConsoleTab = () => {
+
+}
+
+const BookActionWrapper = ({ selects, consoleType, action, selectedTime }) => {
+	return (
+		<>
+		<div className={`sub-content-wrapper ${selects.e !== -1 ? `finished-${consoleType}` : ''}`} id="sub" onClick={() => action()}>
 			<a href="#" onClick={(e) => e.preventDefault()}>
-				<div className={`sub-content ${selects.e !== -1 ? `finished-${getTypeID(consoleType)}` : ''}`}>
+				<div className={`sub-content ${selects.e !== -1 ? `finished-${consoleType}` : ''}`}>
 					<div className="section">
 						<div className="time-wrap">
-							<p>{getSelectedTime()}</p>
+							<p>{selectedTime}</p>
 						</div>
 					</div>
 					<div className="section">
@@ -295,17 +315,6 @@ const Book = () => {
 				</div>
 			</a>
 		</div>
-	</>
-	);
-}
-
-const BookConsoleTab = () => {
-
-}
-
-const BookActionWrapper = ({ selects }) => {
-	return (
-		<>
 		</>
 	)
 }
