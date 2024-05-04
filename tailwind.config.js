@@ -6,9 +6,16 @@ module.exports = {
   theme: {
     fontFamily: {
       "noto" : ['Noto Sans KR', 'sans-serif'],
-      "outfit" : ['Outfit', 'sans-serif']
+      "outfit" : ['Outfit', 'sans-serif'],
+      "Bolwby-One" : ['Bowlby One SC', 'sans-serif']
     },
     extend: {
+      boxShadow: {
+        'basic': 'inset 0px -4px rgba(0, 0, 0, 0.1)',
+        'selected' : 'inset 0px 4px 1px rgba(0, 0, 0, 0.4)',
+        'not-selected' : 'inset 0px -4px 1px rgba(0, 0, 0, 0.4)',
+        'modal': '4px 4px 4px 1px rgba(0, 0, 0, 0.25)'
+      },
       animation: {
         shake: 'shake .5s ease-in-out'
       },
@@ -24,6 +31,9 @@ module.exports = {
       screens: {
         'pointerhover': {
           'raw': "(hover:hover) and (pointer:fine)"
+        },
+        'mobile' : {
+          'raw': "(hover:none)"
         }
       },
       backgroundImage: {

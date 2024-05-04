@@ -31,21 +31,19 @@ export const notiActionState = atom({
 
 export const reserveTimeLimitError = () => {
 	return ({
-		title: '!',
-		content: '예약은 최대 2시간까지 가능합니다.',
+		title: '예약은 한번에 최대',
+		content: '2시간까지만 가능합니다.',
 	});
 };
 
 export const reserveSubmitError = () => {
 	return ({
-		title: '!',
 		content: '예약 실패',
 	});
 };
 
 export const reserveSubmitHistoryTick = () => {
 	return ({
-		title: '!',
 		content: '지나간 시간은 예약 할 수 없습니다.'
 	});
 };
@@ -53,7 +51,6 @@ export const reserveSubmitHistoryTick = () => {
 export const loginModal = (callback) => {
 	return ({
 		type: 'login',
-		title: '!',
 		content: '로그인이 필요합니다',
 		callback: () => callback(),
 	})

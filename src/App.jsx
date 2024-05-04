@@ -66,8 +66,10 @@ const App = () => {
 						<Route path="user" element={<UserModal />} />
 						<Route path="user/:id" element={<UserModal />} />
 					</Route>
-					<Route path="/report" element={<Report />} />
-					<Route path={`/${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
+					<Route path="/" element={<IssueRoutes />} >
+						<Route path="report" element={<Report />} />
+						<Route path={`${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
+					</Route>
 					<Route path='/*' element={<Error404 />} /> 
 				</Routes>
 			</Suspense>

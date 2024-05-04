@@ -59,40 +59,41 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 			</span>
 			)}
 			{state === 'book' && record === null && (
-				<span
-					className={`slot ${isSelected ? (`selected-${typeToString(type, 1)}`) : ''}${curTick > index ? 'disabled' : ''}`}
-					value={index}
-					id={index}
-					onClick={(event) => {
-						event.preventDefault();
-						onClick(event);
-					}}
-					type='empty'
-					// onClick="showModal('reservationModal')"
+				<div
+				value={index}
+				id={index}
+				onClick={(event) => {
+					event.preventDefault();
+					onClick(event);
+				}}
+				//${curTick > index ? 'disabled' : ''} 
+				class={`${isSelected ? `slot-selected-${typeToString(type, 1)}` : 'slot-empty'} ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1]`}
 				>
-					<div className="slot-wrapper">
-						<div className="slot-time">{tickToTime(index)} ~</div>
-						<div className="slot-value">{isSelected ? 'SELECTED' : '-'}</div>
+					<div class="w-36 h-full flex items-center justify-center text-lg font-bold px-2 font-outfit">
+						<p>{tickToTime(index)}~</p>
 					</div>
-				</span>
+					<div class="grow h-full flex items-center justify-center">
+						<p>{ isSelected ? 'SELECTED' : '슬롯 선택하기'}</p>
+					</div>
+				</div>
 			)}
 			{state === 'book' && record !== null && (
-				<span
-					className={`slot reserved ${isSelected ? 'selected' : ''}${curTick > index ? 'disabled' : ''}`}
-					value={index}
-					id={index}
-					onClick={(event) => {
-						event.preventDefault();
-						(isDeletable && curTick <= index && openModal(deleteModal(record, getDuration, deleteAction)))
-					}}
-					type='reserve'
-					// onClick="showModal('reservationModal')"
+				<div
+				value={index}
+				id={index}
+				onClick={(event) => {
+					event.preventDefault();
+					{isDeletable && openModal(deleteModal(record, getDuration, deleteAction))}
+				}}
+				class={` ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1] slot-full`}
 				>
-					<div className="slot-wrapper">
-						<div className="slot-time">{tickToTime(index)} ~</div>
-						<div className="slot-value">{record.user[0].name}</div>
+					<div class="w-36 h-full flex items-center justify-center text-lg font-bold px-2 font-outfit">
+						<p>{tickToTime(index)}~</p>
 					</div>
-				</span>
+					<div class="grow h-full flex items-center justify-center">
+						<p>{record.user[0].name}</p>
+					</div>
+				</div>
 			)}
 			{state === 'admin' && (
 				<button
