@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useRecoilState } from 'recoil';
 
-import useDate from '../hooks/useDate.jsx';
-import useModal from '../hooks/useModal.jsx';
-import useNotification from "../hooks/useNotification.jsx";
-import useToken from '../hooks/useToken.jsx';
+import useDate from '../hooks/useDate';
+import useModal from '../hooks/useModal';
+import useNotification from "../hooks/useNotification";
+import useToken from '../hooks/useToken';
 import {
 	postBookRecord,
-} from '../api/bookApi.jsx';
-import { userState } from '../api/userApi.jsx';
-import { consoleTypeState } from '../store/State.jsx';
+} from '../api/bookApi';
+import { userState } from '../api/userApi';
+import { consoleTypeState } from '../store/State';
 import {
 	loginModal,
 	reservationModal,
@@ -18,10 +18,12 @@ import {
 	reserveSubmitError,
 	reserveSubmitHistoryTick,
 	failedReservationModal,
-} from '../store/Modal.jsx';
+} from '../store/Modal';
 import { booksState, selectState, initialBooksSelector } from "../store/book";
 
-import Record from "./Record.jsx";
+import Record from "./Record";
+import BookSkeleton from "./loading/BookSkeleton";
+import PageInfo from "./PageInfo";
 
 const Book = () => {
 	const [selects, setSelects] = useRecoilState(selectState);
@@ -195,7 +197,7 @@ const Book = () => {
 			case 1:
 				return 'xbox';
 			case 2:
-				return 'nintendo';
+				return 'switch';
 			case 3:
 				return 'ps5';
 			default:
@@ -256,38 +258,65 @@ const Book = () => {
 
 	return (
 		<>
-		<div className='content' id='main-content'>
-			<div className='tabs'>
-				<span className={`tab${consoleType === 1 ? '-active' : ''}`} id="xbox-tab"   onClick={(e) => {e.preventDefault(); setConsoleType(1)}}><p>Xbox</p></span>
-				<span className={`tab${consoleType === 2 ? '-active' : ''}`} id="nintendo-tab"  onClick={(e) => {e.preventDefault(); setConsoleType(2)}}><p>Switch</p></span>
-				<span className={`tab${consoleType === 3 ? '-active' : ''}`} id="ps5-tab"  onClick={(e) => {e.preventDefault(); setConsoleType(3)}}><p>PS5</p></span>
+		<PageInfo page={'index'} />
+		{/* <!-- 내용 컨테이너 --> */}
+		<Suspense fallback={<BookSkeleton />}>
+		<div class="w-full grow flex flex-col items-center justify-start overflow-hidden z-10 rounded-t-3xl bg-white">
+			{/* <!-- 탭 컨테이너 --> */}
+			<div class="w-full min-h-24 top-0 flex flex-row items-center justify-around px-5">
+				<div
+				onClick={(e) => {e.preventDefault(); setConsoleType(1)}}
+				class={`${consoleType === 1 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-xbox cursor-pointer pointerhover:hover:brightness-75`}
+				>
+					<p class="font-Bolwby-One text-white w-20 text-center">XBOX</p>
+				</div>
+				<div
+				onClick={(e) => {e.preventDefault(); setConsoleType(2)}}
+				class={`${consoleType === 2 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-switch cursor-pointer pointerhover:hover:brightness-75`}
+				>
+					<p class="font-Bolwby-One text-white w-20 text-center">Switch</p>
+				</div>
+				<div
+				onClick={(e) => {e.preventDefault(); setConsoleType(3)}}
+				class={`${consoleType === 3 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-ps5 cursor-pointer pointerhover:hover:brightness-75`}
+				>
+					<p class="font-Bolwby-One text-white w-20 text-center">PS5</p>
+				</div>
 			</div>
-			<div className="slot-list slot-list-active"  id={`${getTypeID(consoleType)}-slot-list`}>
-					{books[consoleType].map((book, index) => {
-						return (
-							<Record
-								key={index}
-								index={index}
-								type={consoleType}
-								onClick={(e) => {
-									e.preventDefault();
-									onClickRecord(index);
-								}}
-								isDeletable={(book !== null && userID === book.user_id) || user.admin}
-								isSelected={checkSelects(index)}
-								state='book'
-							/>
-						)
-					}
-			)}
+			{/* <!-- 슬롯 컨테이너 --> */}
+			<div class={`relative w-full max-h-full overflow-y-scroll bg-white`}>
+				{/* <!-- 테스트기간 안내문(xbox, switch) --> */}
+				<div class={`absolute w-full h-full ${consoleType === 3 ? 'hidden' : 'flex' } flex-col items-center justify-center top-0 left-0 pb-24 backdrop-blur-sm text-2xl font-bold z-50`}>
+					<p>현재 테스트 기간으로</p>
+					<p>PS5만 지원됩니다</p>
+					<p>테스트 기간 : ~5/30</p>
+				</div>
+				{books[consoleType].map((book, index) => {
+					return (
+						<Record
+							key={index}
+							index={index}
+							type={consoleType}
+							onClick={(e) => {
+								e.preventDefault();
+								onClickRecord(index);
+							}}
+							isDeletable={(book !== null && userID === book.user_id) || user.admin}
+							isSelected={checkSelects(index)}
+							state='book'
+						/>
+					)})}
+				{selects.e !== -1 && 
+				<BookActionWrapper
+					selects={selects}
+					consoleType={getTypeID(consoleType)}
+					action={onClickReservation}
+					selectedTime={getSelectedTime()}
+				/>
+				}
 			</div>
 		</div>
-		<BookActionWrapper 
-			selects={selects}
-			consoleType={getTypeID(consoleType)}
-			action={onClickReservation}
-			selectedTime={getSelectedTime()}
-		/>
+		</Suspense>
 	</>
 	);
 }
@@ -298,24 +327,13 @@ const BookConsoleTab = () => {
 
 const BookActionWrapper = ({ selects, consoleType, action, selectedTime }) => {
 	return (
-		<>
-		<div className={`sub-content-wrapper ${selects.e !== -1 ? `finished-${consoleType}` : ''}`} id="sub" onClick={() => action()}>
-			<a href="#" onClick={(e) => e.preventDefault()}>
-				<div className={`sub-content ${selects.e !== -1 ? `finished-${consoleType}` : ''}`}>
-					<div className="section">
-						<div className="time-wrap">
-							<p>{selectedTime}</p>
-						</div>
-					</div>
-					<div className="section">
-						<div className="comment-wrap">
-							<p>{selects.s === -1 ? '원하는 시간대 슬롯을 선택하세요' : '예약하기'}</p>
-						</div>
-					</div>
-				</div>
-			</a>
+		<div
+		onClick={action}
+		className={`${selects.e !== -1 ? `booking-btn-active-${consoleType}` : ''} fixed w-[16rem] h-20 top-[calc(100%-8rem)] left-1/2 -translate-x-1/2 flex flex-col items-center justify-center rounded-[2rem] active:shadow-selected cursor-pointer shadow-not-selected z-30`}
+		>
+			<p class="text-white text-sm font-Bolwby-One">{selectedTime}</p>
+			<p class="text-white text-2xl font-semibold text-start">예약하기</p>
 		</div>
-		</>
 	)
 }
 

@@ -3,12 +3,13 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import Search from '../components/Search';
+import SideBar from '../components/SideBar';
 
 import { userState } from '../api/userApi';
 import { isLoggedInState } from '../hooks/Auth';
 import { Cookie } from '../hooks/Cookie';
 
-import useSideMenu from '../hooks/useSideMenu';
+
 import useModal from '../hooks/useModal';
 import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
@@ -17,13 +18,11 @@ import useNotification from '../hooks/useNotification';
 export const Index = () => {
 	const { isopen, modalDataState, closeModal, } = useModal();
 	const { isNotiOpen, noti } = useNotification();
-	const { isSideBarOpen, onClickMenu } = useSideMenu();
 	const { getCookies } = Cookie();
 	const cookie = getCookies();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const date = useDate();
-	const { logout } = useToken();
 
 	const loginState = useRecoilValue(isLoggedInState);
 	const loggedInUser = useRecoilValue(userState);
@@ -31,10 +30,6 @@ export const Index = () => {
 	const onClickDimmer = () => {
 		closeModal();
 	};
-
-	const onClickLogin = () => {
-		window.location.href = process.env.REACT_APP_LOGIN_URL;
-	}
 
 	//relogin
 	useEffect(() => {
@@ -45,148 +40,78 @@ export const Index = () => {
 	
 	return (
 		<>
+		{/* <div class="hidden booking-btn-active-xbox booking-btn-active-switch booking-btn-active-ps5 slot-selected-ps5 slot-selected-xbox slot-selected-switch "/> */}
 		{/*====================================notification MODAL======================================= */}
-		<div className={`alert ${isNotiOpen ? 'active' : ''}`}  id="warning-alert">
-			<div className="warning red">
-				<p>{noti.title ? noti.title : ''}</p>
-			</div>
-			<div className="warning-message">
-				<p>{noti.content ? noti.content : ''}</p>
-			</div>
+		<div
+		id="warning"
+		class={`${isNotiOpen ? 'popup-shown' : 'popup-hidden'} fixed w-72 h-14 top-10 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center bg-color-switch rounded-2xl text-white font-bold z-40 transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300`}
+		>
+			<p>{noti.title || ''}</p>
+			<p>{noti.content || ''}</p>
 		</div>
 		{/*====================================SIDE-BAR MENU ===================================== */}
-			<div className={`sidebar-menu ${isSideBarOpen ? 'open' : ''}`} id="sidebar-menu">
-				<div className="header">
-					<div className="section" id="left-section">
-						<span className="material-symbols-outlined" onClick={onClickMenu}>
-							close
-						</span>
-					</div>
-					{/* userinfo */}
-					{loginState ? (
-						<div className="section" id="center-section">
-							<div className="wrapper" id="empty-wrapper"></div>
-							<div className="wrapper" id="profile-img-wrapper">
-								<div id="profile-img">
-									<img src={loggedInUser.profile_img} alt="profileImg" />
-								</div>
-							</div>
-							<div className="wrapper" id="description-wrapper">
-								<div className="username">
-									<p>{loggedInUser.name}</p>
-								</div>
-								<div className="name">
-									<p>{loggedInUser.displayname}</p>
-								</div>
-							</div>
-						</div>
-					) : (
-						<div className="section" id="center-section">
-							<div className="wrapper" id="empty-wrapper"></div>
-							<div className="wrapper" id="profile-img-wrapper" onClick={onClickLogin}>
-								<div id="profile-img">
-									<img />
-								</div>
-							</div>
-							<div className="wrapper" id="description-wrapper" onClick={onClickLogin}>
-								<div className="username">
-									<p>Login</p>
-								</div>
-								<div className="name">
-									<p>...</p>
-								</div>
-							</div>
-						</div>
-					)}
-
-					<div className="section" id="right-section">
-						<span className="material-symbols-outlined">
-							settings
-						</span>
-					</div>
-				</div>
-				<div className="container">
-					<ul className="menu-list">
-						<li className="menu-item">
-							<Link to="/" onClick={onClickMenu}>홈</Link>
-						</li>
-						{loginState && (
-							<>
-							<li className="menu-item" key='1'>
-								<Link to="/user" onClick={onClickMenu}>내 정보</Link>
-							</li>
-							<li className="menu-item" key='2'>
-								<Link onClick={() => {
-									logout();
-									window.location.reload();
-									// navigate(0);
-								}}>로그아웃</Link>
-							</li>
-							</>
-						)}
-					</ul>
-				</div>
-				<div className="empty-space"></div>
-				<div className="footer">
-					<div className="section" id="info">
-						<div className="contact-wrap">
-							<p>contact us</p>
-						</div>
-						<div className="email-wrap">
-							<p>junkim2@student.42seoul.kr</p>
-						</div>
-					</div>
-					<div className="section"></div>
-				</div>
-			</div>
-			{ /*-------------------------------- MODAL  -------------------------------- */}
+		<SideBar
+			loggedInUser={loggedInUser}
+			loginState={loginState}
+		/>
+		{ /*-------------------------------- MODAL  -------------------------------- */}
 			{isopen && modalDataState.type === 'normal' && (
-				<div className="modal" onClick={() => onClickDimmer()}>
-					<div className="modal-content" onClick={(event) => event.stopPropagation()}>
-						<div className="time-wrap">
-							<p>{modalDataState.title}</p>
+				<div
+				id="booking-modal"
+				onClick={onClickDimmer}
+				class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
+				>
+					<div
+					onClick={(event) => event.stopPropagation()}
+					class="w-80 h-36 bg-white shadow-modal rounded-xl"
+					>
+						<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
+							<p class="font-Bolwby-One text-lg font-color-ps5">{modalDataState.title}</p>
+							<p class="font-semibold text-2xl">{modalDataState.content}</p>
 						</div>
-						<div className="comment-wrap">
-							<p>{modalDataState.content}</p>
-						</div>
-						<div className="select-wrap">
-							<div className="left red" onClick={modalDataState.callback}>
-								<span className="material-symbols-outlined">
-									cancel
-								</span>
-								<span >예</span>
+						<div class="w-full h-1/3 flex flex-row items-center justify-center">
+							<div
+							onClick={modalDataState.callback} 
+							class="w-1/2 h-full flex items-center justify-center border-r border-[#818181] cursor-pointer"
+							>
+								<p>예</p>
 							</div>
-							<div className="right" onClick={closeModal}>
-								<span>아니요</span>
+							<div onClick={closeModal} class="w-1/2 h-full flex items-center justify-center cursor-pointer">
+								<p>아니오</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			)}
 			{isopen && modalDataState.type === 'login' && (
-				<div className="modal" id="login-modal" onClick={() => onClickDimmer()}>
-					<div className="modal-content" onClick={(event) => event.stopPropagation()}>
-						<div className="time-wrap red">
-							<p>{modalDataState.title}</p>
+				<div
+				id="login-modal"
+				onClick={onClickDimmer}
+				class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
+				>
+					<div
+					onClick={(event) => event.stopPropagation()}
+					class="w-80 h-36 bg-white shadow-modal rounded-xl"
+					>
+						<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
+							<p class="font-Bolwby-One text-lg font-color-switch">{modalDataState.title}</p>
+							<p class="font-semibold text-2xl">{modalDataState.content}</p>
 						</div>
-						<div className="comment-wrap">
-							{modalDataState.content}
-						</div>
-						<div className="select-wrap">
-							<div className="left" onClick={modalDataState.callback}>
-								<img src="42logo.svg" alt="42logo" id="logo-42" />
-								<span>로그인</span>
+						<div class="w-full h-1/3 flex flex-row items-center justify-center">
+							<div
+							onClick={modalDataState.callback}
+							class="w-1/2 h-full flex items-center justify-center border-r border-[#818181] cursor-pointer"
+							>
+								<p>42 로그인</p>
 							</div>
-							<div className="right" onClick={closeModal}>
-								<span>닫기</span>
+							<div onClick={closeModal} class="w-1/2 h-full flex items-center justify-center cursor-pointer">
+								<p>닫기</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			)}
-			{isopen && modalDataState.type === 'search' && (
-				<Search />
-			)}
+			<Search />
 		</>
 	)
 }
