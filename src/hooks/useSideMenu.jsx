@@ -9,7 +9,11 @@ export const useSideMenu = () => {
 		setSideBar(!isSideBarOpen);
 	};
 
-	return { isSideBarOpen, onClickMenu };
+	const closeMenu = () => {
+		setSideBar(false);
+	}
+
+	return { isSideBarOpen, onClickMenu, closeMenu };
 }
 
 export default useSideMenu;
