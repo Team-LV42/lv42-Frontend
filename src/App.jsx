@@ -63,7 +63,6 @@ const App = () => {
 						<Route index element={<Book />} />
 						<Route path="callback" element={<Auth />} />
 						<Route path="test" element={<Search />} /> 
-						<Route path="user" element={<UserModal />} />
 						<Route path="user/:id" element={<UserModal />} />
 					</Route>
 					<Route path="/" element={<IssueRoutes />} >

@@ -72,7 +72,7 @@ export default function UserModal() {
 			setIsPlaying(data);
 		}
 		checkIsPlaying();
-	}, [])
+	}, [id])
 
 	return (
 		<>
