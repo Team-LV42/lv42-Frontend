@@ -5,7 +5,7 @@ import useToken from '../hooks/useToken';
 const PageInfo = ({ page }) => {
 	const navigate = useNavigate();
 	const { logout } = useToken();
-
+	
 	const onClickLogout = () => {
 		logout();
 		navigate('/');
@@ -14,6 +14,7 @@ const PageInfo = ({ page }) => {
 	return (
 		// <!-- 상단 정보 -->
 		<div class="w-full min-h-40 flex flex-row items-end justify-between px-9 pb-5 pt-10">
+			<div>
 			{ page === 'index' && (
 				<p class="text-2xl font-bold">예약하기</p>
 			)}
@@ -26,6 +27,7 @@ const PageInfo = ({ page }) => {
 					<p class="text-2xl font-bold">마이페이지</p>
 				</>
 			)} 
+			</div>
 			<span class="w-24 h-14 bg-basic bg-logo cursor-pointer" onClick={() => navigate('/')}></span>
 		</div>
 	)
