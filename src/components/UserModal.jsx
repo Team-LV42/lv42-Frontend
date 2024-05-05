@@ -23,13 +23,177 @@ const userRenderComponent = selectorFamily({
 	}
 })
 
-const targetUserSelector = selectorFamily({
-	key: 'TargetUser',
-	get: userID => ({ get }) => {
-		const searchUser = get(usersState(userID));
-		return searchUser !== null ? searchUser : get(userState);
+
+// !login -> userpage
+// login && id === user.id -> mypage
+
+const userDataSelector = selectorFamily({
+	key: 'UserDataSelector',
+	get: userid => async ({ get }) => {
+		if (userid === undefined || !userid) return null;
+		
+		let type;
+		
+		const id = get(userState).id;
+		if (userid === id) type = 'my';
+		else type = 'user';
+
+		const data = get(fetchUserCurrentBook(userid)) || [];
+		const user = await getUserInfoById(userid);
+		return {data: data, type: type, user: user};
 	}
 });
+
+const getUserNowPlaying = async (userID) => {
+	try {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/books/${userID}/nowplay`, {
+			method: "GET",
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+		return response;
+	} catch (err) {
+		console.log(err);
+	}
+}
+
+export default function UserModal() {
+	let isPlaying = false;
+	const { id } = useParams();
+	const navigate = useNavigate();
+	const location = useLocation();
+	const date = useDate();
+	const { data, type, user } = useRecoilValue(userDataSelector(id));
+
+	useEffect(() => {
+		if (id)
+			isPlaying = getUserNowPlaying(id);
+	}, [])
+
+	return (
+		<>
+			<PageInfo page={type} />
+			<div class="w-full grow flex flex-col items-center justify-start overflow-hidden z-10 rounded-t-3xl bg-white">
+				{/* <!-- 프로필 컨테이너 --> */}
+				<div class="w-full min-h-36 flex flex-row items-center justify-around px-8 border-b border-gray-500">
+					<span
+					class="w-[4.5rem] h-[4.5rem] rounded-full bg-basic bg-cover"
+					style={{ backgroundImage: `url(${user.profile_img})`}}
+					/>
+					<div class="h-[4.5rem] flex flex-col items-start justify-center px-5">
+						<p class="text-2xl font-bold">{user.name}</p>
+						<p class="font-medium text-[#9E9F9F]">{user.displayname}</p>
+					</div>
+					{isPlaying
+					? (
+					<div class="w-24 h-12 flex flex-row items-center justify-center rounded-3xl border border-gray-400">
+						<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00C83B">
+							<path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm14.024-.983a1.125 1.125 0 0 1 0 1.966l-5.603 3.113A1.125 1.125 0 0 1 9 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113Z" clip-rule="evenodd" />
+						</svg>
+						<span class="w-14 h-10 flex flex-col items-start justify-center text-xs ml-[0.35rem] text-[#00C838]">
+							<p class="text-center">NOW</p>
+							<p class="text-center">PLAYING</p>
+						</span>
+					</div>
+					) : (
+					<div class="w-24 h-12 flex flex-row items-center justify-center rounded-3xl border border-gray-400">
+						<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#C8D2DD">
+							<path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM9 8.25a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75h.75a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75H9Zm5.25 0a.75.75 0 0 0-.75.75v6c0 .414.336.75.75.75H15a.75.75 0 0 0 .75-.75V9a.75.75 0 0 0-.75-.75h-.75Z" clip-rule="evenodd" />
+						</svg>
+						<span class="w-14 h-10 flex flex-col items-start justify-center text-xs ml-[0.35rem] text-[#C8D2DD]">
+							<p class="text-center">NOT</p>
+							<p class="text-center">PLAYING</p>
+						</span>
+					</div>
+					)}
+				</div>
+				<div class="w-full grow flex flex-col items-center justify-start overflow-scroll py-4 px-6">
+					<Suspense fallback={<UserReservationLoadingSpinner />}>
+						<UserReservationList list={data} />
+						{/* <UserReservaitonHistoryList /> */}
+					</Suspense>
+				</div>
+			</div>
+		</>
+	)
+}
+
+const UserReservationList = ({ list }) => {
+
+
+	return (
+		<div class="w-full flex flex-col items-center justify-center mb-10">
+			<input id="booking-list-accordion" checked="checked" type="checkbox" class="peer hidden" />
+			<label for="booking-list-accordion" class="w-full h-16 flex flex-row items-center justify-between cursor-pointer peer-checked:[&>svg]:[transform-style-preserve-3d] peer-checked:[&>svg]:[transform:rotateX(180deg)]">
+				<div class="flex flex-row items-center justify-center">
+					<svg class="w-6 h-6 mx-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+					</svg>
+					<span class="text-xl font-semibold text-[#4A4A4A]">예약현황</span>
+				</div>
+				<svg class="w-7 h-7 transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+				</svg>
+			</label>
+			<div
+			id="booking-list"
+			class={`w-full ${list.length > 3 ? `peer-checked:h-[${list.length * 4}rem]` : 'peer-checked:h-48' } h-0 flex items-center justify-center transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300 overflow-hidden`}
+			>
+				{ list.length !== 0 ? (
+					<div id="booking-list-exist" class="w-[92%] h-full flex flex-col items-center justify-start list-none border-b border-[#C1C1C1]">
+						{list.map((record, index) => {
+							return <UserReservationItem key={index} item={record} />
+						})}
+					</div>
+				) : (
+					<div id="booking-list-empty" class="w-full h-full flex flex-col items-center justify-center">
+						<p class="font-semibold text-xl text-[#4A4A4A]">예약이 없습니다</p>
+						<a class="text-xs text-[#2997FF] hover:underline" href="/">지금 예약하러 가기 {'>'}</a>
+					</div>
+				)}
+			</div>
+		</div>
+	)
+}
+
+const UserReservationLoadingSpinner = () => {
+	return (
+		<div id="booking-list-spinner" class="block" role="status">
+			<svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+				<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+			</svg>
+			<span class="sr-only">Loading...</span>
+		</div>
+	)
+}
+
+const UserReservationItem = ({ item }) => {
+	const { tickToTime } = useDate();
+
+	const getTypeID = (consoleType) => {
+		switch (consoleType) {
+			case 1:
+				return 'XBOX';
+			case 2:
+				return 'SWITCH';
+			case 3:
+				return 'PS5';
+		}; 
+	}
+
+	return (
+		<li class="w-full h-16 flex flex-row items-center justify-center border-t border-[#C1C1C1]">
+			<div class="w-36 h-full flex items-center justify-center font-bold px-2 font-outfit">
+				<p>{tickToTime(item.start_time)} ~ {tickToTime(item.end_time)}</p>
+			</div>
+			<div class="grow h-full flex flex-row items-center justify-start pl-12 booking-xbox">
+				<p>{getTypeID(item.type)}</p>
+			</div>
+		</li>
+	)
+}
 
 const HistoryDate = () => {
 	const { getMonth, getWeek, setMovedDate } = useDate();
@@ -116,98 +280,4 @@ const HistoryRecord = ({ record, date }) => {
 		</div>
 		</>
 	);
-}
-
-export default function UserModal() {
-	const { id } = useParams();
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	const date = useDate();
-	const user = useRecoilValue(userState);
-	const [books, setBooks] = useRecoilState(userBookState);
-	const userID = id ? id : user.id;
-	const targetUser = useRecoilValue(targetUserSelector(userID));
-	
-	const [pageStatus, setPageStatus] = useRecoilState(userPageState);
-	const render = useRecoilValue(userRenderComponent(userID));
-
-	useEffect(() => {
-		console.log(render);
-		setBooks(render);
-	}, [render, pageStatus, setBooks])
-
-	const isDeletable = (pageStatus === 'status' ? true : false);
-
-	const onClickTab = (state) => {
-		setPageStatus(state);
-		setBooks(render);
-	};
-
-	return (
-		<>
-			{/* side nav bar */}
-			<Suspense fallback="Loading...</p>" >
-				<div className="content" id="user-content">
-					<Suspense fallback="loading user">
-						<div className="user">
-							{targetUser && (
-								<>
-								<div className="section" id="user-img-section">
-									<div className="wrapper" id="user-img">
-										<img src={targetUser.profile_img} alt="profileImg" />
-									</div>
-								</div>
-								<div className="user-info">
-									<div className="wrapper" id="username-wrapper">
-										<div className="username">
-											<p>{targetUser.name}</p>
-											<div className="user-status">
-												{/* user status */}
-												<img id="inactive" />
-											</div>
-										</div>
-										<div className="name">
-											<p>{targetUser.displayname}</p>
-										</div>
-									</div>
-								</div>
-								</>
-							)}
-							{!targetUser && (
-							<>
-							{/* skeleton */}
-							</>
-							)}
-						</div>
-					</Suspense>
-					<div className="wrapper" id="slot-list-wrapper">
-						<div className="tabs">
-							<span className="tab" id="status-tab" onClick={() => onClickTab('status')}><p>예약현황</p></span>
-							<span className="tab" id="history-tab" onClick={() => onClickTab('history')}><p>예약기록</p></span>
-						</div>
-						<Suspense fallback="loading... list">
-							<div className="slot-list-active" id={`${pageStatus}-slot-list`}>
-								{pageStatus === 'history' && (
-								<>
-								<HistoryDate />
-								<HistoryList isSelected={true}/>
-
-								</>
-							)}
-							{pageStatus === 'status' && books && books.map((record) => (
-								<Record
-									record={record}
-									key={record._id}
-									type={'user'}
-									isDeletable={isDeletable}
-								/>
-							))}
-							</div>
-						</Suspense>
-					</div>
-				</div>
-			</Suspense>
-		</>
-	)
 }
