@@ -22,6 +22,7 @@ export const MainRoutes = () => {
 export const IssueRoutes = () => {
 	return (
 		<>
+		<Index />
 		<Outlet />
 		</>
 	)
