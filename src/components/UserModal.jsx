@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { atom, useRecoilValue, selectorFamily } from 'recoil';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
@@ -52,14 +52,14 @@ const getUserNowPlaying = async (userID) => {
 				'Content-Type': 'application/json',
 			},
 		});
-		return response;
+		return await response.json();
 	} catch (err) {
 		console.log(err);
 	}
 }
 
 export default function UserModal() {
-	let isPlaying = false;
+	const [isPlaying, setIsPlaying] = useState(false);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -67,8 +67,11 @@ export default function UserModal() {
 	const { data, type, user } = useRecoilValue(userDataSelector(id));
 
 	useEffect(() => {
-		if (id)
-			isPlaying = getUserNowPlaying(id);
+		const checkIsPlaying = async () => {
+			const data = await getUserNowPlaying(id);
+			setIsPlaying(data);
+		}
+		checkIsPlaying();
 	}, [])
 
 	return (
@@ -186,7 +189,7 @@ const UserReservationItem = ({ item }) => {
 	return (
 		<li class="w-full h-16 flex flex-row items-center justify-center border-t border-[#C1C1C1]">
 			<div class="w-36 h-full flex items-center justify-center font-bold px-2 font-outfit">
-				<p>{tickToTime(item.start_time)} ~ {tickToTime(item.end_time)}</p>
+				<p>{tickToTime(item.start_time)} ~ {tickToTime(item.end_time + 1)}</p>
 			</div>
 			<div class="grow h-full flex flex-row items-center justify-start pl-12 booking-xbox">
 				<p>{getTypeID(item.type)}</p>
