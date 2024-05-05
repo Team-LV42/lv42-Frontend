@@ -4,17 +4,14 @@ const errorState = 404;
 
 export const Error500 = () => {
 	return (
-		<div>
-			<h1>500</h1>
-			<span>이런...</span>
-		</div>
+		<div class="w-[calc(100dvw)] h-[calc(100dvh)] bg-basic bg-cover bg-error-500 md:bg-error-500-desktop"></div>
 	);
 }
 
 export const Error404 = () => {
 	return (
 		<>
-			<div className="error-background-404" />
+			<div class="w-[calc(100dvw)] h-[calc(100dvh)] bg-basic bg-cover bg-error-404 md:bg-error-404-desktop"></div>
 		</>
 	);
 }
