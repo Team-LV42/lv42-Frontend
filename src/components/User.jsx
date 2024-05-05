@@ -1,36 +1,21 @@
 import { Suspense, useState, useEffect } from "react";
-import { atom, useRecoilValue, selectorFamily } from 'recoil';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useRecoilValue, selectorFamily } from 'recoil';
+import { useParams } from 'react-router-dom';
 
-import { useDate } from '../hooks/useDate';
+import useDate from '../hooks/useDate';
+import useToken from '../hooks/useToken';
+import useModal from "../hooks/useModal";
+
 import { fetchUserCurrentBook, fetchUserHistory, getUserInfoById, userState } from "../api/userApi";
+import { deleteBookRecord } from "../api/bookApi";
 
 import PageInfo from "./PageInfo";
-
-const userPageState = atom({
-	key: 'UserPageState',
-	default: 'status',
-});
-
-const userRenderComponent = selectorFamily({
-	key: 'UserRenderComponent',
-	get: userID => ({ get }) => {
-		const state = get(userPageState);
-		if (state === 'status')
-			return get(fetchUserCurrentBook(userID));
-		if (state === 'history')
-			return get(fetchUserHistory(userID));
-	}
-})
-
-
-// !login -> userpage
-// login && id === user.id -> mypage
+import { deleteModal } from "../store/Modal";
 
 const userDataSelector = selectorFamily({
 	key: 'UserDataSelector',
 	get: userid => async ({ get }) => {
-		if (userid === undefined || !userid) return null;
+		if (userid === undefined || !userid) return null;	
 		
 		let type;
 		
@@ -61,9 +46,6 @@ const getUserNowPlaying = async (userID) => {
 export default function UserModal() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const { id } = useParams();
-	const navigate = useNavigate();
-	const location = useLocation();
-	const date = useDate();
 	const { data, type, user } = useRecoilValue(userDataSelector(id));
 
 	useEffect(() => {
@@ -113,7 +95,7 @@ export default function UserModal() {
 				</div>
 				<div class="w-full grow flex flex-col items-center justify-start overflow-scroll py-4 px-6">
 					<Suspense fallback={<UserReservationLoadingSpinner />}>
-						<UserReservationList list={data} />
+						<UserReservationList list={data} type={type} />
 						{/* <UserReservaitonHistoryList /> */}
 					</Suspense>
 				</div>
@@ -122,7 +104,7 @@ export default function UserModal() {
 	)
 }
 
-const UserReservationList = ({ list }) => {
+const UserReservationList = ({ list, type }) => {
 	const [isChecked, setIsChecked] = useState(true);
 
 	const onClickInput = () => {
@@ -167,7 +149,7 @@ const UserReservationList = ({ list }) => {
 				{ list.length !== 0 ? (
 					<div id="booking-list-exist" class="w-[92%] h-full flex flex-col items-center justify-start list-none border-b border-[#C1C1C1]">
 						{list.map((record, index) => {
-							return <UserReservationItem key={index} item={record} />
+							return <UserReservationItem key={index} item={record} type={type} />
 						})}
 					</div>
 				) : (
@@ -193,8 +175,10 @@ const UserReservationLoadingSpinner = () => {
 	)
 }
 
-const UserReservationItem = ({ item }) => {
-	const { tickToTime } = useDate();
+const UserReservationItem = ({ item, type }) => {
+	const { tickToTime, getDuration } = useDate();
+	const { openModal, closeModal } = useModal();
+	const accessToken = useToken().accessToken();
 
 	const getTypeID = (consoleType) => {
 		switch (consoleType) {
@@ -207,8 +191,18 @@ const UserReservationItem = ({ item }) => {
 		}; 
 	}
 
+	const deleteAction = async () => {
+		await deleteBookRecord(item._id, item.user_id, accessToken);
+		closeModal();
+	};
+
+	console.log(type);
+
 	return (
-		<li class="w-full h-16 flex flex-row items-center justify-center border-t border-[#C1C1C1]">
+		<li
+		onClick={() => type === 'my' && openModal(deleteModal(item, getDuration, deleteAction))}
+		class="w-full h-16 flex flex-row cursor-pointer items-center justify-center border-t border-[#C1C1C1]"
+		>
 			<div class="w-36 h-full flex items-center justify-center font-bold px-2 font-outfit">
 				<p>{tickToTime(item.start_time)} ~ {tickToTime(item.end_time + 1)}</p>
 			</div>
