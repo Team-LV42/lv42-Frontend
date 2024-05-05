@@ -41,6 +41,12 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 			return str.toLowerCase();
 		return str;
 	};
+
+	const displayRecordDesciption = () => {
+		if (curTick > index)
+			return ('-');
+		return (isSelected ? 'SELECTED' : '슬롯 선택하기');
+	}
 	
 	return (
 		<>
@@ -73,7 +79,7 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 						<p>{tickToTime(index)}~</p>
 					</div>
 					<div class="grow h-full flex items-center justify-center">
-						<p>{ isSelected ? 'SELECTED' : '슬롯 선택하기'}</p>
+						<p>{displayRecordDesciption()}</p>
 					</div>
 				</div>
 			)}
