@@ -1,7 +1,7 @@
-import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilState, useResetRecoilState } from 'recoil';
 import { Cookie } from './Cookie';
 
-import { logoutUser } from '../api/userApi';
+import { logoutUser, userState } from '../api/userApi';
 
 export const accessTokenState = atom({
     key: 'accessTokenState',
@@ -15,6 +15,8 @@ export function useToken() {
     const [ at, setat ] = useRecoilState(accessTokenState);
     const rt = cookies.refreshToken;
     const userid = cookies.userId;
+    const resetAccessToken = useResetRecoilState(accessTokenState);
+    const resetUserState = useResetRecoilState(userState);
 
     const refreshToken = () => {
 		  return rt ? rt : null;
@@ -35,7 +37,8 @@ export function useToken() {
 
     const logout = () => {
       logoutUser(userid);
-      setat(null);
+      resetAccessToken();
+      resetUserState();
       removeCookie('refreshToken');
       removeCookie('userId');
     }
