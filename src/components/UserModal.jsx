@@ -1,16 +1,11 @@
 import { Suspense, useEffect } from "react";
-import { atom, useRecoilState, useRecoilValue, selectorFamily, selector } from 'recoil';
+import { atom, useRecoilValue, selectorFamily } from 'recoil';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
-import { useDate } from '../hooks/useDate.jsx';
+import { useDate } from '../hooks/useDate';
+import { fetchUserCurrentBook, fetchUserHistory, getUserInfoById, userState } from "../api/userApi";
 
-import Record from "./Record.jsx";
-import { fetchUserCurrentBook, fetchUserHistory, usersState, userState } from "../api/userApi";
-
-const userBookState = atom({
-	key: 'UserBookState',
-	default: [],
-});
+import PageInfo from "./PageInfo";
 
 const userPageState = atom({
 	key: 'UserPageState',
