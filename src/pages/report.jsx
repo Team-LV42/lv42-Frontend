@@ -27,7 +27,6 @@ import { getAddableContent } from '../store/addable';
 import useModal from '../hooks/useModal';
 import useSideMenu from '../hooks/useSideMenu';
 
-import SideBar from '../components/SideBar';
 import AddableList from '../components/AddableList';
 
 const DeviceHeader = ({ page }) => {
@@ -115,7 +114,6 @@ const DeviceIssueReporting = () => {
 					{page === 'controller' && <ControllerIssueReporting />}
 					{(page === 'etc' || page === 'console') && <EtcIssueReporting />}
 				</div>
-				<SideBar />
 				<div id="big-img-modal" onClick={closeModal} className={`${isopen && modalDataState.type === 'bigImg' ? 'visible' : 'invisible'} fixed top-0 left-0 flex items-center justify-center pb-24 w-full h-full backdrop-brightness-50 z-50`}>
 					<span onClick={(e) => e.stopPropagation()} className={`${modalDataState.content} bg-basic  bg-white md:h-[600px] md:w-[700px] w-full h-80 border border-black rounded-md shadow-md mt-2 mb-3 z-50`}></span>
 				</div>
