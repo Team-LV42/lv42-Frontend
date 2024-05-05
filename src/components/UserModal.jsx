@@ -123,12 +123,33 @@ export default function UserModal() {
 }
 
 const UserReservationList = ({ list }) => {
+	const [isChecked, setIsChecked] = useState(true);
 
+	const onClickInput = () => {
+		setIsChecked(!isChecked);
+	};
+
+	const listSizes = {
+		4: 'peer-checked:h-[16rem]',
+		5: 'peer-checked:h-[20rem]',
+		6: 'peer-checked:h-[24rem]',
+		7: 'peer-checked:h-[28rem]',
+		8: 'peer-checked:h-[32rem]',
+	}
+
+	const renderListHeight = (length) => {
+		if (length <= 3)
+			return ('peer-checked:h-48');
+		else if (3 < length && length < 9)
+			return (listSizes[length]);
+		else
+			return ('peer-checked:h-auto');
+	}
 
 	return (
 		<div class="w-full flex flex-col items-center justify-center mb-10">
-			<input id="booking-list-accordion" checked="checked" type="checkbox" class="peer hidden" />
-			<label for="booking-list-accordion" class="w-full h-16 flex flex-row items-center justify-between cursor-pointer peer-checked:[&>svg]:[transform-style-preserve-3d] peer-checked:[&>svg]:[transform:rotateX(180deg)]">
+			<input id="booking-list-accordion" checked={isChecked} type="checkbox" class="peer hidden" />
+			<label onClick={onClickInput} for="booking-list-accordion" class="w-full h-16 flex flex-row items-center justify-between cursor-pointer peer-checked:[&>svg]:[transform-style-preserve-3d] peer-checked:[&>svg]:[transform:rotateX(180deg)]">
 				<div class="flex flex-row items-center justify-center">
 					<svg class="w-6 h-6 mx-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
@@ -141,7 +162,7 @@ const UserReservationList = ({ list }) => {
 			</label>
 			<div
 			id="booking-list"
-			class={`w-full ${list.length > 3 ? `peer-checked:h-[${list.length * 4}rem]` : 'peer-checked:h-48' } h-0 flex items-center justify-center transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300 overflow-hidden`}
+			class={`w-full ${renderListHeight(list.length)} h-0 flex items-center justify-center transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300 overflow-hidden`}
 			>
 				{ list.length !== 0 ? (
 					<div id="booking-list-exist" class="w-[92%] h-full flex flex-col items-center justify-start list-none border-b border-[#C1C1C1]">

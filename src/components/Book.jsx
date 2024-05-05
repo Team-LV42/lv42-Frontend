@@ -333,10 +333,17 @@ const BookConsoleTab = () => {
 }
 
 const BookActionWrapper = ({ selects, consoleType, action, selectedTime }) => {
+
+	const consoleTypeStyles = {
+		'xbox': 'booking-btn-active-xbox',
+		'switch': 'booking-btn-active-switch',
+		'ps5': 'booking-btn-active-ps5',
+	}
+
 	return (
 		<div
 		onClick={action}
-		className={`${selects.e !== -1 ? `booking-btn-active-${consoleType}` : ''} fixed w-[16rem] h-20 top-[calc(100%-8rem)] left-1/2 -translate-x-1/2 flex flex-col items-center justify-center rounded-[2rem] active:shadow-selected cursor-pointer shadow-not-selected z-30`}
+		className={`${selects.s !== -1 && consoleTypeStyles[consoleType]} fixed w-[16rem] h-20 top-[calc(100%-8rem)] left-1/2 -translate-x-1/2 flex flex-col items-center justify-center rounded-[2rem] active:shadow-selected cursor-pointer shadow-not-selected z-30`}
 		>
 			<p class="text-white text-sm font-Bolwby-One">{selectedTime}</p>
 			<p class="text-white text-2xl font-semibold text-start">예약하기</p>

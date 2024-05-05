@@ -28,7 +28,7 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 				str = 'Xbox';
 				break ;
 			case 2:
-				str = 'Nintendo';
+				str = 'switch';
 				break ;
 			case 3:
 				str = 'PS5';
@@ -46,6 +46,12 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 		if (curTick > index)
 			return ('-');
 		return (isSelected ? 'SELECTED' : '슬롯 선택하기');
+	}
+
+	const slotSelectedStyles = {
+		'xbox': 'slot-selected-xbox',
+		'switch': 'slot-selected-switch',
+		'ps5' : 'slot-selected-ps5',
 	}
 	
 	return (
@@ -73,7 +79,7 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 					onClick(event);
 				}}
 				//${curTick > index ? 'disabled' : ''} 
-				class={`${isSelected ? `slot-selected-${typeToString(type, 1)}` : 'slot-empty'} ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1]`}
+				class={`${isSelected ? slotSelectedStyles[typeToString(type, 1)] : 'slot-empty'} ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1]`}
 				>
 					<div class="w-36 h-full flex items-center justify-center text-lg font-bold px-2 font-outfit">
 						<p>{tickToTime(index)}~</p>
