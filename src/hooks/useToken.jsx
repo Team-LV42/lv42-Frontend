@@ -34,7 +34,7 @@ export function useToken() {
     }
 
     const logout = () => {
-      logoutUser(at);
+      logoutUser(userid);
       setat(null);
       removeCookie('refreshToken');
       removeCookie('userId');
