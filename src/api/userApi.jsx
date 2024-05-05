@@ -64,13 +64,12 @@ const fetchUserStateQuery = async (param, search) => {
 	};
 }
 
-export const logoutUser = async (authToken) => {
+export const logoutUser = async (id) => {
 	try {
-		const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/logout`, {
+		const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/logout?userId=${id}`, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
-				"Authorization": `Bearer ${authToken}`, 
 			}
 		})
 	} catch (error) {
