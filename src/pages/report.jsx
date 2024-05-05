@@ -39,6 +39,7 @@ const DeviceHeader = ({ page }) => {
 	const content = useRecoilValue(deviceTotalSelectedMalfList);
 	const setContent = useSetRecoilState(getAddableContent(index));
 	const setPage = useSetRecoilState(pageState);
+	const { openModal } = useModal();
 	const { onClickMenu } = useSideMenu();
 
 	const resetBtnMalfList = () => {
@@ -65,13 +66,17 @@ const DeviceHeader = ({ page }) => {
 
 	return (
 		<>
-			<header className="fixed flex flex-row items-center justify-start p-4 top-0 left-0 w-full h-12 z-30 bg-white">
+			<header className="w-full h-12 fixed flex flex-row items-center justify-between p-4 top-0 bg-white">
 				<button id="menu-button" className="flex" onClick={onClickMenu}>
-					<svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+					<svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
 					</svg>
 				</button>
-				<div className="h-8 w-8 hidden bg-basic bg-logo"></div>
+				<button id="search-buttom" class="flex" onClick={() => openModal({type: 'search'})}>
+					<svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+					</svg>
+				</button>
 			</header>
 			<div className="flex flex-row items-end justify-between md:p-10 md:px-12 px-9 py-5 pt-10 w-full md:h-44 h-32 border-b border-black">
 				<div>
@@ -96,13 +101,13 @@ const DeviceIssueReporting = () => {
 	const { isopen, modalDataState, closeModal } = useModal();
 
 	return (
-		<>
+		<div class="w-[calc(100dvw)] h-[calc(100dvh)] flex items-center justify-center">
 			{page === 'done' 
 			? (
 				<DoneIssueReporting />
 			)
 			: (
-			<div className="overflow-auto font-outfit w-full min-h-dvh flex flex-col items-center justify-center">
+			<div className="overflow-auto font-outfit w-full h-full flex flex-col items-center justify-center">
 				<DeviceHeader page={page} />
 				<div className="overflow-hidden flex flex-col items-center justify-start px-6 w-full grow relative z-10">
 					<div className="absolute left-0 top-0 w-full h-1/3 bg-gradient-to-b from-gray-200 z-20"></div>
@@ -110,13 +115,13 @@ const DeviceIssueReporting = () => {
 					{page === 'controller' && <ControllerIssueReporting />}
 					{(page === 'etc' || page === 'console') && <EtcIssueReporting />}
 				</div>
-				<DeviceSideMenu />
-				<div id="big-img-modal" onClick={closeModal} className={`${isopen ? 'visible' : 'invisible'} fixed top-0 left-0 flex items-center justify-center pb-24 w-full h-full backdrop-brightness-50 z-50`}>
+				<SideBar />
+				<div id="big-img-modal" onClick={closeModal} className={`${isopen && modalDataState.type === 'bigImg' ? 'visible' : 'invisible'} fixed top-0 left-0 flex items-center justify-center pb-24 w-full h-full backdrop-brightness-50 z-50`}>
 					<span onClick={(e) => e.stopPropagation()} className={`${modalDataState.content} bg-basic  bg-white md:h-[600px] md:w-[700px] w-full h-80 border border-black rounded-md shadow-md mt-2 mb-3 z-50`}></span>
 				</div>
 			</div>
 			)}
-		</>
+		</div>
 	)
 };
 
@@ -375,6 +380,7 @@ const ControllerIssueReporting = () => {
 
 	const bgImgModal = () => {
 		return ({
+			type: 'bigImg',
 			content: getConsoleName(deviceID),
 		});
 	}
@@ -464,8 +470,8 @@ const DoneIssueReporting = () => {
 					<p>매월 1일 슬랙 채널에서</p>
 					<p>확인하실 수 있습니다</p>
 				</div>
-				<button onClick={() => navigate(0)} className="w-[210px] h-[46px] mt-16 rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
-					<p>고장신고 홈으로 돌아가기</p>
+				<button onClick={() => navigate('/')} className="w-[210px] h-[46px] mt-16 rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
+					<p>홈으로 돌아가기</p>
 				</button>
 				<button onClick={() => window.open("https://forms.gle/CWybJJPorTauRUuQ8")} className="w-[210px] h-[46px] mt-7 rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
 					<p>서비스 관련 문의하기</p>
