@@ -26,35 +26,9 @@ import {
 import { getAddableContent } from '../store/addable';
 import useModal from '../hooks/useModal';
 import useSideMenu from '../hooks/useSideMenu';
+
+import SideBar from '../components/SideBar';
 import AddableList from '../components/AddableList';
-
-export const DeviceSideMenu = () => {
-	const navigate = useNavigate();
-	const { isSideBarOpen, onClickMenu } = useSideMenu();
-
-	return (
-		<>
-		<div id="sidebar-menu" className={`${isSideBarOpen ? 'side-shown' : 'side-hidden'} peer flex items-center justify-center w-72 h-full bg-white rounded-r-md transition-all ease-in-out z-50`}>
-			<header className="absolute flex flex-row items-center justify-between p-4 top-0 left-0 w-full h-12">
-				<button id="menu-close-button" className="z40" onClick={onClickMenu}>
-					<svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-					</svg>
-				</button>
-			</header>
-			<ul className="flex flex-col items-start justify-start w-full h-4/5 font-bold text-xl">
-				<li onClick={() => {navigate('/report'); onClickMenu();}} className="flex flex-row items-center justify-start w-full h-14 my-1 p-5 hover:backdrop-brightness-50 cursor-pointer">
-					<button>고장수리 신고하기</button>
-				</li>
-				<li onClick={() => window.open("https://forms.gle/CWybJJPorTauRUuQ8")} className="flex flex-row items-center justify-start w-full h-14 my-1 p-5 hover:backdrop-brightness-50 cursor-pointer">
-					<button>문의하기</button>
-				</li>
-			</ul>
-		</div>
-		<div onClick={onClickMenu} id="sidebar-bg" className={`${isSideBarOpen ? 'visible' : 'invisible'} peer-[.side-shown]:visible backdrop-brightness-50 w-full h-full fixed top-0 left-0 z-40`}></div>
-		</>
-	)
-}
 
 const DeviceHeader = ({ page }) => {
 	let index = 0;
