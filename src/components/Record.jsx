@@ -96,6 +96,7 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 				onClick={(event) => {
 					event.preventDefault();
 					{isDeletable && curTick <= index && openModal(deleteModal(record, getDuration, deleteAction))}
+					{isDeletable || navigate(`/user/${record.user_id}`)}
 				}}
 				class={` ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1] slot-full`}
 				>
