@@ -18,6 +18,7 @@ import {
 	reserveSubmitError,
 	reserveSubmitHistoryTick,
 	failedReservationModal,
+	testReservationOnlyModal,
 } from '../store/Modal';
 import { booksState, selectState, initialBooksSelector } from "../store/book";
 
@@ -265,13 +266,15 @@ const Book = () => {
 			{/* <!-- 탭 컨테이너 --> */}
 			<div class="w-full min-h-24 top-0 flex flex-row items-center justify-around px-5">
 				<div
-				onClick={(e) => {e.preventDefault(); setConsoleType(1)}}
+				onClick={() => openNoti(testReservationOnlyModal())}
+				// onClick={(e) => {e.preventDefault(); setConsoleType(1)}}
 				class={`${consoleType === 1 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-xbox cursor-pointer pointerhover:hover:brightness-75`}
 				>
 					<p class="font-Bolwby-One text-white w-20 text-center">XBOX</p>
 				</div>
 				<div
-				onClick={(e) => {e.preventDefault(); setConsoleType(2)}}
+				onClick={() => openNoti(testReservationOnlyModal())}
+				// onClick={(e) => {e.preventDefault(); setConsoleType(2)}}
 				class={`${consoleType === 2 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-switch cursor-pointer pointerhover:hover:brightness-75`}
 				>
 					<p class="font-Bolwby-One text-white w-20 text-center">Switch</p>

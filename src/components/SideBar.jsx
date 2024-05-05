@@ -56,11 +56,13 @@ export const SideBar = ({ loggedInUser, loginState }) => {
 				)}
 				{/* <!-- 사이드바 리스트 --> */}
 				<ul class="flex flex-col items-start justify-start w-full h-[calc(100%-5rem)] font-bold text-xl">
-					{loginState && (
-						<li onClick={() => {navigate(`/user/${loggedInUser.id}`);onClickMenu()}} class="w-full h-14 flex flex-row items-center justify-start my-1 p-5 px-8 hover:backdrop-brightness-50 cursor-pointer">
-							<button>마이페이지</button>
-						</li>
-					)}
+					<li onClick={() => {
+						loginState && navigate(`/user/${loggedInUser.id}`);
+						loginState || onClickLogin();
+						onClickMenu();
+					}} class="w-full h-14 flex flex-row items-center justify-start my-1 p-5 px-8 hover:backdrop-brightness-50 cursor-pointer">
+						<button>마이페이지</button>
+					</li>
 					<li onClick={() => {navigate('/');onClickMenu()}} class="w-full h-14 flex flex-row items-center justify-start my-1 p-5 px-8 hover:backdrop-brightness-50 cursor-pointer">
 						<button>예약하기</button>
 					</li>
