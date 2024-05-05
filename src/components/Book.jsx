@@ -306,7 +306,7 @@ const Book = () => {
 							state='book'
 						/>
 					)})}
-				{selects.e !== -1 && 
+				{selects.s !== -1 && 
 				<BookActionWrapper
 					selects={selects}
 					consoleType={getTypeID(consoleType)}

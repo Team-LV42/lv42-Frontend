@@ -14,11 +14,6 @@ import { dateState } from '../store/State.jsx';
 * }
 */
 
-/* Test Code */
-
-// const userId = cookie.get('userid');
-// const userId = '';
-
 export const userState = atom({
 	key: 'UserState',
 	default: {
@@ -30,19 +25,6 @@ export const userState = atom({
 	},
 });
 
-//특정 유저의 정보를 한번 가져온 경우 들고있음
-export const usersState = atomFamily({
-	key: 'UsersState',
-	default: selectorFamily({
-		key: 'UsersState/Default',
-		get: userID => async ({ get }) => {
-			const checkDuplicateUser = get(userState);
-			if (checkDuplicateUser.id === userID || userID === 0) return null;
-			const response = await fetchUserStateQuery("id", userID);
-			return response;
-		}
-	}),
-});
 
 //특정한 사용자 검색을 위한 api
 export const getUserInfoById = async (userID) => {
@@ -101,7 +83,7 @@ export const fetchUserCurrentBook = selectorFamily({
 	key: 'FetchUserCurrentBook',
 	get: (id) => async ({ get }) => {
 		try {
-			if (id === 0) return null;
+			if (id === 0) return [];
 			const today = get(dateState);
 			const response = await fetch(`${process.env.REACT_APP_API_URL}/books/${id}/list?date=${today}`, {
 				method: "GET",

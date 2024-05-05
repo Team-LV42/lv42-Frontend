@@ -14,9 +14,11 @@ import useModal from '../hooks/useModal';
 import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
 import useNotification from '../hooks/useNotification';
+import useSideMenu from '../hooks/useSideMenu';
 
 export const Index = () => {
 	const { isopen, modalDataState, closeModal, } = useModal();
+	const { closeMenu } = useSideMenu();
 	const { isNotiOpen, noti } = useNotification();
 	const { getCookies } = Cookie();
 	const cookie = getCookies();
@@ -33,6 +35,8 @@ export const Index = () => {
 
 	//relogin
 	useEffect(() => {
+		closeModal();
+		closeMenu();
 		if (!loginState && cookie.refreshToken && location.pathname !== '/callback') {
 			navigate('/callback', { state: { from: location.pathname }});
 		}

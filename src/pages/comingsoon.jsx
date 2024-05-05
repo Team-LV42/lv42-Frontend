@@ -1,6 +1,6 @@
 import useSideMenu from "../hooks/useSideMenu";
 
-import { DeviceSideMenu }from './report';
+// import { DeviceSideMenu }from './report';
 
 export const ComingSoon = () => {
 	const { onClickMenu } = useSideMenu();
@@ -19,7 +19,7 @@ export const ComingSoon = () => {
 			<p>서비스</p>
 			<p>준비중입니다</p>
 		</div>
-		<DeviceSideMenu />
+		{/* <DeviceSideMenu /> */}
 	</div>
 	)
 }
