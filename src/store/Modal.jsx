@@ -88,3 +88,10 @@ export const failedReservationModal = (closeModal) => {
 		callback: () => closeModal(),
 	})
 };
+
+export const testReservationOnlyModal = () => {
+	return ({
+		title: '~6/4 (화)까지 테스트 기간으로',
+		content: 'PS5 만 예약 가능합니다',
+	})
+};
