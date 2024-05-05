@@ -48,7 +48,15 @@ module.exports = {
         'ps5-btn-info': "url('../public/ps5-button-info.png')",
         'switch-btn-info': "url('../public/switch-button-info.png')",
         'switch-pro-btn-info': "url('../public/switch-pro-button-info.png')",
-        'xbox-btn-info': "url('../public/xbox-button-info.png')"
+        'xbox-btn-info': "url('../public/xbox-button-info.png')",
+        'user-onboarding-2': "url('../public/user-onboarding-2.png')",
+        'user-onboarding-3': "url('../public/user-onboarding-3.png')",
+        'user-onboarding-4': "url('../public/user-onboarding-4.png')",
+        'user-onboarding-1': "url('../public/user-onboarding-1.png')",
+        'error-404': "url('../public/error-background-404.svg')",
+        'error-404-desktop': "url('../public/error-background-404-desktop.svg')",
+        'error-500': "url('../public/error-background-500.svg')",
+        'error-500-desktop': "url('../public/error-background-500-desktop.svg')",
       }
     },
   },
