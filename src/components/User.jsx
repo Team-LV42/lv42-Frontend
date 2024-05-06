@@ -176,7 +176,7 @@ const UserReservationLoadingSpinner = () => {
 }
 
 const UserReservationItem = ({ item, type }) => {
-	const { tickToTime, getDuration } = useDate();
+	const { tickToTime, getDuration, curTick } = useDate();
 	const { openModal, closeModal } = useModal();
 	const accessToken = useToken().accessToken();
 
@@ -194,13 +194,14 @@ const UserReservationItem = ({ item, type }) => {
 	const deleteAction = async () => {
 		await deleteBookRecord(item._id, item.user_id, accessToken);
 		closeModal();
+		window.location.reload();
 	};
 
 	console.log(type);
 
 	return (
 		<li
-		onClick={() => type === 'my' && openModal(deleteModal(item, getDuration, deleteAction))}
+		onClick={() => type === 'my' && curTick <= item.end_time && openModal(deleteModal(item, getDuration, deleteAction))}
 		class="w-full h-16 flex flex-row cursor-pointer items-center justify-center border-t border-[#C1C1C1]"
 		>
 			<div class="w-36 h-full flex items-center justify-center font-bold px-2 font-outfit">
