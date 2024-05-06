@@ -95,3 +95,10 @@ export const testReservationOnlyModal = () => {
 		content: 'PS5 만 예약 가능합니다',
 	})
 };
+
+export const submitReservationSuccessModal = (console) => {
+	return ({
+		type: 'onboarding-console-guide',
+		content: console,
+	});
+};

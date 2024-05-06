@@ -80,6 +80,7 @@ export const getAccessToken = selectorFamily({
 				},
 			});
 
+			// if (response.status === 401) window.location.reload();
 			if (400 <= response.status && response.status <= 599) return null;
 			
 			return response.json();

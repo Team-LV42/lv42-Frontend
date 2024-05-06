@@ -4,7 +4,8 @@ import { useRecoilValue } from 'recoil';
 
 import Search from '../components/Search';
 import SideBar from '../components/SideBar';
-import OnBoarding from '../components/OnBoarding';
+import OnBoardingGuide from '../components/onboarding/OnBoardingGuide';
+import OnBoardingConsoleGuide from '../components/onboarding/OnBoardingConsoleGuide';
 
 import { userState } from '../api/userApi';
 import { isLoggedInState } from '../hooks/Auth';
@@ -27,12 +28,8 @@ export const Index = () => {
 
 	const loginState = useRecoilValue(isLoggedInState);
 	const loggedInUser = useRecoilValue(userState);
-
-	const onClickDimmer = () => {
-		closeModal();
-	};
-
-	//relogin
+	
+	// rt, userid가 있으면 재로그인 시도
 	useEffect(() => {
 		closeModal();
 		closeMenu();
@@ -56,11 +53,12 @@ export const Index = () => {
 			loggedInUser={loggedInUser}
 			loginState={loginState}
 		/>
+		<Search />
 		{ /*-------------------------------- MODAL  -------------------------------- */}
 		{isopen && modalDataState.type === 'normal' && (
 			<div
 			id="booking-modal"
-			onClick={onClickDimmer}
+			onClick={closeModal}
 			class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
 			>
 				<div
@@ -88,7 +86,7 @@ export const Index = () => {
 		{isopen && modalDataState.type === 'login' && (
 			<div
 			id="login-modal"
-			onClick={onClickDimmer}
+			onClick={closeModal}
 			class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
 			>
 				<div
@@ -113,10 +111,12 @@ export const Index = () => {
 				</div>
 			</div>
 		)}
-		{isopen && modalDataState.type === 'onboarding' && (
-			<OnBoarding />
+		{isopen && modalDataState.type === 'onboarding-guide' && (
+			<OnBoardingGuide closeModal={closeModal}/>
 		)}
-		<Search />
+		{isopen && modalDataState.type === 'onboarding-console-guide' && (
+			<OnBoardingConsoleGuide closeModal={closeModal} />
+		)}
 		</>
 	)
 }
