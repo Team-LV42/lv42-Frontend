@@ -69,7 +69,6 @@ const Auth = () => {
 					SetUserInfo(token.userid, setUser, regenAccessToken.admin);
 				} else {
 					token.logout();
-					navigate('/');
 				}
 			if (location.state) {
 				console.log(location.state);
