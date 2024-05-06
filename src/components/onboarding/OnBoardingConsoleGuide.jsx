@@ -32,9 +32,9 @@ const OnBoardingConsoleGuide = ({ closeModal, data, user }) => {
 
 	return (
 		<div onClick={closeModal} id="user-onboarding-modal-console-guide" class="modal-shown fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40">
-				<div onClick={(event) => event.stopPropagation()} class="relative w-80 h-[80%] overflow-hidden bg-white shadow-modal rounded-2xl">					  
-					<div class="w-full h-full flex flex-col items-center justify-start p-10 pt-14">
-						<div class="w-full flex flex-col items-center justify-center mb-8">
+				<div onClick={(event) => event.stopPropagation()} class="relative w-80 h-[80%] max-h-[42rem] flex flex-col items-center justify-center bg-white shadow-modal rounded-2xl">					  
+					<div class="w-full h-full flex flex-col items-center justify-center py-10 min-[376px]-[gap-6] gap-2">
+						<div class="w-full flex flex-col items-center justify-center h-10">
 							<p class="text-3xl font-bold mb-2">예약 성공</p>
 							<p class="text-sm font-medium">{content[data.content][0]}</p>
 						</div>
