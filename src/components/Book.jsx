@@ -256,12 +256,12 @@ const Book = () => {
 			const data = setData(selects);
 			const response = await postBookRecord(userID, data, accessToken);
 
-			if (response.status === 400) {
-				openNoti(reserveSubmitError());
-			}
 			setSelects({s: -1, e: -1});
 			closeModal();
-			openModal(submitReservationSuccessModal(getTypeID(consoleType)));
+			if (response.status === 400) {
+				openNoti(reserveSubmitError());
+			} else
+				openModal(submitReservationSuccessModal(getTypeID(consoleType)));
 		} catch (error) {
 			console.error(`BookForm: handleSubmitBookForm: ${error}`);
 			closeModal();
