@@ -36,8 +36,8 @@ export function useToken() {
       setat(accessToken);
     }
 
-    const logout = () => {
-      logoutUser(userid, rt);
+    const logout = async () => {
+      await logoutUser(userid, rt);
       removeCookie('refreshToken');
       removeCookie('userId');
       navigate('/');
