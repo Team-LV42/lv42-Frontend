@@ -22,8 +22,12 @@ export const MainRoutes = () => {
 export const IssueRoutes = () => {
 	return (
 		<>
-		<Index />
-		<Outlet />
+		<div class="w-[calc(100dvw)] h-[calc(100dvh)] flex items-center justify-center">
+			<div className="w-full h-full overflow-y-scroll font-outfit relative">
+				<Index />
+				<Outlet />
+			</div>
+		</div>
 		</>
 	)
 }

@@ -13,6 +13,7 @@ import { Error404, Error500 } from './components/redirect/Error';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 import Report from './pages/report.jsx';
+import { DoneIssueReporting } from './pages/report.jsx';
 import DashBoard from './pages/dashboard.jsx';
 
 import GoogleAnalycis from './components/GoogleAnalytics';
@@ -36,6 +37,7 @@ const App = () => {
 						<Route path="report" element={<Report />} />
 						<Route path={`${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
 					</Route>
+					<Route path="/report/done" element={<DoneIssueReporting />} />
 					<Route path='/*' element={<Error404 />} /> 
 				</Routes>
 			</Suspense>
