@@ -57,6 +57,9 @@ module.exports = {
         'error-404-desktop': "url('../public/error-background-404-desktop.svg')",
         'error-500': "url('../public/error-background-500.svg')",
         'error-500-desktop': "url('../public/error-background-500-desktop.svg')",
+        'xbox-controller': "url('../public/xbox-controller.png')",
+        'switch-controller': "url('../public/switch-controller.png')",
+        'ps5-controller': "url('../public/ps5-controller.png')",
       }
     },
   },
