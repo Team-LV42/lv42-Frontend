@@ -197,7 +197,11 @@ const UserReservationItem = ({ item, type }) => {
 		window.location.reload();
 	};
 
-	console.log(type);
+	const styleTypes = {
+		1: 'booking-xbox',
+		2: 'booking-switch',
+		3: 'booking-ps5',
+	}
 
 	return (
 		<li
@@ -207,7 +211,7 @@ const UserReservationItem = ({ item, type }) => {
 			<div class="w-36 h-full flex items-center justify-center font-bold px-2 font-outfit">
 				<p>{tickToTime(item.start_time)} ~ {tickToTime(item.end_time + 1)}</p>
 			</div>
-			<div class="grow h-full flex flex-row items-center justify-start pl-12 booking-xbox">
+			<div class={`grow h-full flex flex-row items-center justify-start pl-12 ${styleTypes[item.type]}`}>
 				<p>{getTypeID(item.type)}</p>
 			</div>
 		</li>
