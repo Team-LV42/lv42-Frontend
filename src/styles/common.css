@@ -21,6 +21,6 @@
 	width: 0px;
 	height: 80px;
 	background: url('../../public/logo/42logo-loading.svg') 0 0 / 260px no-repeat;
-	transition: all 2s ease-in-out;
+	transition: all 1s ease-in-out;
 }
 .animate::after{ width: 130px; }
