@@ -257,11 +257,11 @@ const Book = () => {
 			const response = await postBookRecord(userID, data, accessToken);
 
 			setSelects({s: -1, e: -1});
+			closeModal();
 			if (response.status === 400) {
 				openNoti(reserveSubmitError());
 			} else
 				openModal(submitReservationSuccessModal(getTypeID(consoleType)));
-			closeModal();
 		} catch (error) {
 			console.error(`BookForm: handleSubmitBookForm: ${error}`);
 			closeModal();
