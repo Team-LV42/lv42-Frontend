@@ -1,6 +1,6 @@
 import { Suspense, useState, useEffect } from "react";
-import { useRecoilValue, selectorFamily } from 'recoil';
-import { useParams } from 'react-router-dom';
+import { useRecoilValue, useRecoilRefresher_UNSTABLE ,selectorFamily } from 'recoil';
+import { useParams, useLocation } from 'react-router-dom';
 
 import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
@@ -47,6 +47,8 @@ export default function UserModal() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const { id } = useParams();
 	const { data, type, user } = useRecoilValue(userDataSelector(id));
+	const refreshData = useRecoilRefresher_UNSTABLE(userDataSelector(id));
+	const location = useLocation();
 
 	useEffect(() => {
 		const checkIsPlaying = async () => {
@@ -55,6 +57,11 @@ export default function UserModal() {
 		}
 		checkIsPlaying();
 	}, [id])
+
+	useEffect(() => {
+		// 사용자 데이터 업데이트
+		refreshData();
+	  }, [location.pathname, refreshData]);
 
 	return (
 		<>
