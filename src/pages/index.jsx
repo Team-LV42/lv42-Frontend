@@ -1,18 +1,17 @@
-import { useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect	} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import Search from '../components/Search';
 import SideBar from '../components/SideBar';
+import OnBoarding from '../components/OnBoarding';
 
 import { userState } from '../api/userApi';
 import { isLoggedInState } from '../hooks/Auth';
 import { Cookie } from '../hooks/Cookie';
 
-
 import useModal from '../hooks/useModal';
 import useDate from '../hooks/useDate';
-import useToken from '../hooks/useToken';
 import useNotification from '../hooks/useNotification';
 import useSideMenu from '../hooks/useSideMenu';
 
@@ -44,7 +43,6 @@ export const Index = () => {
 	
 	return (
 		<>
-		{/* <div class="hidden booking-btn-active-xbox booking-btn-active-switch booking-btn-active-ps5 slot-selected-ps5 slot-selected-xbox slot-selected-switch "/> */}
 		{/*====================================notification MODAL======================================= */}
 		<div
 		id="warning"
@@ -59,63 +57,66 @@ export const Index = () => {
 			loginState={loginState}
 		/>
 		{ /*-------------------------------- MODAL  -------------------------------- */}
-			{isopen && modalDataState.type === 'normal' && (
+		{isopen && modalDataState.type === 'normal' && (
+			<div
+			id="booking-modal"
+			onClick={onClickDimmer}
+			class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
+			>
 				<div
-				id="booking-modal"
-				onClick={onClickDimmer}
-				class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
+				onClick={(event) => event.stopPropagation()}
+				class="w-80 h-36 bg-white shadow-modal rounded-xl"
 				>
-					<div
-					onClick={(event) => event.stopPropagation()}
-					class="w-80 h-36 bg-white shadow-modal rounded-xl"
-					>
-						<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
-							<p class="font-Bolwby-One text-lg font-color-ps5">{modalDataState.title}</p>
-							<p class="font-semibold text-2xl">{modalDataState.content}</p>
+					<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
+						<p class="font-Bolwby-One text-lg font-color-ps5">{modalDataState.title}</p>
+						<p class="font-semibold text-2xl">{modalDataState.content}</p>
+					</div>
+					<div class="w-full h-1/3 flex flex-row items-center justify-center">
+						<div
+						onClick={modalDataState.callback} 
+						class="w-1/2 h-full flex items-center justify-center border-r border-[#818181] cursor-pointer"
+						>
+							<p>예</p>
 						</div>
-						<div class="w-full h-1/3 flex flex-row items-center justify-center">
-							<div
-							onClick={modalDataState.callback} 
-							class="w-1/2 h-full flex items-center justify-center border-r border-[#818181] cursor-pointer"
-							>
-								<p>예</p>
-							</div>
-							<div onClick={closeModal} class="w-1/2 h-full flex items-center justify-center cursor-pointer">
-								<p>아니오</p>
-							</div>
+						<div onClick={closeModal} class="w-1/2 h-full flex items-center justify-center cursor-pointer">
+							<p>아니오</p>
 						</div>
 					</div>
 				</div>
-			)}
-			{isopen && modalDataState.type === 'login' && (
+			</div>
+		)}
+		{isopen && modalDataState.type === 'login' && (
+			<div
+			id="login-modal"
+			onClick={onClickDimmer}
+			class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
+			>
 				<div
-				id="login-modal"
-				onClick={onClickDimmer}
-				class="modal-hidden fixed w-full h-full top-0 left-0 flex items-center justify-center backdrop-brightness-50 z-40"
+				onClick={(event) => event.stopPropagation()}
+				class="w-80 h-36 bg-white shadow-modal rounded-xl"
 				>
-					<div
-					onClick={(event) => event.stopPropagation()}
-					class="w-80 h-36 bg-white shadow-modal rounded-xl"
-					>
-						<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
-							<p class="font-Bolwby-One text-lg font-color-switch">{modalDataState.title}</p>
-							<p class="font-semibold text-2xl">{modalDataState.content}</p>
+					<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
+						<p class="font-Bolwby-One text-lg font-color-switch">{modalDataState.title}</p>
+						<p class="font-semibold text-2xl">{modalDataState.content}</p>
+					</div>
+					<div class="w-full h-1/3 flex flex-row items-center justify-center">
+						<div
+						onClick={modalDataState.callback}
+						class="w-1/2 h-full flex items-center justify-center border-r border-[#818181] cursor-pointer"
+						>
+							<p>42 로그인</p>
 						</div>
-						<div class="w-full h-1/3 flex flex-row items-center justify-center">
-							<div
-							onClick={modalDataState.callback}
-							class="w-1/2 h-full flex items-center justify-center border-r border-[#818181] cursor-pointer"
-							>
-								<p>42 로그인</p>
-							</div>
-							<div onClick={closeModal} class="w-1/2 h-full flex items-center justify-center cursor-pointer">
-								<p>닫기</p>
-							</div>
+						<div onClick={closeModal} class="w-1/2 h-full flex items-center justify-center cursor-pointer">
+							<p>닫기</p>
 						</div>
 					</div>
 				</div>
-			)}
-			<Search />
+			</div>
+		)}
+		{isopen && modalDataState.type === 'onboarding' && (
+			<OnBoarding />
+		)}
+		<Search />
 		</>
 	)
 }

@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useNavigate, useLocation } from "react-router-dom";
+import { useRecoilValue, useRecoilState, useRecoilRefresher_UNSTABLE } from 'recoil';
 
 import useDate from '../hooks/useDate';
 import useModal from '../hooks/useModal';
@@ -30,6 +30,7 @@ const Book = () => {
 	const [selects, setSelects] = useRecoilState(selectState);
 	const [books, setBooks] = useRecoilState(booksState);
 	const initialBooks = useRecoilValue(initialBooksSelector);
+	const refreshBooks = useRecoilRefresher_UNSTABLE(initialBooksSelector);
 	const [consoleType, setConsoleType] = useRecoilState(consoleTypeState);
 	const today = useDate();
 	const user = useRecoilValue(userState);
@@ -41,6 +42,16 @@ const Book = () => {
 
 	const userID = user.id;
 	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		// 사용자 데이터 업데이트
+		setBooks(prev => ({
+			...prev,
+			init: false,
+		}));
+		refreshBooks();
+	  }, [location.pathname]);
 
 	useEffect(() => {
 		/* SSE 및 이벤트 핸들러 등록 */
