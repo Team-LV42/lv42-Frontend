@@ -80,7 +80,7 @@ export const SideBar = ({ loggedInUser, loginState }) => {
 				<footer onClick={() => window.open("https://github.com/Team-LV42")} class="absolute w-full h-32 top-[calc(100%-8rem)] left-0 flex flex-col items-center justify-center">
 					<p class="font-medium text-sm text-[#C8D2DD]">contact us</p>
 					<p class="fomt-medium text-sm text-bold">teamlv42@gmail.com</p>
-					<span onclick="location.href='//github.com/orgs/Team-LV42/repositories'" class="w-8 h-8 rounded-full bg-basic bg-cover bg-[url('../public/logo/github-mark.svg')] my-3 cursor-pointer"></span>
+					<span class="w-8 h-8 rounded-full bg-basic bg-cover bg-[url('../public/logo/github-mark.svg')] my-3 cursor-pointer"></span>
 				</footer>
 			</div>
 			<div 
