@@ -115,7 +115,7 @@ export const Index = () => {
 			<OnBoardingGuide closeModal={closeModal}/>
 		)}
 		{isopen && modalDataState.type === 'onboarding-console-guide' && (
-			<OnBoardingConsoleGuide closeModal={closeModal} data={modalDataState} />
+			<OnBoardingConsoleGuide closeModal={closeModal} data={modalDataState} user={loggedInUser} />
 		)}
 		</>
 	)
