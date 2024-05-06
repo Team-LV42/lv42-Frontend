@@ -1,9 +1,6 @@
 import { useState} from 'react';
 
-import useModal from '../hooks/useModal';
-
-const OnBoarding = () => {
-	const { closeModal } = useModal();
+const OnBoardingGuide = ({ closeModal }) => {
 	const [indicator, setIndicator] = useState(1);
 
 	const indicatorStyles = {
@@ -92,4 +89,4 @@ const OnBoarding = () => {
 }
 
 
-export default OnBoarding;
+export default OnBoardingGuide;

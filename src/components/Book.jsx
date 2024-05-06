@@ -19,6 +19,7 @@ import {
 	reserveSubmitHistoryTick,
 	failedReservationModal,
 	testReservationOnlyModal,
+	submitReservationSuccessModal,
 } from '../store/Modal';
 import { booksState, selectState, initialBooksSelector } from "../store/book";
 
@@ -55,6 +56,7 @@ const Book = () => {
 
 	useEffect(() => {
 		/* SSE 및 이벤트 핸들러 등록 */
+		today.setUpdateTick(true);
 		const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}/sse/subscribe?userId=${userID}`, {
 			withCredentials: false,
 		});
@@ -259,6 +261,7 @@ const Book = () => {
 			}
 			setSelects({s: -1, e: -1});
 			closeModal();
+			openModal(submitReservationSuccessModal(getTypeID(consoleType)));
 		} catch (error) {
 			console.error(`BookForm: handleSubmitBookForm: ${error}`);
 			closeModal();
@@ -324,14 +327,12 @@ const Book = () => {
 						</svg>
 					<p class="text-xl font-extrabold text-[#C1C1C1]">END OF DAY</p>
 				</div>
-				{selects.s !== -1 && 
 				<BookActionWrapper
 					selects={selects}
 					consoleType={getTypeID(consoleType)}
 					action={onClickReservation}
 					selectedTime={getSelectedTime()}
 				/>
-				}
 			</div>
 		</div>
 		</Suspense>
@@ -351,7 +352,7 @@ const BookActionWrapper = ({ selects, consoleType, action, selectedTime }) => {
 		'ps5': 'booking-btn-active-ps5',
 	}
 
-	return (
+	return (selects.s !== -1 && (
 		<div
 		onClick={action}
 		className={`${selects.s !== -1 && consoleTypeStyles[consoleType]} fixed w-[16rem] h-20 top-[calc(100%-8rem)] left-1/2 -translate-x-1/2 flex flex-col items-center justify-center rounded-[2rem] active:shadow-selected cursor-pointer shadow-not-selected z-30`}
@@ -359,7 +360,7 @@ const BookActionWrapper = ({ selects, consoleType, action, selectedTime }) => {
 			<p class="text-white text-sm font-Bolwby-One">{selectedTime}</p>
 			<p class="text-white text-2xl font-semibold text-start">예약하기</p>
 		</div>
-	)
+	))
 }
 
 export default Book;
