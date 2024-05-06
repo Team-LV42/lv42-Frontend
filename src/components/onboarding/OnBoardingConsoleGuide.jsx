@@ -49,10 +49,10 @@ const OnBoardingConsoleGuide = ({ closeModal, data, user }) => {
 							<p class="text-sm font-medium">{content[data.content][2]}</p>
 							<p class="text-sm font-medium mb-2">{content[data.content][3]}</p>
 						</div>
-						<button onClick={() => navigate('/')} class="w-[210px] h-[46px] mb-6 rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
+						<button onClick={() => {navigate('/');closeModal()}} class="w-[210px] h-[46px] mb-6 rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
 							예약 홈으로 돌아가기
 						</button>
-						<button onClick={() => navigate(`/user/${user.id}`)} class="w-[210px] h-[46px] rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
+						<button onClick={() => {navigate(`/user/${user.id}`);closeModal()}} class="w-[210px] h-[46px] rounded-3xl bg-gray-300 pointerhover:hover:bg-gray-400 font-semibold text-[17px]">
 							내 예약 바로가기
 						</button>
 					</div>
