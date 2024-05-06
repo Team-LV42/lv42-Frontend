@@ -248,9 +248,6 @@ const Book = () => {
 			}
 			setSelects({s: -1, e: -1});
 			closeModal();
-			//삭제하거나 추가한 내용들 새로고침 없이 갱신하는 방법으로 유지하기
-			if (response.status === 200)
-				window.location.reload();
 		} catch (error) {
 			console.error(`BookForm: handleSubmitBookForm: ${error}`);
 			closeModal();
