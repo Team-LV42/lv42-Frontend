@@ -151,10 +151,10 @@ const UserReservationList = ({ list, type }) => {
 			</label>
 			<div
 			id="booking-list"
-			class={`w-full ${renderListHeight(list.length)} h-0 flex items-center justify-center transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300 overflow-hidden`}
+			class={`user-item w-full ${renderListHeight(list.length)} h-0 flex items-center justify-center transition-all ease-[cubic-bezier(.4,0,.6,1)] duration-300 overflow-hidden`}
 			>
 				{ list.length !== 0 ? (
-					<div id="booking-list-exist" class="w-[92%] h-full flex flex-col items-center justify-start list-none border-b border-[#C1C1C1]">
+					<div id="booking-list-exist" class="w-[92%] h-full flex flex-col items-center justify-start list-none [&>*:last-child]:border-b [&>*:last-child]:border-[#C1C1C1]">
 						{list.map((record, index) => {
 							return <UserReservationItem key={index} item={record} type={type} />
 						})}
