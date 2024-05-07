@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
@@ -5,22 +6,23 @@ import useModal from '../hooks/useModal';
 import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
 
-import { consoleTypeState } from '../store/State';
 import { deleteModal } from '../store/Modal';
 import { deleteBookRecord } from '../api/bookApi';
+import { bookSelector } from '../store/book';
+import { useEffect } from 'react';
 
-export default function Record({ record, type, time, onClick, isDeletable = false, isSelected = false }) {
+export const Record = ({ index, type, state, onClick, isDeletable = false, isSelected = false }) => {
 	const { openModal, closeModal } = useModal();
-	const { tickToTime, getDuration, curTick } = useDate();
-	const consoleType = useRecoilValue(consoleTypeState);
+	const { tickToTime, getDuration, curTick, setUpdateTick } = useDate();
 	const navigate = useNavigate();
 	const accessToken = useToken().accessToken();
+	const record = useRecoilValue(bookSelector({type, index}));
+
+	const [bgcolor, setBgcolor] = useState('');
 
 	const deleteAction = async () => {
 		await deleteBookRecord(record._id, record.user_id, accessToken);
 		closeModal();
-		window.location.reload();
-		// navigate(0);
 	};
 	
 	const typeToString = (type, flag) => {
@@ -30,82 +32,97 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 				str = 'Xbox';
 				break ;
 			case 2:
-				str = 'Nintendo';
+				str = 'switch';
 				break ;
 			case 3:
 				str = 'PS5';
-				break ;
-			default :
-				str = '';
 				break ;
 		}
 		if (flag)
 			return str.toLowerCase();
 		return str;
 	};
+
+	const displayRecordDesciption = () => {
+		if (curTick > index)
+			return ('-');
+		return (isSelected ? 'SELECTED' : '슬롯 선택하기');
+	};
+
+	const slotSelectedStyles = {
+		'xbox': 'slot-selected-xbox',
+		'switch': 'slot-selected-switch',
+		'ps5' : 'slot-selected-ps5',
+	};
+
+	const calcurateTimeDifference = (slotTick, curTick) => {
+		const now = new Date();
+		if (slotTick !== curTick)
+			return false;
+		else
+			return Math.floor(now.getMinutes() / 10) % 3 / 3 * 100;
+	}
+
+	useEffect(() => {
+		setUpdateTick(true);
+	}, []);
 	
+	useEffect(() => {
+		const newTime = calcurateTimeDifference(index, curTick);
+		setBgcolor(`linear-gradient(rgb(198, 198, 198) ${newTime}%, white 10%)`);
+	}, [curTick]);
+
 	return (
 		<>
-			{type === 'user' && record.length !== 0 && (
-				<span
-				className="slot"
-				value={time}
+			{state === 'book' && record === null && (
+				<div
+				value={index}
+				id={index}
 				onClick={(event) => {
 					event.preventDefault();
-					(isDeletable && openModal(deleteModal));
+					onClick(event);
 				}}
-				// onClick="showModal('reservationModal')"
-			>
-				<div className="slot-time"><p>{record.date}</p><p>{getDuration(record.start_time, record.end_time)}</p></div>
-				<div className={`slot-value content-type-${record.type}`}><p>{typeToString(record.type, 0)}</p></div>
-			</span>
-			)}
-			{type === 'book' && record.length === 0 && (
-				<span
-					className={`slot ${isSelected ? (`selected-${typeToString(consoleType, 1)}`) : ''}${curTick > time ? 'disabled' : ''}`}
-					value={time}
-					id={time}
-					onClick={(event) => {
-						event.preventDefault();
-						onClick(event);
-					}}
-					type='empty'
-					// onClick="showModal('reservationModal')"
+				class={`${isSelected ? slotSelectedStyles[typeToString(type, 1)] : 'slot-empty'} ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1]`}
+				// style={{ backgroundImage: curTick === index && bgcolor}}
 				>
-					<div className="slot-wrapper">
-						<div className="slot-time">{tickToTime(time)} ~</div>
-						<div className="slot-value">{isSelected ? 'SELECTED' : '-'}</div>
+					<div class="w-36 h-full flex items-center justify-center text-lg font-bold px-2 font-outfit">
+						<p>{tickToTime(index)}~</p>
 					</div>
-				</span>
+					<div class="grow h-full flex items-center justify-center">
+						<p>{displayRecordDesciption()}</p>
+					</div>
+				</div>
 			)}
-			{type === 'book' && record.length !== 0 && (
-				<span
-					className={`slot reserved ${isSelected ? 'selected' : ''}${curTick > time ? 'disabled' : ''}`}
-					value={time}
-					id={time}
-					onClick={(event) => {
-						event.preventDefault();
-						(isDeletable && curTick <= time && openModal(deleteModal(record, getDuration, deleteAction)))
-					}}
-					type='reserve'
-					// onClick="showModal('reservationModal')"
+			{state === 'book' && record !== null && (
+				<div
+				value={index}
+				id={index}
+				onClick={(event) => {
+					event.preventDefault();
+					{isDeletable && curTick <= index && openModal(deleteModal(record, getDuration, deleteAction))}
+					{isDeletable || navigate(`/user/${record.user_id}`)}
+				}}
+				class={` ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1] slot-full`}
+				// style={{ backgroundImage: curTick === index && bgcolor }}
 				>
-					<div className="slot-wrapper">
-						<div className="slot-time">{tickToTime(time)} ~</div>
-						<div className="slot-value">{record.user[0].name}</div>
+					<div class="w-36 h-full flex items-center justify-center text-lg font-bold px-2 font-outfit">
+						<p>{tickToTime(index)}~</p>
 					</div>
-				</span>
+					<div class="grow h-full flex items-center justify-center">
+						<p>{record.user[0].name}</p>
+					</div>
+				</div>
 			)}
-			{type === 'admin' && (
+			{state === 'admin' && (
 				<button
 					className='time-button'
-					value={time}
+					value={index}
 					onClick={(event) => {
 						event.preventDefault();
 						(isDeletable && openModal(deleteModal))
 					}}
 				>
-					<div>{tickToTime(time)}</div>
+					<div>{tickToTime(index)}</div>
 					<div>{getDuration(record.start_time, record.end_time)}</div>
 					<div>
 						<h1>{record.user[0].name}</h1>
@@ -117,3 +134,5 @@ export default function Record({ record, type, time, onClick, isDeletable = fals
 		</>
 	);
 };
+
+export default Record;

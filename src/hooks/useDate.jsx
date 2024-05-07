@@ -1,5 +1,5 @@
-import { useRecoilState, useRecoilValue, selector } from "recoil";
-import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue, useRecoilRefresher_UNSTABLE, selector } from "recoil";
+import { useEffect, useState } from 'react';
 import { 
 	dateState,
 	moveDateState,
@@ -49,10 +49,36 @@ export const useDate = () => {
 	const [date, setS_Date] = useRecoilState(dateState);
 	const [move, setMoveDate] = useRecoilState(moveDateState);
 	const curTick = useRecoilValue(currentTick);
+	const updateCurTick = useRecoilRefresher_UNSTABLE(currentTick);
 	const moveDate = useRecoilValue(dateSelector);
 	const moveDateObject = useRecoilValue(dateObjectSelector);
 
-	//해당부분 수정하기 selector 사용??
+	const [updateTick, setUpdateTick] = useState(false);
+
+	useEffect(() => {
+		if (!updateTick) return ;
+		const now = new Date();
+		const minutes = now.getMinutes();
+		const seconds = now.getSeconds();
+		const milliseconds = now.getMilliseconds();
+	  
+		const delay = ((10 - (minutes % 10)) * 60 - seconds) * 1000 - milliseconds;
+	  
+		const delayTimeout = setTimeout(() => {
+			updateCurTick();
+			const updateInterval = setInterval(() => {
+				updateCurTick();
+			}, 1000 * 60 * 10);
+
+			return () => {
+				clearInterval(updateInterval);
+			};
+		}, delay);
+
+		return () => {
+			clearTimeout(delayTimeout);
+		}
+	}, [updateTick])
 	
 	const setDate = (day) => {
 		setS_Date(toFormat(day));
@@ -145,6 +171,7 @@ export const useDate = () => {
 		getWeekDay,
 		getDay,
 		curTick,
+		setUpdateTick,
 	};
 };
 

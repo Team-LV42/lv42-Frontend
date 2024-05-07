@@ -1,4 +1,6 @@
-import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+
 import { Cookie } from './Cookie';
 
 import { logoutUser } from '../api/userApi';
@@ -15,6 +17,7 @@ export function useToken() {
     const [ at, setat ] = useRecoilState(accessTokenState);
     const rt = cookies.refreshToken;
     const userid = cookies.userId;
+    const navigate = useNavigate();
 
     const refreshToken = () => {
 		  return rt ? rt : null;
@@ -33,10 +36,12 @@ export function useToken() {
       setat(accessToken);
     }
 
-    const logout = () => {
-      logoutUser(at)
+    const logout = async () => {
+      await logoutUser(userid, rt);
       removeCookie('refreshToken');
       removeCookie('userId');
+      navigate('/');
+      window.location.reload();
     }
 
     return { refreshToken, accessToken, setRefreshToken, setAccessToken, userid, logout };

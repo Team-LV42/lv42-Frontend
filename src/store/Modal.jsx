@@ -31,21 +31,19 @@ export const notiActionState = atom({
 
 export const reserveTimeLimitError = () => {
 	return ({
-		title: '!',
-		content: '예약은 최대 2시간까지 가능합니다.',
+		title: '예약은 한번에 최대',
+		content: '2시간까지만 가능합니다.',
 	});
 };
 
 export const reserveSubmitError = () => {
 	return ({
-		title: '!',
 		content: '예약 실패',
 	});
 };
 
 export const reserveSubmitHistoryTick = () => {
 	return ({
-		title: '!',
 		content: '지나간 시간은 예약 할 수 없습니다.'
 	});
 };
@@ -53,7 +51,6 @@ export const reserveSubmitHistoryTick = () => {
 export const loginModal = (callback) => {
 	return ({
 		type: 'login',
-		title: '!',
 		content: '로그인이 필요합니다',
 		callback: () => callback(),
 	})
@@ -90,4 +87,18 @@ export const failedReservationModal = (closeModal) => {
 		content: '예약할 시간을 선택해주세요',
 		callback: () => closeModal(),
 	})
+};
+
+export const testReservationOnlyModal = () => {
+	return ({
+		title: '~6/4 (화)까지 테스트 기간으로',
+		content: 'PS5 만 예약 가능합니다',
+	})
+};
+
+export const submitReservationSuccessModal = (console) => {
+	return ({
+		type: 'onboarding-console-guide',
+		content: console,
+	});
 };

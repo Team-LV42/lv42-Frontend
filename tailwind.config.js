@@ -6,9 +6,16 @@ module.exports = {
   theme: {
     fontFamily: {
       "noto" : ['Noto Sans KR', 'sans-serif'],
-      "outfit" : ['Outfit', 'sans-serif']
+      "outfit" : ['Outfit', 'sans-serif'],
+      "Bolwby-One" : ['Bowlby One SC', 'sans-serif']
     },
     extend: {
+      boxShadow: {
+        'basic': 'inset 0px -4px rgba(0, 0, 0, 0.1)',
+        'selected' : 'inset 0px 4px 1px rgba(0, 0, 0, 0.4)',
+        'not-selected' : 'inset 0px -4px 1px rgba(0, 0, 0, 0.4)',
+        'modal': '4px 4px 4px 1px rgba(0, 0, 0, 0.25)'
+      },
       animation: {
         shake: 'shake .5s ease-in-out'
       },
@@ -24,6 +31,9 @@ module.exports = {
       screens: {
         'pointerhover': {
           'raw': "(hover:hover) and (pointer:fine)"
+        },
+        'mobile' : {
+          'raw': "(hover:none)"
         }
       },
       backgroundImage: {
@@ -38,7 +48,18 @@ module.exports = {
         'ps5-btn-info': "url('../public/ps5-button-info.png')",
         'switch-btn-info': "url('../public/switch-button-info.png')",
         'switch-pro-btn-info': "url('../public/switch-pro-button-info.png')",
-        'xbox-btn-info': "url('../public/xbox-button-info.png')"
+        'xbox-btn-info': "url('../public/xbox-button-info.png')",
+        'user-onboarding-2': "url('../public/user-onboarding-2.png')",
+        'user-onboarding-3': "url('../public/user-onboarding-3.png')",
+        'user-onboarding-4': "url('../public/user-onboarding-4.png')",
+        'user-onboarding-1': "url('../public/user-onboarding-1.png')",
+        'error-404': "url('../public/error-background-404.svg')",
+        'error-404-desktop': "url('../public/error-background-404-desktop.svg')",
+        'error-500': "url('../public/error-background-500.svg')",
+        'error-500-desktop': "url('../public/error-background-500-desktop.svg')",
+        'xbox-controller': "url('../public/xbox-controller.png')",
+        'switch-controller': "url('../public/switch-controller.png')",
+        'ps5-controller': "url('../public/ps5-controller.png')",
       }
     },
   },
