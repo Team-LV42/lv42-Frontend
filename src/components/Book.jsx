@@ -108,7 +108,8 @@ const Book = () => {
 			eventSource.close();
 			console.log('eventSource is closed');
 		}
-	}, [curTick, setBooks, today, userID]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (books.init === false && initialBooks)

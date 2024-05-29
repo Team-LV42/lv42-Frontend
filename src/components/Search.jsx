@@ -41,19 +41,6 @@ const Search = () => {
 			setSearchResult([]);
 		setOnInput(event.target.value);
 	};
-	
-	const fetchSearchResult = async () => {
-		try {
-			if (onInput === '') {
-				setSearchResult([]);
-				return ;
-			}
-			const result = await searchUserByPattern(onInput);
-			setSearchResult(result);
-		} catch (error) {
-			console.error('Error fetching search result', error);
-		}
-	};
 
 	const onClickDimmer = useCallback(() => {
 		closeModal();
@@ -76,9 +63,21 @@ const Search = () => {
 	}, [onClickDimmer, setOnInput]);
 	
 	useEffect(() => {
+		const fetchSearchResult = async () => {
+			try {
+				if (onInput === '') {
+					setSearchResult([]);
+					return ;
+				}
+				const result = await searchUserByPattern(onInput);
+				setSearchResult(result);
+			} catch (error) {
+				console.error('Error fetching search result', error);
+			}
+		};
+
 		fetchSearchResult();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [onInput, setSearchResult]);
 
 	
 	const HandleOnKeyPress = e => {
