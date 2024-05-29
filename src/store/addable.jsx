@@ -1,7 +1,7 @@
 import { selectorFamily } from 'recoil';
 
 import { deviceTotalSelectedMalfList } from './report';
-import { setSelected } from '../api/reportApi';
+import { setSelected } from '../api/report';
 
 export const getAddableContent = selectorFamily({
 	key: 'getAddableContent',

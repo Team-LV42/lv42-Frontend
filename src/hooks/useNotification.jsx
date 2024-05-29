@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { notiState, notiActionState } from '../store/Modal';
+import { notiState, notiActionState } from '../store/modal';
 
 const useNotification = () => {
 	const [isNotiOpen, setActionNoti] = useRecoilState(notiActionState);
@@ -21,7 +21,7 @@ const useNotification = () => {
 			setTimeout(() => {
 				setActionNoti(false);
 			}, 1500);
-	}, [isNotiOpen]);
+	}, [isNotiOpen, setActionNoti]);
 
 	return { isNotiOpen, openNoti, noti };
 }

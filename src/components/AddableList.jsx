@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getAddableContent } from '../store/addable';
-import { setSelected } from '../api/reportApi';
+import { setSelected } from '../api/report';
 import { deviceTotalSelectedMalfList } from '../store/report';
 import { btnListState, btnMalfState } from '../store/report';
 
@@ -144,18 +144,19 @@ const AddableList = () => {
 	const btnList = useRecoilValue(btnListState);
 	const btnMalfTypeList = useRecoilValue(btnMalfState);
 
-	const addItem = () => {
+	const addItem = useCallback(() => {
 		setSelect({
 			name: 'controller_malf_btn_list',
 			value:{
 				'controller_btn_id': 0,
 				'controller_btn_malf_type': '',
 			}});
-	};
+	}, [setSelect]);
 
 	useEffect(() => {
 		if (items.length === 0)
 			addItem();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

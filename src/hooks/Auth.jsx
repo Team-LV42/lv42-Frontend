@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 import { getAccessToken, UserLoginQuery } from './Login';
 import {useToken} from './useToken';
 import { Cookie } from './Cookie';
-import { getUserInfoById, userState } from '../api/userApi';
+import { getUserInfoById, userState } from '../api/user';
 
 export const isLoggedInState = atom({
 	key: 'isLoggedIn',
@@ -78,6 +78,7 @@ const Auth = () => {
 				navigate('/');
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 }

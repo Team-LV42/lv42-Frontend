@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { 
 	dateState,
 	moveDateState,
-	} from "../store/State.jsx";
+	} from "../store/state.jsx";
 
 export const dateSelector = selector({
 	key: 'DateSelector',
@@ -78,7 +78,7 @@ export const useDate = () => {
 		return () => {
 			clearTimeout(delayTimeout);
 		}
-	}, [updateTick])
+	}, [updateTick, updateCurTick])
 	
 	const setDate = (day) => {
 		setS_Date(toFormat(day));
@@ -106,7 +106,8 @@ export const useDate = () => {
 		const today = new Date();
 		
 		setS_Date(toFormat(today));
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [setS_Date]);
 	
 	const getMonth = () => {
 		return new Intl.DateTimeFormat('en-GB', {

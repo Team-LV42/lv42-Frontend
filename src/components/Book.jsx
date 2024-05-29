@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useRecoilValue, useRecoilState, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { useLocation } from "react-router-dom";
+import { useRecoilValue, useRecoilState, useRecoilRefresher_UNSTABLE, useSetRecoilState } from 'recoil';
 
 import useDate from '../hooks/useDate';
 import useModal from '../hooks/useModal';
@@ -8,9 +8,9 @@ import useNotification from "../hooks/useNotification";
 import useToken from '../hooks/useToken';
 import {
 	postBookRecord,
-} from '../api/bookApi';
-import { userState } from '../api/userApi';
-import { consoleTypeState } from '../store/State';
+} from '../api/book';
+import { userState } from '../api/user';
+import { consoleTypeState } from '../store/state';
 import {
 	loginModal,
 	reservationModal,
@@ -18,9 +18,8 @@ import {
 	reserveSubmitError,
 	reserveSubmitHistoryTick,
 	failedReservationModal,
-	testReservationOnlyModal,
 	submitReservationSuccessModal,
-} from '../store/Modal';
+} from '../store/modal';
 import { booksState, selectState, initialBooksSelector } from "../store/book";
 
 import Record from "./Record";
@@ -32,7 +31,7 @@ const Book = () => {
 	const [books, setBooks] = useRecoilState(booksState);
 	const initialBooks = useRecoilValue(initialBooksSelector);
 	const refreshBooks = useRecoilRefresher_UNSTABLE(initialBooksSelector);
-	const [consoleType, setConsoleType] = useRecoilState(consoleTypeState);
+	const consoleType = useRecoilValue(consoleTypeState);
 	const today = useDate();
 	const user = useRecoilValue(userState);
 
@@ -42,7 +41,6 @@ const Book = () => {
 	const accessToken = useToken().accessToken();
 
 	const userID = user.id;
-	const navigate = useNavigate();
 	const location = useLocation();
 
 	useEffect(() => {
@@ -52,7 +50,7 @@ const Book = () => {
 			init: false,
 		}));
 		refreshBooks();
-	  }, [location.pathname]);
+	  }, [location.pathname, refreshBooks, setBooks]);
 
 	useEffect(() => {
 		/* SSE 및 이벤트 핸들러 등록 */
@@ -110,12 +108,12 @@ const Book = () => {
 			eventSource.close();
 			console.log('eventSource is closed');
 		}
-	}, []);
+	}, [curTick, setBooks, today, userID]);
 
 	useEffect(() => {
 		if (books.init === false && initialBooks)
 			setBooks(initialBooks);
-	}, [initialBooks, setBooks]);
+	}, [initialBooks, setBooks, books.init]);
 
 	useEffect(() => {
 		setSelects({s: -1, e: -1});
@@ -275,28 +273,7 @@ const Book = () => {
 		<Suspense fallback={<BookSkeleton />}>
 		<div class="w-full grow flex flex-col items-center justify-start overflow-hidden z-10 rounded-t-3xl bg-white">
 			{/* <!-- 탭 컨테이너 --> */}
-			<div class="w-full min-h-24 top-0 flex flex-row items-center justify-around px-5">
-				<div
-				onClick={() => openNoti(testReservationOnlyModal())}
-				// onClick={(e) => {e.preventDefault(); setConsoleType(1)}}
-				class={`${consoleType === 1 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-xbox cursor-pointer pointerhover:hover:brightness-75`}
-				>
-					<p class="font-Bolwby-One text-white w-20 text-center">XBOX</p>
-				</div>
-				<div
-				onClick={() => openNoti(testReservationOnlyModal())}
-				// onClick={(e) => {e.preventDefault(); setConsoleType(2)}}
-				class={`${consoleType === 2 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-switch cursor-pointer pointerhover:hover:brightness-75`}
-				>
-					<p class="font-Bolwby-One text-white w-20 text-center">Switch</p>
-				</div>
-				<div
-				onClick={(e) => {e.preventDefault(); setConsoleType(3)}}
-				class={`${consoleType === 3 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-ps5 cursor-pointer pointerhover:hover:brightness-75`}
-				>
-					<p class="font-Bolwby-One text-white w-20 text-center">PS5</p>
-				</div>
-			</div>
+			<BookConsoleTab consoleType={consoleType} />
 			{/* <!-- 슬롯 컨테이너 --> */}
 			<div class={`relative w-full overflow-y-scroll bg-white`}>
 				{/* <!-- 테스트기간 안내문(xbox, switch) --> */}
@@ -340,8 +317,33 @@ const Book = () => {
 	);
 }
 
-const BookConsoleTab = () => {
+const BookConsoleTab = ({consoleType}) => {
+	const setConsoleType = useSetRecoilState(consoleTypeState);
 
+	return (
+		<div class="w-full min-h-24 top-0 flex flex-row items-center justify-around px-5">
+			<div
+			// onClick={() => openNoti(testReservationOnlyModal())}
+			onClick={(e) => {e.preventDefault(); setConsoleType(1)}}
+			class={`${consoleType === 1 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-xbox cursor-pointer pointerhover:hover:brightness-75`}
+			>
+				<p class="font-Bolwby-One text-white w-20 text-center">XBOX</p>
+			</div>
+			<div
+			// onClick={() => openNoti(testReservationOnlyModal())}
+			onClick={(e) => {e.preventDefault(); setConsoleType(2)}}
+			class={`${consoleType === 2 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-switch cursor-pointer pointerhover:hover:brightness-75`}
+			>
+				<p class="font-Bolwby-One text-white w-20 text-center">Switch</p>
+			</div>
+			<div
+			onClick={(e) => {e.preventDefault(); setConsoleType(3)}}
+			class={`${consoleType === 3 ? 'tab-selected' : 'tab-not-selected'} grow h-10 flex items-center justify-center mx-2 rounded-3xl bg-color-ps5 cursor-pointer pointerhover:hover:brightness-75`}
+			>
+				<p class="font-Bolwby-One text-white w-20 text-center">PS5</p>
+			</div>
+		</div>
+	)
 }
 
 const BookActionWrapper = ({ selects, consoleType, action, selectedTime }) => {
