@@ -7,12 +7,11 @@ import SideBar from '../components/SideBar';
 import OnBoardingGuide from '../components/onboarding/OnBoardingGuide';
 import OnBoardingConsoleGuide from '../components/onboarding/OnBoardingConsoleGuide';
 
-import { userState } from '../api/userApi';
+import { userState } from '../api/user';
 import { isLoggedInState } from '../hooks/Auth';
 import { Cookie } from '../hooks/Cookie';
 
 import useModal from '../hooks/useModal';
-import useDate from '../hooks/useDate';
 import useNotification from '../hooks/useNotification';
 import useSideMenu from '../hooks/useSideMenu';
 
@@ -24,7 +23,6 @@ export const Index = () => {
 	const cookie = getCookies();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const date = useDate();
 
 	const loginState = useRecoilValue(isLoggedInState);
 	const loggedInUser = useRecoilValue(userState);
@@ -36,6 +34,7 @@ export const Index = () => {
 		if (!loginState && cookie.refreshToken && location.pathname !== '/callback') {
 			navigate('/callback', { state: { from: location.pathname }});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	
 	return (

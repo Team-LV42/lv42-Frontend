@@ -21,7 +21,7 @@ import {
 	deviceListSelector,
 	deviceButtonListSelector,
 	setSelected
-} from '../api/reportApi';
+} from '../api/report';
 
 import { getAddableContent } from '../store/addable';
 import useModal from '../hooks/useModal';
@@ -43,10 +43,8 @@ const DeviceHeader = ({ page }) => {
 
 	const resetBtnMalfList = () => {
 		//다른 상태도 초기화 필요??
-		const list = content.controller_malf_btn_list.map((item, i) => {
-			index = i;
+		content.controller_malf_btn_list.forEach((item, _) => {
 			setContent();
-			console.log(index);
 		})
 	}
 
@@ -148,7 +146,7 @@ const MainIssueReporting = () => {
 			setDeviceID('');
 		if (deviceType === 1)
 			setDeviceID(deviceList[0].id);
-	}, [consoleType, deviceType])
+	}, [consoleType, deviceType, deviceID, deviceType])
 
 	return (
 		<>
@@ -495,7 +493,7 @@ const EtcIssueReporting = () => {
 			name: 'device',
 			value: 'etc',
 		});
-	}, []);
+	}, [setSelect]);
 
 	const onDescriptionSet = (value) => {
 		setSelect({

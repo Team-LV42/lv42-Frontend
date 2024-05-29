@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Cookie } from './Cookie';
 
-import { logoutUser } from '../api/userApi';
+import { logoutUser } from '../api/user';
 
 export const accessTokenState = atom({
     key: 'accessTokenState',

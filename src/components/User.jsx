@@ -6,11 +6,11 @@ import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
 import useModal from "../hooks/useModal";
 
-import { fetchUserCurrentBook, fetchUserHistory, getUserInfoById, userState } from "../api/userApi";
-import { deleteBookRecord } from "../api/bookApi";
+import { fetchUserCurrentBook, getUserInfoById, userState } from "../api/user";
+import { deleteBookRecord } from "../api/book";
 
 import PageInfo from "./PageInfo";
-import { deleteModal } from "../store/Modal";
+import { deleteModal } from "../store/modal";
 
 const userDataSelector = selectorFamily({
 	key: 'UserDataSelector',
@@ -195,6 +195,8 @@ const UserReservationItem = ({ item, type }) => {
 				return 'SWITCH';
 			case 3:
 				return 'PS5';
+			default :
+				return '';
 		}; 
 	}
 
@@ -225,89 +227,89 @@ const UserReservationItem = ({ item, type }) => {
 	)
 }
 
-const HistoryDate = () => {
-	const { getMonth, getWeek, setMovedDate } = useDate();
+// const HistoryDate = () => {
+// 	const { getMonth, getWeek, setMovedDate } = useDate();
 
-	const onClickDate = (value) => {
-		setMovedDate(value);
-	}
+// 	const onClickDate = (value) => {
+// 		setMovedDate(value);
+// 	}
 
-	return (
-		<>
-		<div className="date-wrapper">
-			<div className="button" id="left-button" onClick={() => onClickDate(-1)}>
-				<span className="material-symbols-outlined">
-					navigate_before
-				</span>
-			</div>
-			<div className="date" id="month">
-				<p>{getMonth()},</p>
-			</div>
-			<div className="date" id="week">
-				<p>WEEK {getWeek()}</p>
-			</div>
-			<div className="button" id="right-button" onClick={() => onClickDate(1)}>
-				<span className="material-symbols-outlined">
-					navigate_next
-				</span>
-			</div>
-		</div>
-		</>
-	);
-}
+// 	return (
+// 		<>
+// 		<div className="date-wrapper">
+// 			<div className="button" id="left-button" onClick={() => onClickDate(-1)}>
+// 				<span className="material-symbols-outlined">
+// 					navigate_before
+// 				</span>
+// 			</div>
+// 			<div className="date" id="month">
+// 				<p>{getMonth()},</p>
+// 			</div>
+// 			<div className="date" id="week">
+// 				<p>WEEK {getWeek()}</p>
+// 			</div>
+// 			<div className="button" id="right-button" onClick={() => onClickDate(1)}>
+// 				<span className="material-symbols-outlined">
+// 					navigate_next
+// 				</span>
+// 			</div>
+// 		</div>
+// 		</>
+// 	);
+// }
 
-const HistoryList = ({list, isSelected}) => {
-	const date = useDate();
+// const HistoryList = ({list, isSelected}) => {
+// 	const date = useDate();
 
-	return (
-		<>
-		<div className={`list ${isSelected ? 'now' : ''}`}>
-			<span className="history-slot">
-			<div className="slot-date">
-				<p className="day-of-week">{date.getWeekDay()}</p>
-				<p className="day">day {date.getDay()}</p>
-			</div>
-			{list && list.map((record) => (
-				<HistoryRecord record={record} date={date} />
-			))}
-			</span>
-		</div>
-		</>
-	);
-}
+// 	return (
+// 		<>
+// 		<div className={`list ${isSelected ? 'now' : ''}`}>
+// 			<span className="history-slot">
+// 			<div className="slot-date">
+// 				<p className="day-of-week">{date.getWeekDay()}</p>
+// 				<p className="day">day {date.getDay()}</p>
+// 			</div>
+// 			{list && list.map((record) => (
+// 				<HistoryRecord record={record} date={date} />
+// 			))}
+// 			</span>
+// 		</div>
+// 		</>
+// 	);
+// }
 
-const HistoryRecord = ({ record, date }) => {
-	const typeToString = (type) => {
-		let str;
-		switch (type) {
-			case 1:
-				str = 'Xbox';
-				break ;
-			case 2:
-				str = 'Nintendo';
-				break ;
-			case 3:
-				str = 'PS5';
-				break ;
-			default :
-				str = '';
-				break ;
-		}
-		return str;
-	};
+// const HistoryRecord = ({ record, date }) => {
+// 	const typeToString = (type) => {
+// 		let str;
+// 		switch (type) {
+// 			case 1:
+// 				str = 'Xbox';
+// 				break ;
+// 			case 2:
+// 				str = 'Nintendo';
+// 				break ;
+// 			case 3:
+// 				str = 'PS5';
+// 				break ;
+// 			default :
+// 				str = '';
+// 				break ;
+// 		}
+// 		return str;
+// 	};
 
-	return (
-		<>
-		<div className="slot-time-value">
-			<div className="slot-content">
-				<div className="slot-time">
-					<p>{`${date.tickToTime(record.start_time)} ~ ${date.tickToTime(record.end_time)}`}</p>
-				</div>
-				<div className="slot-value red">
-					<p>{typeToString(record.type)}</p>
-				</div>
-			</div>
-		</div>
-		</>
-	);
-}
+// 	return (
+// 		<>
+// 		<div className="slot-time-value">
+// 			<div className="slot-content">
+// 				<div className="slot-time">
+// 					<p>{`${date.tickToTime(record.start_time)} ~ ${date.tickToTime(record.end_time)}`}</p>
+// 				</div>
+// 				<div className="slot-value red">
+// 					<p>{typeToString(record.type)}</p>
+// 				</div>
+// 			</div>
+// 		</div>
+// 		</>
+// 	);
+// }

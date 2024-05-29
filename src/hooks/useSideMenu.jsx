@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 
-import sideBarState from '../store/SideBar';
+import sideBarState from '../store/sidebar';
 
 export const useSideMenu = () => {
 	const [isSideBarOpen, setSideBar] = useRecoilState(sideBarState);

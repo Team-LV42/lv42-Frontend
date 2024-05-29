@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
 	atom,
-	selector,
 	useRecoilState,
 	useSetRecoilState,
 	useRecoilValue,
@@ -15,8 +14,10 @@ import UpdateDeviceForm from '../components/dashboard/UpdateDevice';
 import { toggleState } from '../store/toggle';
 import { controllerType, deviceTypeState, deviceIDState } from '../store/report';
 import '../styles/dashboard.css';
-import { deviceListSelector } from '../api/reportApi';
-import { getReportsList, deleteDevice, deleteReport } from '../api/dashboardApi';
+import { deviceListSelector } from '../api/report';
+import { getReportsList, deleteDevice, deleteReport } from '../api/dashboard';
+
+import '../styles/dashboard.css';
 
 const TestToggle = {
 	0: {
@@ -44,7 +45,52 @@ const TestToggle = {
 export const requestState = atom({
 	key: 'RequestState',
 	default: 'none',
-})
+});
+
+const TestDashBoard = () => {
+	return (
+		<div class="dashboard">
+			<div class="sidebar">
+				<h3>신고</h3>
+				<ul>
+				<li>#1 pc1</li>
+				<li>#2 pc2</li>
+				<li>#3 pc3</li>
+				<li>#4 pc4</li>
+				<li>#5 pc5</li>
+				</ul>
+			</div>
+			<div class="main-content">
+				<h3>상세정보</h3>
+				<div class="timeline">
+					<div class="timeline-item">
+						<div class="dot success"></div>
+						<span>고장 접수</span>
+						<span>4월 8일, 2024, 13:40AM</span>
+					</div>
+					<div class="timeline-item">
+						<div class="dot success"></div>
+						<span>수리 접수</span>
+						<span>4월 15일, 2024, 12:00AM</span>
+					</div>
+					<div class="timeline-item">
+						<div class="dot"></div>
+						<span>수리 완료</span>
+					</div>
+				</div>
+				<div>
+					<p>r1: 더블 클릭</p>
+					<p>기타: 뻑뻑해요</p>
+				</div>
+				<div class="buttons">
+					<button>수리완료</button>
+					<button>수리 항목</button>
+					<button>취소</button>
+				</div>
+			</div>
+			</div>
+	)
+}
 
 const IssueList = ({ list }) => {
 	const request = useRecoilValue(requestState);
@@ -118,10 +164,11 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		setToggleState(TestToggle);
-	}, []);
+	}, [setToggleState]);
 	
 	return (
 		<>
+			<TestDashBoard />
 			<div className="container">
 				<div className="dashboard-content">
 					<div className="section">

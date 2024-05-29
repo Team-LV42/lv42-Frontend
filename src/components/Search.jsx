@@ -1,9 +1,9 @@
-import { atom, useRecoilState, useSetRecoilState } from 'recoil';
-import { useEffect, useState } from 'react';
+import { atom, useRecoilState} from 'recoil';
+import { useEffect, useCallback } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { searchUserByPattern } from '../api/searchApi';
+import { searchUserByPattern } from '../api/search';
 import useModal from '../hooks/useModal';
 
 const searchResultState = atom({
@@ -33,7 +33,6 @@ const SearchResult = (props) => {
 const Search = () => {
 	const { isopen, modalDataState, closeModal } = useModal();
 	const [onInput, setOnInput] = useRecoilState(inputState);
-	const [throttle, setThrottle] = useState(false);
 	const [searchResult, setSearchResult] = useRecoilState(searchResultState);
 	const navigate = useNavigate();
 	
@@ -56,10 +55,10 @@ const Search = () => {
 		}
 	};
 
-	const onClickDimmer = () => {
+	const onClickDimmer = useCallback(() => {
 		closeModal();
 		setOnInput('');
-	}
+	}, [closeModal, setOnInput]);
 	
 	useEffect(() => {
 		const handleEscKey = e => {
@@ -74,11 +73,12 @@ const Search = () => {
 		return () => {
 			window.removeEventListener('keydown', handleEscKey);
 		}
-	}, []);
+	}, [onClickDimmer, setOnInput]);
 	
 	useEffect(() => {
 		fetchSearchResult();
-	}, [onInput, setSearchResult]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	
 	const HandleOnKeyPress = e => {

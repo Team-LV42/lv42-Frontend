@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { controllerType, deviceTypeState } from "../../store/report";
-import { deviceListSelector } from "../../api/reportApi";
-import { updateDeviceStatus_TEST } from '../../api/dashboardApi';
+import { deviceListSelector } from "../../api/report";
+import { updateDeviceStatus_TEST } from '../../api/dashboard';
 import { requestState } from '../../pages/dashboard';
 
 export const UpdateDeviceForm = () => {
@@ -16,7 +16,7 @@ export const UpdateDeviceForm = () => {
 	const deviceList = useRecoilValue(deviceListSelector);
 
 	const onClickSubmit = async () => {
-		const response = await updateDeviceStatus_TEST(deviceId, deviceStatus);
+		await updateDeviceStatus_TEST(deviceId, deviceStatus);
 		window.location.reload();
 	}
 
@@ -25,15 +25,6 @@ export const UpdateDeviceForm = () => {
 		if (status === 1) return '수리중';
 		if (status === 2) return '정상';
 	};
-
-	useEffect(() => {
-		deviceList.map((device) => {
-			if (device.id === deviceId) {
-				setDeviceStatus(device.status);
-				return ;
-			}
-		})
-	}, [deviceId, deviceList]);
 
 	return (
 		<>

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { modalState, actionState } from '../store/Modal';
+import { modalState, actionState } from '../store/modal';
 
 export const useModal = () => {
 	const [modalDataState, setModalDataState] = useRecoilState(modalState);

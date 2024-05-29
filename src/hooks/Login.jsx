@@ -1,46 +1,6 @@
 import {
-	atom,
 	selectorFamily,
-	useRecoilValue,
-	useSetRecoilState,
 } from 'recoil';
-
-import { useCallback } from 'react';
-import { useSearchParams, redirect } from 'react-router-dom';
-import { Cookie } from './Cookie';
-import { accessTokenState } from './useToken';
-import { userState, usersState } from '../api/userApi';
-
-/*로그인 쿼리 보내고 쿠키 저장하기*/
-// export function Login() {
-// 	const [params] = useSearchParams();
-// 	const code = params.get('code');
-// 	const authRes = useRecoilValue(UserLoginQuery(code));
-// 	SetTokens(authRes);
-// 	redirect('/');
-// };
-
-// /*반환된 값을 토큰으로 저장*/
-// export function SetTokens(authRes){
-// 	const { getCookies, setCookie } = useCookie();
-// 	const cookies = getCookies();
-// 	const setAccessToken = useSetRecoilState(accessTokenState);
-// 	const userid = authRes.user_id !== undefined ? authRes.user_id : cookies.userId;
-
-// 	console.log(authRes);
-// 	//test add
-// 	const setUserState = useSetRecoilState(userState);
-// 	const user = useRecoilValue(usersState(userid));
-// 	setCookie('refreshToken', authRes.refreshToken, 14); // set refresh token cookie
-// 	setCookie('userId', userid, 14);
-// 	setAccessToken(authRes.accessToken);
-// 	setUserState({
-// 		id: user.user_id,
-// 		name: user.name,
-// 		profile_img: user.profile_img,
-// 	});
-// }
-
 
 /*login 쿼리 */
 export const UserLoginQuery = selectorFamily({

@@ -1,11 +1,9 @@
 import {
 	atom,
-	atomFamily,
-	selector, 
 	selectorFamily 
 } from 'recoil'
 
-import { dateState } from '../store/State.jsx';
+import { dateState } from '../store/state.jsx';
 /*
 * user : {
 *	id: STRING,
@@ -67,7 +65,7 @@ const fetchUserStateQuery = async (param, search) => {
 export const logoutUser = async (id, rt) => {
 	try {
 		if (id === 0 || rt === null) return;
-		const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/logout?userId=${id}`, {
+		await fetch(`${process.env.REACT_APP_API_URL}/auth/logout?userId=${id}`, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",

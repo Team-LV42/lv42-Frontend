@@ -1,7 +1,6 @@
-import React from 'react';
 import { atom, selector, selectorFamily } from 'recoil';
 
-import { fetchBook } from '../api/bookApi';
+import { fetchBook } from '../api/book';
 import { dateSelector } from '../hooks/useDate';
 
 export const booksState = atom({
