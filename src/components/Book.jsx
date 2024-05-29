@@ -276,12 +276,6 @@ const Book = () => {
 			<BookConsoleTab consoleType={consoleType} />
 			{/* <!-- 슬롯 컨테이너 --> */}
 			<div class={`relative w-full overflow-y-scroll bg-white`}>
-				{/* <!-- 테스트기간 안내문(xbox, switch) --> */}
-				<div class={`absolute w-full h-full ${consoleType === 3 ? 'hidden' : 'flex' } flex-col items-center justify-center top-0 left-0 pb-24 backdrop-blur-sm text-2xl font-bold z-50`}>
-					<p>현재 테스트 기간으로</p>
-					<p>PS5만 지원됩니다</p>
-					<p>테스트 기간 : ~5/30</p>
-				</div>
 				{books[consoleType].map((book, index) => {
 					return (
 						<Record
