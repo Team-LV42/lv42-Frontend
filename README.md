@@ -17,22 +17,6 @@
 =====================================================
 ``` 
 
-## Directory Partitioning
-+ ### /bin/www  <br/>
-  : http 모듈에 express 모듈 연결, 포트 지정, 서버 실행
-+ ### /public  <br/>
-  : 각종 리소스(브라우저, 클라이언트에서 접근 가능한 파일들) -> /images, /javascripts, /stylesheets
-+ ### /controller  <br/>
-  : index.js 를 루트로 사용. user, book 등 디렉토리를 생성해 컨셉별로 관리. 라우팅 관련 로직만 작성.
-+ ### /service <br/>
-  : 핵심 비즈니스 로직만 작성.
-+ ### /repository
-  : DB 접근 로직(Query문 등)만 작성. 함수화해서 사용.
-+ ### /views <br/>
-  : html 등 렌더링 파일
-+ ### app.js <br/>
-  : 서버 전체 루트. 미들웨어 관리.
-
 ## Git Branch Rules
 + ### master branch, develop branch
 master와 develop 브랜치는 본래 이름 그대로 사용.
