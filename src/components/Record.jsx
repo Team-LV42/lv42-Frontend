@@ -46,8 +46,8 @@ export const Record = forwardRef(({ index, type, state, onClick, isDeletable = f
 	};
 
 	const displayRecordDesciption = (state) => {
-		if (state === 'testing') return '기기 점검중입니다';
-		if (state === 'block') return '예약 불가능한 시간입니다';
+		if (state === 'testing') return process.env.REACT_APP_RESERVATION_TEST_MSG;
+		if (state === 'block') return process.env.REACT_APP_RESERVATION_BLOCK_MSG;
 		if (curTick > index)
 			return ('-');
 		return (isSelected ? 'SELECTED' : '슬롯 선택하기');
