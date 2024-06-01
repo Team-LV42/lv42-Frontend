@@ -11,12 +11,13 @@ export const useModal = () => {
 		setActionStatus(false), [setActionStatus]);
   
 	const openModal = useCallback(
-	  ({ title, content, callback, type = 'normal' }) => {
+	  ({ title, content, callback, type = 'normal', consoleType = 0 }) => {
 		setModalDataState({
 			type: type,
 			title: title,
 			content: content,
-			callback: callback
+			callback: callback,
+			consoleType: consoleType,
 		});
 		setActionStatus(true);
 	}, [setModalDataState, setActionStatus]);
