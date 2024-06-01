@@ -30,7 +30,7 @@ const App = () => {
 					<Route path="/" element={<MainRoutes />}>
 						<Route index element={<Book />} />
 						<Route path="callback" element={<Auth />} />
-						<Route path="test" element={<Search />} /> 
+						<Route path="test" element={<Search />} />
 						<Route path="user/:id" element={<User />} />
 					</Route>
 					<Route path="/" element={<IssueRoutes />} >
@@ -38,6 +38,7 @@ const App = () => {
 						<Route path={`${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
 					</Route>
 					<Route path="/report/done" element={<DoneIssueReporting />} />
+					<Route path='/404' element={<Error404 />} /> 
 					<Route path='/*' element={<Error404 />} /> 
 				</Routes>
 			</Suspense>
