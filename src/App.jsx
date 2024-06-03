@@ -38,7 +38,6 @@ const App = () => {
 						<Route path={`${process.env.REACT_APP_PANEL_URL}`} index element={<DashBoard />} />
 					</Route>
 					<Route path="/report/done" element={<DoneIssueReporting />} />
-					<Route path='/404' element={<Error404 />} /> 
 					<Route path='/*' element={<Error404 />} /> 
 				</Routes>
 			</Suspense>

@@ -119,24 +119,6 @@ export const Record = forwardRef(({ index, type, state, onClick, isDeletable = f
 					</div>
 				</div>
 			)}
-			{/* {state === 'admin' && (
-				<button
-					className='time-button'
-					value={index}
-					onClick={(event) => {
-						event.preventDefault();
-						(isDeletable && openModal(deleteModal))
-					}}
-				>
-					<div>{tickToTime(index)}</div>
-					<div>{getDuration(record.start_time, record.end_time)}</div>
-					<div>
-						<h1>{record.user[0].name}</h1>
-						<p>{typeToString(record.type, 0)}</p>
-						<span>{record.date}</span>	
-					</div>
-				</button>
-			)} */}
 		</>
 	);
 });
