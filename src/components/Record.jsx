@@ -1,4 +1,4 @@
-// import { useState } from 'react';
+import { forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
@@ -11,7 +11,7 @@ import { deleteBookRecord } from '../api/book';
 import { bookSelector } from '../store/book';
 import { useEffect } from 'react';
 
-export const Record = ({ index, type, state, onClick, isDeletable = false, isSelected = false }) => {
+export const Record = forwardRef(({ index, type, state, onClick, isDeletable = false, isSelected = false }, ref) => {
 	const { openModal, closeModal } = useModal();
 	const { tickToTime, getDuration, curTick, setUpdateTick } = useDate();
 	const navigate = useNavigate();
@@ -45,7 +45,9 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 		return str;
 	};
 
-	const displayRecordDesciption = () => {
+	const displayRecordDesciption = (state) => {
+		if (state === 'testing') return process.env.REACT_APP_RESERVATION_TEST_MSG;
+		if (state === 'block') return process.env.REACT_APP_RESERVATION_BLOCK_MSG;
 		if (curTick > index)
 			return ('-');
 		return (isSelected ? 'SELECTED' : '슬롯 선택하기');
@@ -76,13 +78,14 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 
 	return (
 		<>
-			{state === 'book' && record === null && (
+			{record === null && (
 				<div
+				ref={ref}
 				value={index}
 				id={index}
 				onClick={(event) => {
 					event.preventDefault();
-					onClick(event);
+					state === 'book' && onClick(event);
 				}}
 				class={`${isSelected ? slotSelectedStyles[typeToString(type, 1)] : 'slot-empty'} ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1]`}
 				// style={{ backgroundImage: curTick === index && bgcolor}}
@@ -91,17 +94,18 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 						<p>{tickToTime(index)}~</p>
 					</div>
 					<div class="grow h-full flex items-center justify-center">
-						<p>{displayRecordDesciption()}</p>
+						<p>{displayRecordDesciption(state)}</p>
 					</div>
 				</div>
 			)}
-			{state === 'book' && record !== null && (
+			{record !== null && (
 				<div
+				ref={ref}
 				value={index}
 				id={index}
 				onClick={(event) => {
 					event.preventDefault();
-					isDeletable && curTick <= index && openModal(deleteModal(record, getDuration, deleteAction));
+					isDeletable && curTick <= index && openModal(deleteModal(record, getDuration, deleteAction, type));
 					isDeletable || navigate(`/user/${record.user_id}`);
 				}}
 				class={` ${curTick > index ? 'slot-elapsed' : ''} w-full h-[4.5rem] flex flex-row items-center justify-around px-4 border-b border-[#C1C1C1] slot-full`}
@@ -115,26 +119,8 @@ export const Record = ({ index, type, state, onClick, isDeletable = false, isSel
 					</div>
 				</div>
 			)}
-			{/* {state === 'admin' && (
-				<button
-					className='time-button'
-					value={index}
-					onClick={(event) => {
-						event.preventDefault();
-						(isDeletable && openModal(deleteModal))
-					}}
-				>
-					<div>{tickToTime(index)}</div>
-					<div>{getDuration(record.start_time, record.end_time)}</div>
-					<div>
-						<h1>{record.user[0].name}</h1>
-						<p>{typeToString(record.type, 0)}</p>
-						<span>{record.date}</span>	
-					</div>
-				</button>
-			)} */}
 		</>
 	);
-};
+});
 
 export default Record;

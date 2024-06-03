@@ -4,25 +4,25 @@ const OnBoardingConsoleGuide = ({ closeModal, data, user }) => {
 	const navigate = useNavigate();
 
 	const consoleBgStyles = {
-		'xbox': 'bg-xbox-controller',
-		'switch': 'bg-switch-controller',
-		'ps5': 'bg-ps5-controller',
+		1: 'bg-xbox-controller',
+		2: 'bg-switch-controller',
+		3: 'bg-ps5-controller',
 	};
 
 	const content = {
-		'xbox': {
+		1: {
 			0: 'xbox를 예약하셨군요!',
 			1: '컨트롤러의 xbox 버튼을 눌러',
 			2: '컨트롤러의 xbox 버튼을 3초간 누르고,',
 			3: '콘솔 종료를 선택해주세요.',
 		},
-		'switch': {
+		2: {
 			0: 'switch를 예약하셨군요!',
 			1: '조이콘의 홈 버튼을 눌러',
 			2: '조이콘의 홈 버튼을 눌러 홈으로 이동 후,',
 			3: '우측 하단의 전원메뉴 > 슬립모드로 전환',
 		},
-		'ps5': {
+		3: {
 			0: 'ps5를 예약하셨군요!',
 			1: '컨트롤러의 PS5 버튼을 눌러',
 			2: '컨트롤러의 PS5 버튼을 3초간 누르고,',

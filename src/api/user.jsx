@@ -55,7 +55,7 @@ const fetchUserStateQuery = async (param, search) => {
 			},
 		});
 		if (response.status !== 200)
-			throw new Error("fetchUserStateQuery : fetching path is invaild");
+			return null;
 		return response.json();
 	} catch (err) {
 		throw err;
