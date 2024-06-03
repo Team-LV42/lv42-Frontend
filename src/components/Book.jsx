@@ -254,11 +254,13 @@ const BookItemList = () => {
 
 	const calcurateTickRange = (tick, index) => {
 		if (tick.length === 1) return (1);
-		if (tick[0] > tick[1] && tick[1] < index && index < tick[0])
-			return (1);
-		if (tick[0] < tick[1] && tick[0] < index && index < tick[1])
-			return (1);
-		return (0);
+		if (tick[0] <= tick[1])
+			if (tick[0] <= index && index <= tick[1])
+				return (0);
+		if (tick[0] > tick[1])
+			if (tick[0] <= index || index <= tick[1])
+				return (0);
+		return (1);
 	}
 
 	return (
