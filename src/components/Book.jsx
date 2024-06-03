@@ -266,6 +266,7 @@ const BookItemList = () => {
 	return (
 		<div class={`relative w-full overflow-y-scroll bg-white`}>
 			{books[consoleType].map((book, index) => {
+				if (index <= 13 || 46 <= index) return ;
 				let state = 'book';
 
 				if (process.env.REACT_APP_RESERVATION_TICK_TEST_RANGE) {
