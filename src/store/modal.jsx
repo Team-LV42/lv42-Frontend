@@ -43,6 +43,18 @@ export const reserveSubmitError = () => {
 	});
 };
 
+export const resrveTimeConflict = () => {
+	return {
+	  content: '중복된 시간에 예약이 있습니다.',
+	};
+  };
+  
+export const reserveExceedsTime = () => {
+	return {
+	  content: '1시간을 초과해서 예약할 수 없습니다.',
+	};
+  };
+
 export const reserveSubmitHistoryTick = () => {
 	return ({
 		content: '지나간 시간은 예약 할 수 없습니다.'
