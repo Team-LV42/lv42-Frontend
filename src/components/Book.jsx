@@ -337,7 +337,6 @@ const BookActionWrapper = () => {
 	};
 
 	const onClickReservation = () => {
-		console.log(consoleType);
 		if (user.id === 0)
 			openModal(loginModal(loginModalAction));
 		else if (selects.s !== -1)
