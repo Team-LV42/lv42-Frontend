@@ -71,7 +71,6 @@ const Auth = () => {
 					token.logout();
 				}
 			if (location.state) {
-				console.log(location.state);
 				navigate(location.state.from, { state: { from: location.pathname }});
 			} else {
 				console.log('navigate to index')

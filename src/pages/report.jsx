@@ -63,7 +63,7 @@ const DeviceHeader = ({ page }) => {
 
 	return (
 		<>
-			<header className="w-full h-12 fixed flex flex-row items-center justify-between p-4 top-0 bg-white z-50">
+			<header className="w-full h-12 fixed flex flex-row items-center justify-between p-4 top-0 bg-white z-30">
 				<button id="menu-button" className="flex" onClick={onClickMenu}>
 					<svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

@@ -19,6 +19,8 @@ import {
 	reserveTimeLimitError,
 	reserveSubmitError,
 	reserveSubmitHistoryTick,
+	reserveExceedsTime,
+	resrveTimeConflict,
 	failedReservationModal,
 	submitReservationSuccessModal,
 } from '../store/modal';
@@ -335,7 +337,6 @@ const BookActionWrapper = () => {
 	};
 
 	const onClickReservation = () => {
-		console.log(consoleType);
 		if (user.id === 0)
 			openModal(loginModal(loginModalAction));
 		else if (selects.s !== -1)
@@ -375,7 +376,10 @@ const BookActionWrapper = () => {
 			setSelects({ s: -1, e: -1 });
 			closeModal();
 			if (response.status === 400) {
-				openNoti(reserveSubmitError());
+				const error = await response.json();
+        		if (error.code === 1) openNoti(reserveExceedsTime());
+        		else if (error.code === 2) openNoti(resrveTimeConflict());
+       			else openNoti(reserveSubmitError());
 			} else
 				openModal(submitReservationSuccessModal(consoleType));
 		} catch (error) {
