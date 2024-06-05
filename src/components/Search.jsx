@@ -1,9 +1,9 @@
-import { atom, useRecoilState, useSetRecoilState } from 'recoil';
-import { useEffect, useState } from 'react';
+import { atom, useRecoilState} from 'recoil';
+import { useEffect, useCallback } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { searchUserByPattern } from '../api/searchApi';
+import { searchUserByPattern } from '../api/search';
 import useModal from '../hooks/useModal';
 
 const searchResultState = atom({
@@ -33,7 +33,6 @@ const SearchResult = (props) => {
 const Search = () => {
 	const { isopen, modalDataState, closeModal } = useModal();
 	const [onInput, setOnInput] = useRecoilState(inputState);
-	const [throttle, setThrottle] = useState(false);
 	const [searchResult, setSearchResult] = useRecoilState(searchResultState);
 	const navigate = useNavigate();
 	
@@ -42,24 +41,11 @@ const Search = () => {
 			setSearchResult([]);
 		setOnInput(event.target.value);
 	};
-	
-	const fetchSearchResult = async () => {
-		try {
-			if (onInput === '') {
-				setSearchResult([]);
-				return ;
-			}
-			const result = await searchUserByPattern(onInput);
-			setSearchResult(result);
-		} catch (error) {
-			console.error('Error fetching search result', error);
-		}
-	};
 
-	const onClickDimmer = () => {
+	const onClickDimmer = useCallback(() => {
 		closeModal();
 		setOnInput('');
-	}
+	}, [closeModal, setOnInput]);
 	
 	useEffect(() => {
 		const handleEscKey = e => {
@@ -74,9 +60,22 @@ const Search = () => {
 		return () => {
 			window.removeEventListener('keydown', handleEscKey);
 		}
-	}, []);
+	}, [onClickDimmer, setOnInput]);
 	
 	useEffect(() => {
+		const fetchSearchResult = async () => {
+			try {
+				if (onInput === '') {
+					setSearchResult([]);
+					return ;
+				}
+				const result = await searchUserByPattern(onInput);
+				setSearchResult(result);
+			} catch (error) {
+				console.error('Error fetching search result', error);
+			}
+		};
+
 		fetchSearchResult();
 	}, [onInput, setSearchResult]);
 

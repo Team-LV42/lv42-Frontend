@@ -1,12 +1,5 @@
-import { atom } from 'recoil';
-
 import useSideMenu from '../hooks/useSideMenu';
 import useModal from '../hooks/useModal';
-
-export const menuState = atom({
-	key: 'MenuState',
-	default: false,
-});
 
 const Header = () => {
 	const { onClickMenu } = useSideMenu();

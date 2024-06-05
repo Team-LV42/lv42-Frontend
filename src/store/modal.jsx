@@ -7,6 +7,7 @@ export const modalState = atom({
 		title: '', //string
 		content: '', // string | JSX
 		callback: null, //callback => void,
+		consoleType: 0, //number | string
 	},
 });
 
@@ -32,7 +33,7 @@ export const notiActionState = atom({
 export const reserveTimeLimitError = () => {
 	return ({
 		title: '예약은 한번에 최대',
-		content: '2시간까지만 가능합니다.',
+		content: `${process.env.REACT_APP_RESERVATION_TICK_RANGE / 2}시간까지만 가능합니다.`,
 	});
 };
 
@@ -41,6 +42,18 @@ export const reserveSubmitError = () => {
 		content: '예약 실패',
 	});
 };
+
+export const resrveTimeConflict = () => {
+	return {
+	  content: '중복된 시간에 예약이 있습니다.',
+	};
+  };
+  
+export const reserveExceedsTime = () => {
+	return {
+	  content: '1시간을 초과해서 예약할 수 없습니다.',
+	};
+  };
 
 export const reserveSubmitHistoryTick = () => {
 	return ({
@@ -65,18 +78,20 @@ export const searchModal = () => {
 	})
 }
 
-export const deleteModal = (record, getDuration, deleteAction) => {
+export const deleteModal = (record, getDuration, deleteAction, type) => {
 	return ({
 		title: getDuration(record.start_time, record.end_time),
 		content: '취소하시겠습니까?',
+		consoleType: type,
 		callback: () => deleteAction(),
 	})
 };
 
-export const reservationModal = (getSelectedTime, submitBookForm) => {
+export const reservationModal = (getSelectedTime, submitBookForm, type) => {
 	return ({
 		title: getSelectedTime(),
 		content: '예약하시겠습니까?',
+		consoleType: type,
 		callback: (e) => submitBookForm(e),
 	})
 };

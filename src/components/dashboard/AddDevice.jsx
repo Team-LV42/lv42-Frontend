@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { postNewDevice } from '../../api/dashboardApi';
+import { postNewDevice } from '../../api/dashboard';
 
 export const AddDeviceForm = () => {
 	const [formStatus, setFormStatus] = useState('');

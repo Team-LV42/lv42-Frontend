@@ -7,27 +7,36 @@ import SideBar from '../components/SideBar';
 import OnBoardingGuide from '../components/onboarding/OnBoardingGuide';
 import OnBoardingConsoleGuide from '../components/onboarding/OnBoardingConsoleGuide';
 
-import { userState } from '../api/userApi';
+import { userState } from '../api/user';
 import { isLoggedInState } from '../hooks/Auth';
 import { Cookie } from '../hooks/Cookie';
 
 import useModal from '../hooks/useModal';
-import useDate from '../hooks/useDate';
 import useNotification from '../hooks/useNotification';
 import useSideMenu from '../hooks/useSideMenu';
+import useDate from '../hooks/useDate';
 
 export const Index = () => {
 	const { isopen, modalDataState, closeModal, } = useModal();
 	const { closeMenu } = useSideMenu();
 	const { isNotiOpen, noti } = useNotification();
-	const { getCookies } = Cookie();
-	const cookie = getCookies();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const date = useDate();
-
+	const { getCookies } = Cookie();
+	
+	const cookie = getCookies();
 	const loginState = useRecoilValue(isLoggedInState);
 	const loggedInUser = useRecoilValue(userState);
+
+	// date initial
+	// eslint-disable-next-line no-unused-vars
+	const date = useDate();
+
+	const modalTypeStyle = {
+		'1': 'font-color-xbox',
+		'2': 'font-color-switch',
+		'3': 'font-color-ps5',
+	};
 	
 	// rt, userid가 있으면 재로그인 시도
 	useEffect(() => {
@@ -36,6 +45,7 @@ export const Index = () => {
 		if (!loginState && cookie.refreshToken && location.pathname !== '/callback') {
 			navigate('/callback', { state: { from: location.pathname }});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	
 	return (
@@ -66,7 +76,7 @@ export const Index = () => {
 				class="w-80 h-36 bg-white shadow-modal rounded-xl"
 				>
 					<div class="w-full h-2/3 flex flex-col items-center justify-center border-b border-[#818181]">
-						<p class="font-Bolwby-One text-lg font-color-ps5">{modalDataState.title}</p>
+						<p class={`font-Bolwby-One text-lg ${modalDataState.consoleType && modalTypeStyle[modalDataState.consoleType]}`}>{modalDataState.title}</p>
 						<p class="font-semibold text-2xl">{modalDataState.content}</p>
 					</div>
 					<div class="w-full h-1/3 flex flex-row items-center justify-center">

@@ -30,7 +30,7 @@ const App = () => {
 					<Route path="/" element={<MainRoutes />}>
 						<Route index element={<Book />} />
 						<Route path="callback" element={<Auth />} />
-						<Route path="test" element={<Search />} /> 
+						<Route path="test" element={<Search />} />
 						<Route path="user/:id" element={<User />} />
 					</Route>
 					<Route path="/" element={<IssueRoutes />} >

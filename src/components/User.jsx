@@ -1,21 +1,21 @@
 import { Suspense, useState, useEffect } from "react";
 import { useRecoilValue, useRecoilRefresher_UNSTABLE ,selectorFamily } from 'recoil';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 import useDate from '../hooks/useDate';
 import useToken from '../hooks/useToken';
 import useModal from "../hooks/useModal";
 
-import { fetchUserCurrentBook, fetchUserHistory, getUserInfoById, userState } from "../api/userApi";
-import { deleteBookRecord } from "../api/bookApi";
+import { fetchUserCurrentBook, getUserInfoById, userState } from "../api/user";
+import { deleteBookRecord } from "../api/book";
 
 import PageInfo from "./PageInfo";
-import { deleteModal } from "../store/Modal";
+import { deleteModal } from "../store/modal";
 
 const userDataSelector = selectorFamily({
 	key: 'UserDataSelector',
 	get: userid => async ({ get }) => {
-		if (userid === undefined || !userid) return null;	
+		if (userid === undefined || !userid) return null;
 		
 		let type;
 		
@@ -49,6 +49,13 @@ export default function UserModal() {
 	const { data, type, user } = useRecoilValue(userDataSelector(id));
 	const refreshData = useRecoilRefresher_UNSTABLE(userDataSelector(id));
 	const location = useLocation();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (user == null)
+			navigate('/404');
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		const checkIsPlaying = async () => {
@@ -71,11 +78,11 @@ export default function UserModal() {
 				<div class="w-full min-h-36 flex flex-row items-center justify-around px-8 border-b border-gray-500">
 					<span
 					class="w-[4.5rem] h-[4.5rem] rounded-full bg-basic bg-cover"
-					style={{ backgroundImage: `url(${user.profile_img})`}}
+					style={{ backgroundImage: `url(${user && user.profile_img})`}}
 					/>
 					<div class="h-[4.5rem] flex flex-col items-start justify-center px-5">
-						<p class="text-2xl font-bold">{user.name}</p>
-						<p class="font-medium text-[#9E9F9F]">{user.displayname}</p>
+						<p class="text-2xl font-bold">{user && user.name}</p>
+						<p class="font-medium text-[#9E9F9F]">{user && user.displayname}</p>
 					</div>
 					{isPlaying
 					? (
@@ -195,6 +202,8 @@ const UserReservationItem = ({ item, type }) => {
 				return 'SWITCH';
 			case 3:
 				return 'PS5';
+			default :
+				return '';
 		}; 
 	}
 
@@ -212,7 +221,7 @@ const UserReservationItem = ({ item, type }) => {
 
 	return (
 		<li
-		onClick={() => type === 'my' && curTick <= item.end_time && openModal(deleteModal(item, getDuration, deleteAction))}
+		onClick={() => type === 'my' && curTick <= item.end_time && openModal(deleteModal(item, getDuration, deleteAction, item.type))}
 		class="w-full h-16 flex flex-row cursor-pointer items-center justify-center border-t border-[#C1C1C1]"
 		>
 			<div class="w-36 h-full flex items-center justify-center font-bold px-2 font-outfit">
@@ -225,89 +234,89 @@ const UserReservationItem = ({ item, type }) => {
 	)
 }
 
-const HistoryDate = () => {
-	const { getMonth, getWeek, setMovedDate } = useDate();
+// const HistoryDate = () => {
+// 	const { getMonth, getWeek, setMovedDate } = useDate();
 
-	const onClickDate = (value) => {
-		setMovedDate(value);
-	}
+// 	const onClickDate = (value) => {
+// 		setMovedDate(value);
+// 	}
 
-	return (
-		<>
-		<div className="date-wrapper">
-			<div className="button" id="left-button" onClick={() => onClickDate(-1)}>
-				<span className="material-symbols-outlined">
-					navigate_before
-				</span>
-			</div>
-			<div className="date" id="month">
-				<p>{getMonth()},</p>
-			</div>
-			<div className="date" id="week">
-				<p>WEEK {getWeek()}</p>
-			</div>
-			<div className="button" id="right-button" onClick={() => onClickDate(1)}>
-				<span className="material-symbols-outlined">
-					navigate_next
-				</span>
-			</div>
-		</div>
-		</>
-	);
-}
+// 	return (
+// 		<>
+// 		<div className="date-wrapper">
+// 			<div className="button" id="left-button" onClick={() => onClickDate(-1)}>
+// 				<span className="material-symbols-outlined">
+// 					navigate_before
+// 				</span>
+// 			</div>
+// 			<div className="date" id="month">
+// 				<p>{getMonth()},</p>
+// 			</div>
+// 			<div className="date" id="week">
+// 				<p>WEEK {getWeek()}</p>
+// 			</div>
+// 			<div className="button" id="right-button" onClick={() => onClickDate(1)}>
+// 				<span className="material-symbols-outlined">
+// 					navigate_next
+// 				</span>
+// 			</div>
+// 		</div>
+// 		</>
+// 	);
+// }
 
-const HistoryList = ({list, isSelected}) => {
-	const date = useDate();
+// const HistoryList = ({list, isSelected}) => {
+// 	const date = useDate();
 
-	return (
-		<>
-		<div className={`list ${isSelected ? 'now' : ''}`}>
-			<span className="history-slot">
-			<div className="slot-date">
-				<p className="day-of-week">{date.getWeekDay()}</p>
-				<p className="day">day {date.getDay()}</p>
-			</div>
-			{list && list.map((record) => (
-				<HistoryRecord record={record} date={date} />
-			))}
-			</span>
-		</div>
-		</>
-	);
-}
+// 	return (
+// 		<>
+// 		<div className={`list ${isSelected ? 'now' : ''}`}>
+// 			<span className="history-slot">
+// 			<div className="slot-date">
+// 				<p className="day-of-week">{date.getWeekDay()}</p>
+// 				<p className="day">day {date.getDay()}</p>
+// 			</div>
+// 			{list && list.map((record) => (
+// 				<HistoryRecord record={record} date={date} />
+// 			))}
+// 			</span>
+// 		</div>
+// 		</>
+// 	);
+// }
 
-const HistoryRecord = ({ record, date }) => {
-	const typeToString = (type) => {
-		let str;
-		switch (type) {
-			case 1:
-				str = 'Xbox';
-				break ;
-			case 2:
-				str = 'Nintendo';
-				break ;
-			case 3:
-				str = 'PS5';
-				break ;
-			default :
-				str = '';
-				break ;
-		}
-		return str;
-	};
+// const HistoryRecord = ({ record, date }) => {
+// 	const typeToString = (type) => {
+// 		let str;
+// 		switch (type) {
+// 			case 1:
+// 				str = 'Xbox';
+// 				break ;
+// 			case 2:
+// 				str = 'Nintendo';
+// 				break ;
+// 			case 3:
+// 				str = 'PS5';
+// 				break ;
+// 			default :
+// 				str = '';
+// 				break ;
+// 		}
+// 		return str;
+// 	};
 
-	return (
-		<>
-		<div className="slot-time-value">
-			<div className="slot-content">
-				<div className="slot-time">
-					<p>{`${date.tickToTime(record.start_time)} ~ ${date.tickToTime(record.end_time)}`}</p>
-				</div>
-				<div className="slot-value red">
-					<p>{typeToString(record.type)}</p>
-				</div>
-			</div>
-		</div>
-		</>
-	);
-}
+// 	return (
+// 		<>
+// 		<div className="slot-time-value">
+// 			<div className="slot-content">
+// 				<div className="slot-time">
+// 					<p>{`${date.tickToTime(record.start_time)} ~ ${date.tickToTime(record.end_time)}`}</p>
+// 				</div>
+// 				<div className="slot-value red">
+// 					<p>{typeToString(record.type)}</p>
+// 				</div>
+// 			</div>
+// 		</div>
+// 		</>
+// 	);
+// }
