@@ -126,7 +126,7 @@ const BookItemList = () => {
 	/* 특정 시간이상 선택시 알림 & 초기화 */
 	useEffect(() => {
 		if (selects.s !== -1 && selects.e !== -1
-			&& Math.abs(selects.e - selects.s) >= process.env.REACT_APP_RESERVATION_TICK_RANGE) {
+			&& Math.abs(selects.e - selects.s) >= 2) {
 			openNoti(reserveTimeLimitError());
 			setSelects({ s: -1, e: -1 });
 			return;
