@@ -33,7 +33,7 @@ export const notiActionState = atom({
 export const reserveTimeLimitError = () => {
 	return ({
 		title: '예약은 한번에 최대',
-		content: `${process.env.REACT_APP_RESERVATION_TICK_RANGE / 2}시간까지만 가능합니다.`,
+		content: `${2 / 2}시간까지만 가능합니다.`,
 	});
 };
 
