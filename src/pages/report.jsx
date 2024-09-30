@@ -146,7 +146,8 @@ const MainIssueReporting = () => {
 			setDeviceID('');
 		if (deviceType === 1)
 			setDeviceID(deviceList[0].id);
-	}, [consoleType, deviceType, deviceID, deviceType])
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [deviceType])
 
 	return (
 		<>
